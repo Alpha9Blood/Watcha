@@ -1,0 +1,1 @@
+python Watch.py Run.PrintAnimeList

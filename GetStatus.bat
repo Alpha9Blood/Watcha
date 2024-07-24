@@ -1,0 +1,1 @@
+python Watcha.py Run.GetAnimeStatus()
