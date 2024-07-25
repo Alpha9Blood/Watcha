@@ -1,1 +1,1 @@
-python Watch.py Run.PrintAnimeList
+python -c "import Watcha; Watcha.Run.PrintAnimeList()"

@@ -1,1 +1,1 @@
-python Watcha.py Run.GetAnimeStatus()
+python -c "import Watcha; Watcha.Run.GetAnimeStatus()"

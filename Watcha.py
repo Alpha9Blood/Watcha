@@ -137,9 +137,7 @@ class ExecuteFunctions:
     def __init__(self):
         self.NameList:list = json.load(open("./Data/ListedAnimes.json"))         
 
-    def Add():
-
-        def Reset():
+    def Reset(self):
             Default:dict = {
                 "Name": "",
                 "Name": "",
@@ -148,15 +146,14 @@ class ExecuteFunctions:
                 "Temporada": ""
             }
             json.dump(Default, open("./AddInfo.json", "w"))
-
-
+    def Add(self):
         Info:dict = json.load(open("./AddInfo.json"))
         Name:str = Info.get("Name")
         MaxEpisodes:int = Info.get("MaxEpisodes")
         Status:str = Info.get("Status")
         Temp:str = Info.get("Temporada")
         Watch.SetNewAnime(Name, MaxEpisodes, Status, Temp)
-        Reset()
+        self.Reset()
 
 
     def GetAnimeStatus(self):
@@ -165,9 +162,10 @@ class ExecuteFunctions:
     
         for i in range(self.NameList.__len__()):
             Selected:str = self.NameList[i]
-            if (not Finded and Selected.count(Name) > 0):
-                if (os.path.exists(f"./Data/AnimeData/{Selected[i]}.json")):
-                    Watch.GetStatus(Selected[i])
+            if (not Finded and Selected.count(Name) > -1):
+                print(Selected)
+                if (os.path.exists(f"./Data/AnimeData/{Selected}.json")):
+                    Watch.GetStatus(Selected)
                     json.dump("", open("./GetStatusName.json", "w"))
                     Finded = True
                 else:
@@ -177,4 +175,10 @@ class ExecuteFunctions:
         print(self.NameList)
         time.sleep(30)
 
+    def RemoveAnime(self):
+        Name:str = json.load(open("./RemoveName.json"))
+        Watch.Remove(Name)
+        self.NameList.remove(Name)
+        json.dump(self.NameList, open(f"./Data/ListedAnimes.json", "w"))
+        
 Run = ExecuteFunctions()

@@ -1,1 +1,1 @@
-python Watcha.py Run.Add()
+python -c "import Watcha; Watcha.Run.Add()"
