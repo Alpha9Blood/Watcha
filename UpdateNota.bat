@@ -1,0 +1,1 @@
+python -c "import Watcha; Watcha.Run.UpdateNota()"
