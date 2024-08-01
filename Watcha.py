@@ -18,8 +18,8 @@ class Anime:
         self.CurrentStatus:str = status
         self.Temporada:str = temp
         self.SerieName:str = ""
-        self.DataBase:dict = self.Data()
-        self.Nota = 0
+        self.Nota:int = 0
+        self.DataBase:dict = self.Data()        
     
     def CurrentEpisodeStatus(self):
         return f"{self.Episode}/{self.MaxEpisodes}"
@@ -71,10 +71,8 @@ class Watcha:
 
     def __init__(self):
         self.selected:Anime = Anime("", 0, "", "")
-        self.SerieList:list = json.load(open("./Data/ListedSeries.json"))
         self.NameList:list = json.load(open("./Data/ListedAnimes.json"))
         self.SerieListData:dict = json.load(open("./Data/StatusList.json"))
-        self.Anime:Anime = self.GetAnime("")
     
     def PrintData(self):
         return {
@@ -94,15 +92,24 @@ class Watcha:
         DroppedList:list = []
         PlanToWatchList:list = []
         WatchingList:list = []
-        for anime in self.NameList:                       
-            if (anime.CurrentStatus == "Watching"):
-                WatchingList.append(anime)
-            elif (anime.CurrentStatus == "Completed"):
-                CompletedList.append(anime)
-            elif (anime.CurrentStatus == "PlanToWatch"):
-                PlanToWatchList.append(anime)
-            elif (anime.CurrentStatus == "Dropped"):
-                DroppedList.append(anime)
+
+        for anime in self.NameList: 
+            self.UpdateBaseData(anime)
+            SelectedStatus:str = self.selected.CurrentStatus
+            SelectedName:str = self.selected.Name                    
+            if (SelectedStatus == "Watching" and WatchingList.count(SelectedName) == 0):
+                WatchingList.append(SelectedName)
+            elif (SelectedStatus == "Completed" and CompletedList.count(SelectedName) == 0):
+                CompletedList.append(SelectedName)
+                if (WatchingList.count(SelectedName) > 0):
+                    WatchingList.remove(SelectedName)
+            elif (SelectedStatus == "PlanToWatch" and PlanToWatchList.count(SelectedName) == 0):
+                PlanToWatchList.append(SelectedName)
+            elif (SelectedStatus == "Dropped" and DroppedList.count(SelectedName) == 0):
+                DroppedList.append(SelectedName)
+                if (WatchingList.count(SelectedName) > 0):
+                    WatchingList.remove(SelectedName)
+
         Lists:dict = {
             "CompletedList": CompletedList,
             "DroppedList": DroppedList,
@@ -118,21 +125,34 @@ class Watcha:
         Listed:list = self.SerieListData.get(f"{Type}List")
         print(Listed)
     
+
+    def UpdateBaseData(self, name):
+        if (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
+            self.selected.DataBase = json.load(open(f"./Data/AnimeData/{TrueName}.json"))
+            self.selected.ConvertData()
+        else:
+            print("UpdateData not found")
+
+    def UpdateData(self, name):     
+        self.UpdateStatusList()
+        self.UpdateBaseData(name)
+        
+    
     def GetAnime(self, name):
         self.UpdateData(name)
         return self.selected 
 
-    def UpdateData(self, name):
-        if (os.path.exists(f"./Data/AnimeData/{name}.json")):
-            self.selected.DataBase = json.load(open(f"./Data/AnimeData/{name}.json"))
-            self.selected.ConvertData()
-            self.UpdateStatusList()
-        else:
-            print("UpdateData not found")
-
     
     def GetStatus(self, name):
-        if (os.path.exists(f"./Data/AnimeData/{name}.json")):
+        if  (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
             self.UpdateData(name)
             print(self.PrintData())
             #del self.selected
@@ -141,75 +161,103 @@ class Watcha:
             print("Anime data not found")
 
     def AddEpisode(self, name, set:bool = False, setEp = 0):
-        if (os.path.exists(f"./Data/AnimeData/{name}.json")):
+        if  (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
             self.UpdateData(name)
             if (set):
                 self.selected.Episode = setEp
             else:
                 self.selected.Episode += 1
             self.selected.UpdateStatus()            
-            json.dump(self.selected.Data(), open(f"./Data/AnimeData/{name}.json", "w"))
+            json.dump(self.selected.Data(), open(f"./Data/AnimeData/{TrueName}.json", "w"))
         else:
             print("AddEpisode not found")
 
     def Dropped(self, name):
-        if (os.path.exists(f"./Data/AnimeData/{name}.json")):
+        if  (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
             self.UpdateData(name)
             self.selected.CurrentStatus = "Dropped"
         else:
             print("Dropped not found")
 
     def SetNota(self, name, nota):
-        if (os.path.exists(f"./Data/AnimeData/{name}.json")):
+        if  (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
             self.UpdateData(name)
             self.selected.Nota = nota
-            json.dump(self.selected.Data(), open(f"./Data/AnimeData/{name}.json", "w"))
+            json.dump(self.selected.Data(), open(f"./Data/AnimeData/{TrueName}.json", "w"))
     
     def Remove(self, name):
         self.UpdateData(name)
         ListedSeason:list = json.load(open(f"./Data/Season/{self.selected.Temporada}.json"))
         ListedSeason.remove(name)
         json.dump(ListedSeason, open(f"./Data/Season/{self.selected.Temporada}.json", "w"))
-        if (os.path.exists(f"./Data/AnimeData/{name}.json")):
-            os.remove(f"./Data/AnimeData/{name}.json")
+        if  (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
+            os.remove(f"./Data/AnimeData/{TrueName}.json")
         else:
             print("Remove not found")
 
-    def SetNewAnime(self, name, maxpisodes, currentstatus, temp, seriename = ""):
+    def SetNewAnime(self, name:str, maxpisodes:int, currentstatus:str, temp:str, seriename:str = ""):
         NewAnime = Anime(name, maxpisodes, currentstatus, temp)
-        SeasonList:list = []
 
         if (not seriename == ""):
-            if (os.path.exists(f"./Data/SerieData/{seriename}.json")):
-                self.SerieList.append(name)
-                json.dump(self.SerieList, open(f"./Data/SerieData/{seriename}.json", "w"))
-            else:
-                json.dump([], open(f"./Data/SerieData/{seriename}.json", "w"))
-
-            if (not os.path.exists(f"./Data/ListedSeries.json")):
-                json.dump([], open(f"./Data/ListedSeries.json", "w"))
-                
+            
             if (os.path.exists(f"./Data/ListedSeries.json")):
-                List:list = json.load(open(f"./Data/ListedSeries.json"))
-                List.append(seriename)
-                json.dump(List, open(f"./Data/ListedSeries.json", "w"))
+                SerieList:list = json.load(open(f"./Data/ListedSeries.json"))
+                if (SerieList.count(seriename) == 0):   
+                    SerieList.append(seriename)
+                    json.dump(SerieList, open(f"./Data/ListedSeries.json", "w"))
+            else:
+                json.dump([seriename], open(f"./Data/ListedSeries.json", "w"))
+
+            if (os.path.exists(f"./Data/SerieData/{seriename}.json")):
+                SerieDataList:list = json.load(open(f"./Data/SerieData/{seriename}.json"))
+                if (SerieDataList.count(name) == 0):
+                    SerieDataList.append(name)
+                    json.dump(SerieDataList, open(f"./Data/SerieData/{seriename}.json", "w"))
+            else:
+                json.dump([name], open(f"./Data/SerieData/{seriename}.json", "w"))
             NewAnime.SerieName = seriename
         
         if (os.path.exists(f"./Data/Seasons/{NewAnime.Temporada}.json")):
             SeasonList:list = json.load(open(f"./Data/Seasons/{NewAnime.Temporada}.json"))
-            SeasonList.append(NewAnime.Temporada)
-            json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Temporada}.json", "w"))
+            if (SeasonList.count(NewAnime.Name) == 0):
+                SeasonList.append(NewAnime.Name)
+                json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Temporada}.json", "w"))
         else:
-            json.dump([], open(f"./Data/{NewAnime.Temporada}.json", "w"))
-
-        json.dump(NewAnime.Data(), open(f"./Data/AnimeData/{name}.json", "w"))
+            SeasonList:list = []
+            SeasonList.append(NewAnime.Name)
+            json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Temporada}.json", "w"))
         
         if (os.path.exists(f"./Data/ListedAnimes.json")):
-            List:list = json.load(open(f"./Data/ListedAnimes.json"))
-            List.append(name)
-            json.dump(List, open(f"./Data/ListedAnimes.json", "w"))
+            AnimeList:list = json.load(open(f"./Data/ListedAnimes.json"))
+            if (AnimeList.count(name) == 0):
+                AnimeList.append(name)
+                json.dump(AnimeList, open(f"./Data/ListedAnimes.json", "w"))
         else:
-            json.dump([], open(f"./Data/ListedAnimes.json", "w"))
+            AnimeList:list = []
+            AnimeList.append(name)
+            json.dump(AnimeList, open(f"./Data/ListedAnimes.json", "w"))
+
+        if (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name  
+        json.dump(NewAnime.Data(), open(f"./Data/AnimeData/{TrueName}.json", "w"))
 
 
     def PrintSeason(self, seasonid):
@@ -219,7 +267,11 @@ class Watcha:
 
 
     def AddToSerie(self, seriename, animename):
-        if (os.path.exists(f"./Data/SerieData/{seriename}.json") and os.path.exists(f"./Data/AnimeData/{animename}.json")):
+        if  (animename.count(":") > 0):
+            TrueName:str = animename.replace(":", "_")
+        else:
+            TrueName = animename
+        if (os.path.exists(f"./Data/SerieData/{seriename}.json") and os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
             List:list = json.load(open(f"./Data/SerieData/{seriename}.json"))
             List.append(animename)
             json.dump(List, open(f"./Data/SerieData/{seriename}.json", "w"))
@@ -245,9 +297,10 @@ class ExecuteFunctions:
                 "Name": "",
                 "MaxEpisodes": 0,
                 "Status": "",
-                "Temporada": ""
+                "Temporada": "",
+                "Serie": ""
             }
-            json.dump(Default, open("./Info/AddInfo.json", "w"))
+            json.dump(Default, open("./Info/AddAnimeInfo.json", "w"))
         def ResetAddEpisode(self):
             Default:dict = {
                 "Name": "",
@@ -264,7 +317,9 @@ class ExecuteFunctions:
         MaxEpisodes:int = Info.get("MaxEpisodes")
         Status:str = Info.get("Status")
         Temp:str = Info.get("Temporada")
-        Watch.SetNewAnime(Name, MaxEpisodes, Status, Temp)
+        Serie:str = Info.get("Serie")
+        Watch.SetNewAnime(Name, MaxEpisodes, Status, Temp, Serie)
+
         self.ResetInfo.ResetAdd()
 
     def UpdateNota(self):
@@ -280,9 +335,13 @@ class ExecuteFunctions:
     
         for i in range(self.NameList.__len__()):
             Selected:str = self.NameList[i]
-            if (not Finded and Selected.count(Name) > -1):
-                if (os.path.exists(f"./Data/AnimeData/{Selected}.json")):
-                    Watch.GetStatus(Selected)
+            if (Selected.count(":") > 0):
+                TrueName:str = Selected.replace(":", "_")
+            else:
+                TrueName = Selected  
+            if (not Finded and Selected.count(Name) > 0):
+                if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
+                    Watch.GetStatus(TrueName)
                     json.dump("", open("./Info/GetStatusName.json", "w"))
                     Finded = True
                 else:
@@ -319,13 +378,34 @@ class ExecuteFunctions:
     
         for i in range(self.NameList.__len__()):
             Selected:str = self.NameList[i]
-            if (not Finded and Selected.count(Name) > - 1):
-                if (os.path.exists(f"./Data/AnimeData/{Selected}.json")):
+            if (Selected.count(":") > 0):
+                TrueName:str = Selected.replace(":", "_")
+            else:
+                TrueName = Selected 
+            if (not Finded and Selected.count(Name) > 0):
+                if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
                     Watch.AddEpisode(Selected, IsSetEp, Ep)
-                    self.ResetInfo.ResetAddEpisode() 
+                    self.ResetInfo.ResetAddEpisode()                   
                     Finded = True
                 else:
                     print("AddEpisode path not found")
            
         
 Run = ExecuteFunctions()
+
+
+
+class Test:
+    
+    def Reset(self):
+        Pato:list = []
+        json.dump(Pato, open(f"./Data/ListedAnimes.json", "w"))
+        json.dump(Pato, open(f"./Data/ListedSeries.json", "w"))
+        json.dump(Pato, open(f"./Data/SerieData/Bartender.json", "w"))
+        json.dump(Pato, open(f"./Data/Seasons/Spring_04_2024.json", "w"))
+        """ if (os.path.exists("./Data/AnimeData/Bartender")):
+            os.remove(f"./Data/AnimeData/Bartender") """
+    
+    
+testa = Test()
+""" testa.Reset() """
