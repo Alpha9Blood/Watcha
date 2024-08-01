@@ -87,6 +87,27 @@ class Watcha:
         }
     
     
+
+
+    def GetStatusList(self, Type:str):
+        return self.SerieListData.get(f"{Type}List")
+    
+    def PrintStatusList(self, Type:str):
+        Listed:list = self.SerieListData.get(f"{Type}List")
+        print(Listed)
+    
+
+    def UpdateBaseData(self, name):
+        if (name.count(":") > 0):
+            TrueName:str = name.replace(":", "_")
+        else:
+            TrueName = name
+        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
+            self.selected.DataBase = json.load(open(f"./Data/AnimeData/{TrueName}.json"))
+            self.selected.ConvertData()
+        else:
+            print("UpdateData not found")
+
     def UpdateStatusList(self):
         CompletedList:list = []
         DroppedList:list = []
@@ -111,31 +132,12 @@ class Watcha:
                     WatchingList.remove(SelectedName)
 
         Lists:dict = {
-            "CompletedList": CompletedList,
-            "DroppedList": DroppedList,
-            "PlanToWatchList": PlanToWatchList,
-            "WatchingList": WatchingList
+            "Completed": CompletedList,
+            "Dropped": DroppedList,
+            "PlanToWatch": PlanToWatchList,
+            "Watching": WatchingList
         }
         json.dump(Lists, open("./Data/StatusList.json", "w"))
-
-    def GetStatusList(self, Type:str):
-        return self.SerieListData.get(f"{Type}List")
-    
-    def PrintStatusList(self, Type:str):
-        Listed:list = self.SerieListData.get(f"{Type}List")
-        print(Listed)
-    
-
-    def UpdateBaseData(self, name):
-        if (name.count(":") > 0):
-            TrueName:str = name.replace(":", "_")
-        else:
-            TrueName = name
-        if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
-            self.selected.DataBase = json.load(open(f"./Data/AnimeData/{TrueName}.json"))
-            self.selected.ConvertData()
-        else:
-            print("UpdateData not found")
 
     def UpdateData(self, name):     
         self.UpdateStatusList()
@@ -143,7 +145,7 @@ class Watcha:
         
     
     def GetAnime(self, name):
-        self.UpdateData(name)
+        self.UpdateBaseData(name)
         return self.selected 
 
     
@@ -155,7 +157,6 @@ class Watcha:
         if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
             self.UpdateData(name)
             print(self.PrintData())
-            #del self.selected
             time.sleep(10)            
         else:
             print("Anime data not found")
@@ -182,8 +183,8 @@ class Watcha:
         else:
             TrueName = name
         if (os.path.exists(f"./Data/AnimeData/{TrueName}.json")):
+            self.GetAnime(name).CurrentStatus = "Dropped"
             self.UpdateData(name)
-            self.selected.CurrentStatus = "Dropped"
         else:
             print("Dropped not found")
 
@@ -357,8 +358,21 @@ class ExecuteFunctions:
     
     def PrintSeason(self):
         Info:dict = json.load(open("./Info/PrintSeasonInfo.json"))
-        seasonid = Info.get("SeasonId")
-        Watcha.PrintSeason(seasonid)
+        seasonid:str = Info.get("SeasonId")
+        Watch.PrintSeason(seasonid)
+        Default:dict = {
+            "SeasonId": ""
+        }
+        json.dump(Default, open(f"./Info/PrintSeasonInfo.json", "w"))
+    
+    def PrintStatusList(self):
+        Info:dict = json.load(open("./Info/GetCurrentStatus.json"))
+        Status:dict = json.load(open("./Data/StatusList.json"))
+        Selected:list = Status.get(f"{Info}")
+        print(Selected)
+        json.dump([], open(f"./Info/GetCurrentStatus.json", "w"))
+        time.sleep(30)
+        
 
     def RemoveAnime(self):
         Name:str = json.load(open("./Info/RemoveName.json"))
@@ -367,6 +381,11 @@ class ExecuteFunctions:
         self.SerieList.remove(Watch.GetAnime(Name).SerieName)
         json.dump(self.SerieList, open(f"./Data/ListedSeries.json", "w"))
         json.dump(self.NameList, open(f"./Data/ListedAnimes.json", "w"))
+    
+    def DroppedAnime(self):
+        Name:str = json.load(open("./Info/DroppedName.json"))
+        Watch.Dropped(Name)
+        json.dump("", open(f"./Info/DroppedName.json", "w"))        
 
     def AddEpisode(self):
         Info:dict = json.load(open("./Info/AddEpisodeInfo.json"))
@@ -403,8 +422,6 @@ class Test:
         json.dump(Pato, open(f"./Data/ListedSeries.json", "w"))
         json.dump(Pato, open(f"./Data/SerieData/Bartender.json", "w"))
         json.dump(Pato, open(f"./Data/Seasons/Spring_04_2024.json", "w"))
-        """ if (os.path.exists("./Data/AnimeData/Bartender")):
-            os.remove(f"./Data/AnimeData/Bartender") """
     
     
 testa = Test()
