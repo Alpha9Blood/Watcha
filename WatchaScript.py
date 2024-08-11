@@ -1,4 +1,3 @@
-import time
 import json
 import os , sys
 sys.path.append(os.getcwd())
@@ -9,7 +8,7 @@ import webbrowser as web
 
 class Anime:
 
-    def __init__(self, name:str, maxepisodes:int, status:str, temp:str):
+    def __init__(self, name:str, maxepisodes:int, status:str, Season:str):
         self.Name:str = name
         if (status == "PlanToWatch"):
             self.Episode:int = 0
@@ -20,7 +19,7 @@ class Anime:
         self.MaxEpisodes:int = maxepisodes
         self.EpisodeStatus:str = self.CurrentEpisodeStatus()
         self.CurrentStatus:str = status
-        self.Temporada:str = temp
+        self.Season:str = Season
         self.SerieName:str = ""
         self.Nota:float = 0
         self.MyAnimeListLink:str = ""
@@ -31,6 +30,9 @@ class Anime:
             return f"{self.Episode}/{self.MaxEpisodes}"
         else:
             return f"{self.Episode}/Undefined"
+        
+    def CurrentStatusList(self):
+        return ["PlanToWatch", "Watching", "Completed", "Dropped"]
     
     def UpdateStatus(self):
         if (self.Episode > 0 and not self.CurrentStatus == "Dropped"):
@@ -46,16 +48,16 @@ class Anime:
 
     
     def ConvertData(self):
-        Anime:dict = self.DataBase.get("Anime") # type: ignore
-        self.Name = Anime.get("Name") # type: ignore
-        self.EpisodeStatus = Anime.get("EpisodesStatus") # type: ignore
-        self.CurrentStatus = Anime.get("Status") # type: ignore
-        self.Temporada = Anime.get("Temporada") # type: ignore 
-        self.MaxEpisodes = Anime.get("MaxEpisodes") # type: ignore
-        self.Episode = Anime.get("Episode") # type: ignore
-        self.SerieName = Anime.get("SerieName") # type: ignore
-        self.MyAnimeListLink = Anime.get("MyAnimeListLink") # type: ignore
-        self.Nota = Anime.get("Nota") # type: ignore 
+        Anime = self.DataBase.get("Anime", [])
+        self.Name = Anime.get("Name", "")
+        self.EpisodeStatus = Anime.get("EpisodesStatus", "")
+        self.CurrentStatus = Anime.get("Status", "")
+        self.Season = Anime.get("Season", "")
+        self.MaxEpisodes = Anime.get("MaxEpisodes", 0)
+        self.Episode = Anime.get("Episode", 0)
+        self.SerieName = Anime.get("SerieName", "")
+        self.MyAnimeListLink = Anime.get("MyAnimeListLink", "")
+        self.Nota = Anime.get("Nota", 0.0)
     
     
     @property
@@ -65,7 +67,7 @@ class Anime:
                 "Name": self.Name,
                 "EpisodesStatus": self.CurrentEpisodeStatus(),
                 "Status": self.CurrentStatus,
-                "Temporada": self.Temporada,
+                "Season": self.Season,
                 "MaxEpisodes": self.MaxEpisodes,
                 "Episode": self.Episode,
                 "SerieName": self.SerieName,
@@ -107,7 +109,7 @@ class Watcha:
                 "Name": self.selected.Name,
                 "Episodes": self.selected.CurrentEpisodeStatus(),
                 "Status": self.selected.CurrentStatus,
-                "Temporada": self.selected.Temporada,
+                "Season": self.selected.Season,
                 "SerieName": self.selected.SerieName,
                 "Nota": self.selected.Nota
             }
@@ -120,7 +122,7 @@ class Watcha:
         return self.SerieListData.get(f"{Type}List")
     
     def PrintStatusList(self, Type:str):
-        Listed:list = self.SerieListData.get(f"{Type}List") # type: ignore
+        Listed:list = self.SerieListData.get(f"{Type}List", [])
         print(Listed)
     
 
@@ -192,10 +194,13 @@ class Watcha:
         else:
             print("UpdateEpisode not found")
 
-    def Dropped(self, name):
+    def SetCurrentStatus(self, name:str, status:str):
         if (os.path.exists(f"./Data/AnimeData/{self.TrueName(name)}.json")):
             self.UpdateData(name)
-            self.selected.CurrentStatus = "Dropped"
+            if (self.selected.CurrentStatusList().count(status) > 0):
+                self.selected.CurrentStatus = f"{status}"
+            else:
+                self.selected.CurrentStatus = "Error"    
             json.dump(self.selected.Data(), open(f"./Data/AnimeData/{self.TrueName(name)}.json", "w"), indent=4)
         else:
             print("Dropped not found")
@@ -210,9 +215,9 @@ class Watcha:
     
     def Remove(self, name):
         self.UpdateData(name)
-        ListedSeason:list = json.load(open(f"./Data/Seasons/{self.selected.Temporada}.json"))
+        ListedSeason:list = json.load(open(f"./Data/Seasons/{self.selected.Season}.json"))
         ListedSeason.remove(name)
-        json.dump(ListedSeason, open(f"./Data/Seasons/{self.selected.Temporada}.json", "w"), indent=4)
+        json.dump(ListedSeason, open(f"./Data/Seasons/{self.selected.Season}.json", "w"), indent=4)
 
         if (os.path.exists(f"./Data/SerieData/{self.TrueSerieName(self.selected.SerieName)}.json")):
             List:list = json.load(open(f"./Data/SerieData/{self.TrueSerieName(self.selected.SerieName)}.json"))
@@ -232,8 +237,8 @@ class Watcha:
         else:
             print("RemoveAnime not found")
 
-    def SetNewAnime(self, name:str, maxpisodes:int, currentstatus:str, temp:str, seriename:str = ""):
-        NewAnime = Anime(name, maxpisodes, currentstatus, temp)
+    def SetNewAnime(self, name:str, maxpisodes:int, currentstatus:str, Season:str, seriename:str = ""):
+        NewAnime = Anime(name, maxpisodes, currentstatus, Season)
 
         if (not seriename == ""):
             
@@ -254,15 +259,15 @@ class Watcha:
                 json.dump([name], open(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json", "w"), indent=4)
             NewAnime.SerieName = seriename
         
-        if (os.path.exists(f"./Data/Seasons/{NewAnime.Temporada}.json")):
-            SeasonList:list = json.load(open(f"./Data/Seasons/{NewAnime.Temporada}.json"))
+        if (os.path.exists(f"./Data/Seasons/{NewAnime.Season}.json")):
+            SeasonList:list = json.load(open(f"./Data/Seasons/{NewAnime.Season}.json"))
             if (SeasonList.count(NewAnime.Name) == 0):
                 SeasonList.append(NewAnime.Name)
-                json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Temporada}.json", "w"), indent=4)
+                json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Season}.json", "w"), indent=4)
         else:
             SeasonList:list = []
             SeasonList.append(NewAnime.Name)
-            json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Temporada}.json", "w"), indent=4)
+            json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Season}.json", "w"), indent=4)
         
         if (os.path.exists(f"./Data/ListedAnimes.json")):
             AnimeList:list = json.load(open(f"./Data/ListedAnimes.json"))
@@ -296,6 +301,73 @@ class Watcha:
             json.dump(List, open(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json", "w"), indent=4)
         else:
             print("AddToSerie not found")
+
+    def CreateCalendar(self, Name:str, Day:str):    
+        """
+        Creates a calendar for a given anime and day.
+
+        Args:
+            Name (str): The name of the anime.
+            Day (str): The day of the week. Can be one of the following: "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+            
+        Notes:
+            This function first checks if the anime's season calendar exists. If not, it creates one.
+            Then, it checks if the anime's data exists. If it does, it adds the anime to the corresponding day in the calendar.
+            If the anime is already in the calendar or if the anime's data does not exist, it prints an error message.
+        """
+        AnimeID:Anime = self.GetAnime(Name)
+
+        if (not os.path.exists(f"./Data/SeasonsCalendar/{AnimeID.Season}.json")):
+            Calendar:dict = {
+                    f"{AnimeID.Season}":  {
+                        "Monday": [],
+                        "Tuesday": [],
+                        "Wednesday": [],
+                        "Thursday": [],
+                        "Friday": [],
+                        "Saturday": [],
+                        "Sunday": []
+                    }
+                }
+
+            json.dump(Calendar, open(f"./Data/SeasonsCalendar/{AnimeID.Season}.json", "w"), indent=4)
+
+        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+            Days:list = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            
+            SeasonDict:dict = json.load(open(f"./Data/SeasonsCalendar/{AnimeID.Season}.json"))
+            Monday:list = SeasonDict.get("Monday", [])
+            Tuesday:list = SeasonDict.get("Tuesday", [])
+            Wednesday:list = SeasonDict.get("Wednesday", [])
+            Thursday:list = SeasonDict.get("Thursday", [])
+            Friday:list =  SeasonDict.get("Friday", [])
+            Saturday:list = SeasonDict.get("Saturday", [])
+            Sunday:list = SeasonDict.get("Sunday", [])
+            DaysList:list = [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+
+            if (DaysList[Days.index(Day)].count(Name) == 0):
+
+                DaysList[Days.index(Day)].append(self.GetAnime(Name).Name)
+
+                Calendar:dict = {
+                    f"{AnimeID.Season}":  {
+                        "Monday": Monday,
+                        "Tuesday": Tuesday,
+                        "Wednesday": Wednesday,
+                        "Thursday": Thursday,
+                        "Friday": Friday,
+                        "Saturday": Saturday,
+                        "Sunday": Sunday
+                    }
+                }
+
+                json.dump(Calendar, open(f"./Data/SeasonsCalendar/{AnimeID.Season}.json", "w"), indent=4)
+
+            else:
+                print("CreateCalendar add not found or already exists")
+        else:
+            print("CreateCalendar name path not found")
+        
 
 
 
@@ -363,17 +435,17 @@ class ExecuteFunctions:
         else:
             MaxEpisodes:int = 0
         Status:str = self.GetEntry(2)
-        Temp:str = self.GetEntry(3)
+        Season:str = self.GetEntry(3)
         Serie:str = self.GetEntry(4)
 
         def AddIsComplete():
-            if (len(Name) > 0 and len(Status) > 0 and len(Temp) > 0):
+            if (len(Name) > 0 and len(Status) > 0 and len(Season) > 0):
                 return True
             else:
                 return False
             
         if (AddIsComplete()):
-            Watch.SetNewAnime(Name, MaxEpisodes, Status, Temp, Serie)
+            Watch.SetNewAnime(Name, MaxEpisodes, Status, Season, Serie)
             for i in range(5):
                 self.ClearEntry(i)
         else:
@@ -433,17 +505,26 @@ class ExecuteFunctions:
             self.ClearEntry(8)
             self.ClearEntry(9)     
 
-    def DropAnime(self):
+    def OverrideCurrentStatus(self):
         Name:str = self.GetEntry(10)
-        Watch.Dropped(Name)
+        Status:str = self.GetEntry(11)
+        Watch.SetCurrentStatus(Name, Status)
         self.ClearEntry(10)
+        self.ClearEntry(11)
 
     def AddMyAnimeListLink(self):
-        Name = self.GetEntry(11)
-        Link = self.GetEntry(12)
+        Name = self.GetEntry(12)
+        Link = self.GetEntry(13)
         Watch.UpdateMyAnimeListLink(Name, Link)
-        self.ClearEntry(11)
         self.ClearEntry(12)
+        self.ClearEntry(13)
+
+    def AddToCalendar(self):
+        Name = self.GetEntry(14)
+        Day = self.GetEntry(15)
+        Watch.CreateCalendar(Name, Day)
+        self.ClearEntry(14)
+        self.ClearEntry(15)
 
 
     #Get
@@ -480,7 +561,7 @@ class ExecuteFunctions:
     def PrintStatusList(self):
         Info:str = self.GetEntry(2)
         Status:dict = json.load(open("./Data/StatusList.json"))
-        Selected:list = Status.get(f"{Info}") # type: ignore
+        Selected:list = Status.get(f"{Info}", [])
         self.Gui.Texto.PrintDisplay(Selected)
         self.ClearEntry(2)
 
@@ -502,4 +583,12 @@ class ExecuteFunctions:
         else:
             print("PrintSerie path not found")
     
-    
+    def PrintSeasonCalendar(self):
+        SeasonID:str = self.GetEntry(5)
+        if (os.path.exists(f"./Data/SeasonsCalendar/{SeasonID}.json")):
+            Info:dict = json.load(open(f"./Data/SeasonsCalendar/{SeasonID}.json"))
+            self.Gui.Texto.PrintDisplay(Info)
+            self.ClearEntry(5)
+        else:
+            print("PrintSeasonCalendar path not found")
+        
