@@ -25,7 +25,7 @@ The program's functionality can be summarized as follows:
 3. Users can assign scores to each anime and update them as needed.
 5. Users can customize the GUI to suit their preferences.
 
-**Myself""
+**Myself**
 
 I could improve this in various aspects, but for now i think it's usable and this is more that i wanted when i build this.
 
