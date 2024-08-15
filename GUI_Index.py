@@ -13,9 +13,9 @@ class AnimeSet:
         class AddEpisode(int):
             Name = 6
             Ep = 7
-        class UpdateNota(int):
+        class UpdateScore(int):
             Name = 8
-            Nota = 9
+            Score = 9
         class SetCurrentStatus(int):
             Name = 10
             Status = 11
@@ -38,7 +38,7 @@ class AnimeSet:
         class AddEpisode(int):
             AddEpisode = 6
             Name = 7
-        class UpdateNota(int):
+        class UpdateScore(int):
             Name = 8
         class SetCurrentStatus(int):
             Name = 9
@@ -55,7 +55,7 @@ class AnimeSet:
         DeleteAnime = 1
         AddEp = 2
         SetEp = 3
-        UpdateNota = 4
+        UpdateScore = 4
         RemoveLeastAdded = 5
         SetCurrentStatus = 6
         SetMyAnimeListLink = 7
