@@ -27,7 +27,7 @@ The program's functionality can be summarized as follows:
 
 **Myself**
 
-I could improve this in various aspects, but for now i think it's usable and this is more that i wanted when i build this.
+I could improve this in various aspects, but for now i think it's usable and this is more than i wanted when i started building this.
 
 This has more of a test to learn python and creation of database and graphical interface than a true project and looks ok for me.
 
