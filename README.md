@@ -23,7 +23,6 @@ The program's functionality can be summarized as follows:
 1. Users can create and manage their anime lists, including adding, removing, and updating anime entries.
 2. Users can track episodes for each anime, including setting the current episode and updating the episode count.
 3. Users can assign scores to each anime and update them as needed.
-5. Users can customize the GUI to suit their preferences.
 
 **Myself**
 
