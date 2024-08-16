@@ -407,12 +407,13 @@ class Watcha:
         if (not seriename == ""):
             
             if (os.path.exists(f"./Data/ListedSeries.json")):
-                SerieList:list = json.load(open(f"./Data/ListedSeries.json"))
+                SerieList:list = json.load(open("./Data/ListedSeries.json"))
                 if (SerieList.count(seriename) == 0):   
                     SerieList.append(seriename)
-                    json.dump(SerieList, open(f"./Data/ListedSeries.json", "w"), indent=4)
+                    json.dump([seriename], open("./Data/ListedSeries.json", "w"), indent=4)
             else:
-                json.dump([seriename], open(f"./Data/ListedSeries.json", "w"), indent=4)
+                os.makedirs("./Data")
+                json.dump(seriename, open(f"./Data/ListedSeries.json", "w"), indent=4)
             
             if (os.path.exists(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json")):
                 SerieDataList:list = json.load(open(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json"))
@@ -420,6 +421,7 @@ class Watcha:
                     SerieDataList.append(name)
                     json.dump(SerieDataList, open(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json", "w"), indent=4)
             else:
+                os.makedirs(f"./Data/SerieData")
                 json.dump([name], open(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json", "w"), indent=4)
             NewAnime.SerieName = seriename
         
@@ -431,6 +433,7 @@ class Watcha:
         else:
             SeasonList:list = []
             SeasonList.append(NewAnime.Name)
+            os.makedirs(f"./Data/Seasons")
             json.dump(SeasonList, open(f"./Data/Seasons/{NewAnime.Season}.json", "w"), indent=4)
         
         if (os.path.exists(f"./Data/ListedAnimes.json")):
@@ -441,7 +444,11 @@ class Watcha:
         else:
             AnimeList:list = []
             AnimeList.append(name)
+            if (not os.path.exists(f"./Data")):
+                os.makedirs(f"./Data")
             json.dump(AnimeList, open(f"./Data/ListedAnimes.json", "w"), indent=4)
+        if (not os.path.exists(f"./Data/AnimeData")):
+            os.makedirs(f"./Data/AnimeData")
         json.dump(NewAnime.Data(), open(f"./Data/AnimeData/{self.TrueName(name)}.json", "w"), indent=4)
         self.UpdateData(name)
 
@@ -533,6 +540,7 @@ class Watcha:
                     }
                 }
             if (AnimeID.Season != ""):
+                os.makedirs(f"./Data/SeasonsCalendar")
                 json.dump(Calendar, open(f"./Data/SeasonsCalendar/{AnimeID.Season}.json", "w"), indent=4)
 
         if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
