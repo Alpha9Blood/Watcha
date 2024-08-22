@@ -27,7 +27,7 @@ class Anime:
         self.DataBase:dict = self.Data()        
     
     def CurrentEpisodeStatus(self):
-        if (self.Episode > 0):
+        if (self.Episode > 0 and self.MaxEpisodes != 0):
             return f"{self.Episode}/{self.MaxEpisodes}"
         else:
             return f"{self.Episode}/Undefined"
@@ -46,7 +46,7 @@ class Anime:
 
         """
         if (self.Episode > 0 and not self.CurrentStatus == "Dropped"):
-            if (self.Episode >= self.MaxEpisodes):
+            if (self.MaxEpisodes != 0 and self.Episode >= self.MaxEpisodes):
                 self.Episode = self.MaxEpisodes
                 self.CurrentStatus = "Completed"
             elif (self.Episode < self.MaxEpisodes):
@@ -62,7 +62,7 @@ class Anime:
         Converts data from the DataBase dictionary to the Anime object's properties.
 
         """
-        Anime = self.DataBase.get("Anime", [])
+        Anime:dict = self.DataBase.get("Anime", [])
         self.Name = Anime.get("Name", "")
         self.EpisodeStatus = Anime.get("EpisodesStatus", "")
         self.CurrentStatus = Anime.get("Status", "")
@@ -116,17 +116,22 @@ class Watcha:
         Returns:
             str: The modified string.
         """
-        if  (Name.count(":") > 0):
-            return Name.replace(":", "_")
-        else:
-            return Name
+
+
+        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|"]
+        for i in range(len(CursedChars)):
+            if (Name.count(CursedChars[i]) > 0):
+                Name = Name.replace(CursedChars[i], "_")
+        return Name
+
         
     
     def TrueSerieName(self, SerieName:str):
-        if (SerieName.count(":") > 0):
-            return SerieName.replace(":", "_")
-        else:
-            return SerieName
+        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|"]
+        for i in range(len(CursedChars)):
+            if (SerieName.count(CursedChars[i]) > 0):
+                SerieName = SerieName.replace(CursedChars[i], "_")
+        return SerieName
 
 
     def PrintData(self):
@@ -171,7 +176,7 @@ class Watcha:
             self.selected.DataBase = JsonUtil.LoadJson(f"./Data/AnimeData/{self.TrueName(Name)}.json")
             self.selected.ConvertData()
         else:
-            print("UpdateData not found")
+            print("UpdateData not found" , Name)
 
         
 
@@ -673,13 +678,17 @@ class ExecuteFunctions:
                 return True
             else:
                 return False
-        if (AddIsComplete()):
-            Watch.SetNewAnime(Name, MaxEpisodes, Status, Season, Serie)
-            
-            for i in range(5):
-                self.ClearEntry(i)
+        NameList:list[str] = self.NameList()
+        if (NameList.count(Name) == 0):
+            if (AddIsComplete()):
+                Watch.SetNewAnime(Name, MaxEpisodes, Status, Season, Serie)
+                
+                for i in range(5):
+                    self.ClearEntry(i)
+            else:
+                print("AddInfo is not completed")
         else:
-            print("AddInfo is not completed")
+            print("Anime already exists")
     
     def RemoveAnime(self):
         Name:str = self.GetEntry(self.SetEntryIndex.DeleteAnime.Name)
@@ -708,7 +717,11 @@ class ExecuteFunctions:
                         Finded = True
                         self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
                     else:
-                        print("AddEpisode path not found") 
+                        print("AddEpisode path not found")
+            if (not Finded):
+                print("Anime not found")
+        else:
+            print("Name does't exist")
 
     def SetEpisode(self):
         Name:str = self.GetEntry(self.SetEntryIndex.AddEpisode.Name)
@@ -727,6 +740,10 @@ class ExecuteFunctions:
                         self.ClearEntry(self.SetEntryIndex.AddEpisode.Ep)
                     else:
                         print("SetEpisode path not found")
+            if (not Finded):
+                print("Anime not found")
+        else:
+            print("Name does't exist or setEP is empty")
     
     def UpdateScore(self):
         Name = self.GetEntry(self.SetEntryIndex.UpdateScore.Name)
@@ -798,6 +815,10 @@ class ExecuteFunctions:
                         self.ClearEntry(self.GetEntryIndex.GetStatus.Name)
                     else:
                         print("GetAnimeStatus path not found")
+            if (not Finded):
+                print("Anime not found")
+        else:
+            print("Name does't exist")
 
     def PrintSeason(self):
         SeasonID:str = self.GetEntry(self.GetEntryIndex.PrintSeason.SeasonID)
@@ -809,18 +830,29 @@ class ExecuteFunctions:
         if (os.path.exists("./Data/StatusList.json")):
             Status:dict = JsonUtil.LoadJson("./Data/StatusList.json")
         else:
-            print("PrintStatusList path not found")
+            print("StatusList path not found")
         if (Info != "" and os.path.exists("./Data/StatusList.json")):
-            Selected:list = Status.get(f"{Info}", [])
-            self.Gui.Texto.PrintDisplay(Selected)
-            self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
-        else:
-            StatusList:list[str] = ["Watching", "Completed", "PlanToWatch", "Dropped"]
-            if (StatusList.count(Info) > 0):
-                self.Gui.Texto.PrintDisplay(Info)
+            if (Info == "Watching"):
+                NameList:list[str] = Status.get("Watching", [])
+                NewList:list[str] = []
+                for i in range(len(NameList)):
+                    NewList.append(NameList[i] + " //CurrentEP: " + Watch.GetAnime(NameList[i]).EpisodeStatus)
+                self.Gui.Texto.PrintDisplay(NewList)
                 self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
             else:
-                print("PrintStatusList not found")
+                StatusList:list[str] = ["Completed", "PlanToWatch", "Dropped"]
+                if (StatusList.count(Info) > 0):
+                    Selected:list = Status.get(f"{Info}", [])
+                    self.Gui.Texto.PrintDisplay(Selected)
+                    self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
+                else:
+                    print("Status not found")
+        else:
+            if (os.path.exists("./Data/StatusList.json")):
+                self.Gui.Texto.PrintDisplay(Status)
+                self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
+            else:
+                print("StatusList path not found")
 
     def OpenLink(self):
         Name:str = self.GetEntry(self.GetEntryIndex.OpenLink.Name)
