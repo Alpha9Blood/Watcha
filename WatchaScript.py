@@ -786,6 +786,27 @@ class ExecuteFunctions:
             """ self.ClearEntry(self.SetEntryIndex.AddToCallendar.Day) """
         else:
             print("AddToCalendar not found")
+
+    def SetSeasonLink(self):
+        Name = self.GetEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
+        Link = self.GetEntry(self.SetEntryIndex.SetSeasonLink.Link)
+        if (os.path.exists(f"./Data/Seasons/{Watch.TrueName(Name)}.json")):
+            Info:dict  = {f"{Name}": Link}
+            if (os.path.exists("./Data/SeasonsLinks.json")):
+                Seasonslinks:dict = JsonUtil.LoadJson("./Data/SeasonsLinks.json")
+                if (Seasonslinks.get(Name) == None):
+                    JsonUtil.AddToDictJson(Info, f"./Data/SeasonsLinks.json")
+                    self.ClearEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
+                    self.ClearEntry(self.SetEntryIndex.SetSeasonLink.Link)
+                else:
+                    print("SetSeasonLink Name already exist")
+            else:
+                JsonUtil.CreateJson(Info, "./Data/SeasonsLinks.json")
+                self.ClearEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
+                self.ClearEntry(self.SetEntryIndex.SetSeasonLink.Link)
+        else:
+            print("SetSeasonLink season path not found")
+            
         
 
 
@@ -836,7 +857,9 @@ class ExecuteFunctions:
                 NameList:list[str] = Status.get("Watching", [])
                 NewList:list[str] = []
                 for i in range(len(NameList)):
-                    NewList.append(NameList[i] + " //CurrentEP: " + Watch.GetAnime(NameList[i]).EpisodeStatus)
+                    SelectedAnime:Anime = Watch.GetAnime(NameList[i])
+                    NewList.append(NameList[i])
+                    NewList.append(f" //CurrentEP: {SelectedAnime.EpisodeStatus}, Season: {SelectedAnime.Season}")
                 self.Gui.Texto.PrintDisplay(NewList)
                 self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
             else:
@@ -880,4 +903,17 @@ class ExecuteFunctions:
             self.ClearEntry(self.GetEntryIndex.PrintCallendar.SeasonID)
         else:
             print("PrintSeasonCalendar path not found")
+
+    def OpenSeasonLink(self):
+        Name = self.GetEntry(self.GetEntryIndex.OpenSeasonLink.SeasonID)        
+        if (os.path.exists(f"./Data/Seasons/{Watch.TrueName(Name)}.json")):
+            Info:dict = JsonUtil.LoadJson(f"./Data/SeasonsLinks.json")
+            if (Info.get(Name) != None):
+                Link = Info[f"{Name}"]
+                web.open(Link)
+                self.ClearEntry(self.GetEntryIndex.OpenSeasonLink.SeasonID)
+            else:
+                print("OpenSeasonLink season not found")
+        else:
+            print("SetSeasonLink season path not found")
         

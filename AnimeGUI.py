@@ -40,9 +40,8 @@ class SalameGUI:
         submenu.add_command(label='SwitchBackgrounColor', command=self.Models.SwitchModels)
         self.Menu.add_cascade(label='Salame', menu=submenu)
 
-
-        self.Menu.add_command(label='Reset', command=self.ClearText)
-        self.Menu.add_command(label='Sair', command=self.janela.destroy)
+        self.Menu.add_command(label='Reset', command=self.DeleteAll)
+        self.Menu.add_command(label='Quit w', command=self.janela.destroy)
         
         
         self.janela.config(menu=self.Menu)
@@ -56,19 +55,11 @@ class SalameGUI:
         self.TextList:list[tk.Label] = []
         self.EntryList:list[tk.Entry] = []
 
-
-    def ClearText(self):
-        if (len(self.TextList) > 0):
-            for i in range(len(self.TextList)):
-                self.TextList[i].config(text=f"")
-        if (len(self.EntryList) > 0):        
-                for i in range(len(self.EntryList)):
-                    self.EntryList[i].delete(0, 'end')
         
     def DeleteAll(self):
         if (len(self.janela.winfo_children()) > 0):
             for widget in self.janela.winfo_children():
-                if (not widget == self.Menu):
+                if (widget != self.Menu):
                     widget.destroy()
             self.DefaultList()
 
@@ -292,11 +283,11 @@ class SalameGUI:
 
 
                 #DeleteAnime
-                self.Gui.Button.CreateBut('DeleteAnime',self.Gui.ExecFunc.RemoveAnime , 265, 1 , 650)
+                self.Gui.Button.CreateBut('DeleteAnime',self.Gui.ExecFunc.RemoveAnime , 1100, 1 , 670)
 
-                self.Gui.Texto.CreateText("Name", 100, 1, 591)
+                self.Gui.Texto.CreateText("Name", 1100, 1, 612)
 
-                self.Gui.Entry.CreateEntry(200, 1, 600)
+                self.Gui.Entry.CreateEntry(1200, 1, 620)
                 self.Gui.EntryList[EntryIndex.DeleteAnime.Name].config(width=25)
 
 
@@ -332,18 +323,18 @@ class SalameGUI:
 
 
                 #RemoveLeastAdded
-                self.Gui.Button.CreateBut('RemoveLeastAdded',self.Gui.ExecFunc.RemoveLeastAdded , 1200, 1 , 650)
+                self.Gui.Button.CreateBut('RemoveLeastAdded',self.Gui.ExecFunc.RemoveLeastAdded , 1300, 1 , 670)
                 self.Gui.ButList[ButtonIndex.RemoveLeastAdded].config(width=17)
 
 
                 #SetCurrentStatus
-                self.Gui.Button.CreateBut('SetCurrentStatus', self.Gui.ExecFunc.OverrideCurrentStatus, 1340, 1 , 550)
+                self.Gui.Button.CreateBut('SetCurrentStatus', self.Gui.ExecFunc.OverrideCurrentStatus, 1340, 1 , 500)
                 self.Gui.ButList[ButtonIndex.SetCurrentStatus].config(width=14)
                 
 
-                self.Gui.Texto.CreateText("Name", 1080, 1, 500)
+                self.Gui.Texto.CreateText("Name", 1080, 1, 450)
 
-                self.Gui.Entry.CreateEntry(1180, 1, 510)
+                self.Gui.Entry.CreateEntry(1180, 1, 460)
                 self.Gui.EntryList[EntryIndex.SetCurrentStatus.Name].config(width=25)
                 
                 self.Gui.Texto.CreateText("SetStatus", 1080, 2)
@@ -354,12 +345,12 @@ class SalameGUI:
                 self.Gui.EntryList[EntryIndex.SetCurrentStatus.Status].config(width=11)
 
                 #SetMyAnimeListLink
-                self.Gui.Button.CreateBut('SetMyAnimeListLink', self.Gui.ExecFunc.AddMyAnimeListLink, 250, 1 , 500)
+                self.Gui.Button.CreateBut('SetMyAnimeListLink', self.Gui.ExecFunc.AddMyAnimeListLink, 250, 1 , 420)
                 self.Gui.ButList[ButtonIndex.SetMyAnimeListLink].config(width=16)
 
-                self.Gui.Texto.CreateText("Name", 100, 1, 400)
+                self.Gui.Texto.CreateText("Name", 100, 1, 320)
 
-                self.Gui.Entry.CreateEntry(200, 1, 410)
+                self.Gui.Entry.CreateEntry(200, 1, 330)
                 self.Gui.EntryList[EntryIndex.MyAnimeListLink.Name].config(width=25)
 
                 self.Gui.Texto.CreateText("MyAnimeListLink", 40, 2)
@@ -382,6 +373,22 @@ class SalameGUI:
 
                 self.Gui.Entry.CreateEntry(700, 2)
                 self.Gui.EntryList[EntryIndex.AddToCallendar.Day].config(width=10)
+
+                #SetSeasonLink
+                self.Gui.Button.CreateBut('SetSeasonLink', self.Gui.ExecFunc.SetSeasonLink, 200, 1 , 610)
+                self.Gui.ButList[ButtonIndex.SetSeasonLink].config(width=13)
+
+                self.Gui.Texto.CreateText("SeasonID", 100, 1, 510)
+
+                self.Gui.Entry.CreateEntry(200, 1, 519)
+                self.Gui.EntryList[EntryIndex.SetSeasonLink.SeasonID].config(width=12)
+
+                self.Gui.Texto.CreateText("Link", 100, 2)
+
+                self.Gui.Entry.CreateEntry(200, 2)
+                self.Gui.EntryList[EntryIndex.SetSeasonLink.Link].config(width=25)
+
+
 
 
                 self.SelectedPreset = self.Presets.AnimeSet
@@ -485,6 +492,14 @@ class SalameGUI:
 
                 self.Gui.Entry.CreateEntry(700, 1, 639)
                 self.Gui.EntryList[EntryIndex.PrintCallendar.SeasonID].config(width=12)
+
+                #OpenSeasonLink
+                self.Gui.Button.CreateBut('OpenSeasonLink',self.Gui.ExecFunc.OpenSeasonLink , 170, 1 , 680)
+                self.Gui.ButList[ButtonIndex.OpenSeasonLink].config(width=16)
+
+                self.Gui.Texto.CreateText("SeasonID", 80, 1, 630)
+                self.Gui.Entry.CreateEntry(170, 1, 639)
+                self.Gui.EntryList[EntryIndex.OpenSeasonLink.SeasonID].config(width=12)
 
 
                 self.SelectedPreset = self.Presets.AnimeGet

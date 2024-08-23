@@ -15,5 +15,10 @@ class JsonUtils:
     def LoadJson(self, path:str):
         return json.load(open(path))
     
-    def TurnToIndent(self, content: str | list | dict):
+    def TurnIndent(self, content: str | list | dict):
         return json.dumps(content, indent=4)
+    
+    def AddToDictJson(self, content: dict, path:str):
+        Info:dict = json.load(open(path))
+        Info.update(content)
+        json.dump(Info, open(path, "a"), indent=4)

@@ -25,6 +25,10 @@ class AnimeSet:
         class AddToCallendar(int):
             Name = 14
             Day = 15
+        class SetSeasonLink(int):
+            SeasonID = 16
+            Link = 17
+        
 
     class TextIndex(int):
         class AddAnime(int):
@@ -49,6 +53,8 @@ class AnimeSet:
         class AddToCallendar(int):
             Name = 13
             Day = 14
+        class SetSeasonLink(int):
+            SeasonID = 15
 
     class ButtonIndex(int):
         AddAnime = 0
@@ -60,6 +66,7 @@ class AnimeSet:
         SetCurrentStatus = 6
         SetMyAnimeListLink = 7
         AddToCallendar = 8
+        SetSeasonLink = 9
 
 class AnimeGet:
     class EntryIndex(int):
@@ -75,6 +82,8 @@ class AnimeGet:
             Name = 4
         class PrintCallendar(int):
             SeasonID = 5
+        class OpenSeasonLink(int):
+            SeasonID = 6
 
     class TextIndex(int):
         class GetStatus(int):
@@ -89,6 +98,8 @@ class AnimeGet:
             Name = 4
         class PrintCallendar(int):
             SeasonID = 5
+        class OpenSeasonLink(int):
+            SeasonID = 6
     
     class ButtonIndex(int):
         GetStatus = 0
@@ -100,4 +111,5 @@ class AnimeGet:
         PrintSerieList = 6
         OpenMyAnimeList = 7
         PrintCallendar = 8
+        OpenSeasonLink = 9
 
