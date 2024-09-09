@@ -5,6 +5,7 @@ import webbrowser as web
 from GUI_Index import *
 from Utils import JsonUtils
 
+
 JsonUtil = JsonUtils()
 
 class Anime:
@@ -103,36 +104,8 @@ class Watcha:
         return Names
     
     def SerieListData(self):
-        Data:dict = JsonUtil.LoadJson("./Data/StatusList.json")
+        Data:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
         return Data
-    
-    def TrueName(self, Name:str):
-        """
-        Returns a string with all occurrences of ':' replaced with '_'.
-        
-        Parameters:
-            Name (str): The string to replace ':' with '_'.
-        
-        Returns:
-            str: The modified string.
-        """
-
-
-        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|"]
-        for i in range(len(CursedChars)):
-            if (Name.count(CursedChars[i]) > 0):
-                Name = Name.replace(CursedChars[i], "_")
-        return Name
-
-        
-    
-    def TrueSerieName(self, SerieName:str):
-        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|"]
-        for i in range(len(CursedChars)):
-            if (SerieName.count(CursedChars[i]) > 0):
-                SerieName = SerieName.replace(CursedChars[i], "_")
-        return SerieName
-
 
     def PrintData(self):
         return {
@@ -172,8 +145,8 @@ class Watcha:
             This function checks if the anime's data file exists. If it does, it updates the base data by loading the data from the file and converting it. If the file does not exist, it prints an error message.
         
         """
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
-            self.selected.DataBase = JsonUtil.LoadJson(f"./Data/AnimeData/{self.TrueName(Name)}.json")
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            self.selected.DataBase = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
             self.selected.ConvertData()
         else:
             print("UpdateData not found" , Name)
@@ -196,7 +169,7 @@ class Watcha:
         
         If the current status is "Dropped" and the anime is not already in the DroppedList, it adds the anime to the DroppedList. If the anime is already in the WatchingList, it removes it from the WatchingList.
         
-        Finally, the function creates a dictionary called Lists, which contains the four status lists. It then serializes the Lists dictionary to a JSON file named "StatusList.json" in the "./Data" directory.
+        Finally, the function creates a dictionary called Lists, which contains the four status lists. It then serializes the Lists dictionary to a JSON file named "AnimeStatusList.json" in the "./Data" directory.
         
         """
         CompletedList:list = []
@@ -227,10 +200,10 @@ class Watcha:
             "PlanToWatch": PlanToWatchList,
             "Watching": WatchingList
         }
-        if (os.path.exists("./Data/StatusList.json")):
-            JsonUtil.UpdateJson(Lists, "./Data/StatusList.json")
+        if (os.path.exists("./Data/AnimeStatusList.json")):
+            JsonUtil.UpdateJson(Lists, "./Data/AnimeStatusList.json")
         else:
-            JsonUtil.CreateJson(Lists, "./Data/StatusList.json")
+            JsonUtil.CreateJson(Lists, "./Data/AnimeStatusList.json")
 
     def UpdateData(self, Name):     
         """
@@ -273,11 +246,13 @@ class Watcha:
         Notes:
             This function checks if the anime's data file exists, updates the data, and prints the data if found.
         """
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.UpdateData(Name)
             return self.PrintData()         
         else:
             print("Anime data not found")
+            return "Anime data not found"
+            
 
     def UpdateEpisode(self, Name:str, Set:bool = False, SetEp:int = 0):
         """
@@ -296,14 +271,14 @@ class Watcha:
             - It then updates the status of the anime and saves the updated data to the anime data file.
             - If the anime data file is not found, it prints "UpdateEpisode not found".
         """
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.UpdateData(Name)
             if (Set):
                 self.selected.Episode = SetEp
             else:
                 self.selected.Episode += 1
             self.selected.UpdateStatus()
-            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{self.TrueName(Name)}.json")            
+            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")            
         else:
             print("UpdateEpisode not found")
 
@@ -321,13 +296,13 @@ class Watcha:
 
         If the anime data file is not found, it prints "SetCurrentStatus not found".
         """
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.UpdateData(Name)
             if (self.selected.CurrentStatusList().count(Status) > 0):
                 self.selected.CurrentStatus = f"{Status}"
             else:
                 self.selected.CurrentStatus = "Error"
-            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{self.TrueName(Name)}.json")    
+            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")    
         else:
             print("SetCurrentStatus not found")
 
@@ -342,10 +317,10 @@ class Watcha:
         Updates the Score of the anime and saves the updated data to the anime data file.
         If the anime data file is not found, it prints "SetScore not found".
         """
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.UpdateData(Name)
             self.selected.Score = Score
-            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{self.TrueName(Name)}.json")
+            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
         else:
             print("SetScore not found")
     
@@ -370,22 +345,22 @@ class Watcha:
         else:
             os.remove(f"./Data/Seasons/{self.selected.Season}.json")
 
-        if (os.path.exists(f"./Data/SerieData/{self.TrueSerieName(self.selected.SerieName)}.json")):
-            List:list = JsonUtil.LoadJson(f"./Data/SerieData/{self.TrueSerieName(self.selected.SerieName)}.json")
+        if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")):
+            List:list = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
             List.remove(Name)            
             if (List.count(Name) == 0):
-                os.remove(f"./Data/SerieData/{self.TrueSerieName(self.selected.SerieName)}.json")
+                os.remove(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
             else:
-                JsonUtil.UpdateJson(List, f"./Data/SerieData/{self.TrueSerieName(self.selected.SerieName)}.json")
+                JsonUtil.UpdateJson(List, f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
         else:
             print("RemoveSerieData not found")
 
-        StatusList:dict = JsonUtil.LoadJson("./Data/StatusList.json")
+        StatusList:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
         StatusList[f"{self.selected.CurrentStatus}"].remove(Name)
-        JsonUtil.UpdateJson(StatusList, "./Data/StatusList.json")
+        JsonUtil.UpdateJson(StatusList, "./Data/AnimeStatusList.json")
 
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
-            os.remove(f"./Data/AnimeData/{self.TrueName(Name)}.json")
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            os.remove(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
         else:
             print("RemoveAnime not found")
 
@@ -401,17 +376,17 @@ class Watcha:
             seriename (str, optional): The name of the series the anime belongs to. Defaults to "".
 
         Raises:
-            FileNotFoundError: If the file "./Data/ListedSeries.json" or "./Data/SerieData/{self.TrueSerieName(seriename)}.json" does not exist.
+            FileNotFoundError: If the file "./Data/ListedSeries.json" or "./Data/SerieData/{JsonUtil.TrueName(seriename)}.json" does not exist.
 
         Side Effects:
             - Appends the anime name to the "./Data/ListedSeries.json" file if the series name is not empty and the series name is not already in the file.
-            - Appends the anime name to the "./Data/SerieData/{self.TrueSerieName(seriename)}.json" file if the anime name is not already in the file.
+            - Appends the anime name to the "./Data/SerieData/{JsonUtil.TrueName(seriename)}.json" file if the anime name is not already in the file.
             - Sets the "SerieName" attribute of the "NewAnime" object to the series name if the series name is not empty.
             - Appends the anime name to the "./Data/Seasons/{NewAnime.Season}.json" file if the anime name is not already in the file.
             - Creates a new empty list and appends the anime name to it if the file "./Data/Seasons/{NewAnime.Season}.json" does not exist.
             - Appends the anime name to the "./Data/ListedAnimes.json" file if the anime name is not already in the file.
             - Creates a new empty list and appends the anime name to it if the file "./Data/ListedAnimes.json" does not exist.
-            - Saves the "NewAnime" object data to the "./Data/AnimeData/{self.TrueName(name)}.json" file.
+            - Saves the "NewAnime" object data to the "./Data/AnimeData/{JsonUtil.TrueName(name)}.json" file.
             - Calls the "UpdateData" method with the anime name as an argument.
         """
         NewAnime = Anime(name, maxpisodes, currentstatus, Season)
@@ -427,14 +402,14 @@ class Watcha:
                 SerieNameList:list = [seriename]
                 JsonUtil.CreateJson(SerieNameList, "./Data/ListedSeries.json")
             
-            if (os.path.exists(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json")):
-                SerieDataList:list = JsonUtil.LoadJson(f"./Data/SerieData/{self.TrueSerieName(seriename)}.json")
+            if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(seriename)}.json")):
+                SerieDataList:list = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(seriename)}.json")
                 if (SerieDataList.count(name) == 0):
                     SerieDataList.append(name)
-                    JsonUtil.UpdateJson(SerieDataList, f"./Data/SerieData/{self.TrueSerieName(seriename)}.json")
+                    JsonUtil.UpdateJson(SerieDataList, f"./Data/SerieData/{JsonUtil.TrueName(seriename)}.json")
             else:
                 AnimeNameList:list = [name]
-                JsonUtil.CreateJson(AnimeNameList, f"./Data/SerieData/{self.TrueSerieName(seriename)}.json")
+                JsonUtil.CreateJson(AnimeNameList, f"./Data/SerieData/{JsonUtil.TrueName(seriename)}.json")
 
             NewAnime.SerieName = seriename
         
@@ -455,7 +430,7 @@ class Watcha:
         else:
             AnimeList:list = [name]
             JsonUtil.CreateJson(AnimeList, f"./Data/ListedAnimes.json")
-        JsonUtil.CreateJson(NewAnime.Data(), f"./Data/AnimeData/{self.TrueName(name)}.json")
+        JsonUtil.CreateJson(NewAnime.Data(), f"./Data/AnimeData/{JsonUtil.TrueName(name)}.json")
         self.UpdateData(name)
 
     def UpdateMyAnimeListLink(self, Name, Link):
@@ -470,10 +445,10 @@ class Watcha:
             This function checks if the anime's data file exists. If it does, it updates the MyAnimeList link,
             saves the updated data to the file, and prints an error message if the file does not exist.
         """
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.UpdateData(Name)
             self.selected.MyAnimeListLink = Link
-            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{self.TrueName(Name)}.json")
+            JsonUtil.UpdateJson(self.selected.Data(), f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
         else:
             print("UpdateMyAnimeListLink not found")
 
@@ -491,7 +466,7 @@ class Watcha:
         """
         if (os.path.exists(f"./Data/Seasons/{SeasonID}.json")):
             List:list = JsonUtil.LoadJson(f"./Data/Seasons/{SeasonID}.json")
-            return (f"{SeasonID}", List)
+            return f"{SeasonID}: {List}"
         else:
             print("PrintSeason path not found")
             return "PrintSeason path not found"
@@ -508,10 +483,10 @@ class Watcha:
         This function checks if the series and anime data files exist. If they do, the anime is added to the specified series.
         If the files do not exist, a "FileNotFoundError" is raised.
         """
-        if (os.path.exists(f"./Data/SerieData/{self.TrueSerieName(Seriename)}.json") and os.path.exists(f"./Data/AnimeData/{self.TrueName(Animename)}.json")):
-            List:list = JsonUtil.LoadJson(f"./Data/SerieData/{self.TrueSerieName(Seriename)}.json")
+        if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(Seriename)}.json") and os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Animename)}.json")):
+            List:list = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(Seriename)}.json")
             List.append(Animename)
-            JsonUtil.UpdateJson(List, f"./Data/SerieData/{self.TrueSerieName(Seriename)}.json")
+            JsonUtil.UpdateJson(List, f"./Data/SerieData/{JsonUtil.TrueName(Seriename)}.json")
         else:
             print("AddToSerie not found")
 
@@ -545,7 +520,7 @@ class Watcha:
             if (AnimeID.Season != ""):
                 JsonUtil.CreateJson(Calendar, f"./Data/SeasonsCalendar/{AnimeID.Season}.json")
 
-        if (os.path.exists(f"./Data/AnimeData/{self.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             Days:list = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             
             SeasonDict:dict = JsonUtil.LoadJson(f"./Data/SeasonsCalendar/{AnimeID.Season}.json")
@@ -585,14 +560,16 @@ class Watcha:
 
 Watch = Watcha()
 
-class ExecuteFunctions:
+class WatchaExecute:
     
     
-    def __init__(self, Janela):
-        self.Gui = Janela
+    def __init__(self):
         self.SetEntryIndex = AnimeSet.EntryIndex
         self.GetEntryIndex = AnimeGet.EntryIndex
-        
+    
+    def GuiInit(self, Janela):
+        from AnimeGUI import SalameGUI
+        self.Gui:SalameGUI = Janela
     
     #Tools
     def ClearEntry(self, Index:int = -1, IndexList:list = []):
@@ -661,7 +638,8 @@ class ExecuteFunctions:
         SerieList.remove(Watch.GetAnime(Name).SerieName)
         Watch.Remove(Name)
         JsonUtil.UpdateJson(Namelist, "./Data/ListedAnimes.json")
-        JsonUtil.UpdateJson(SerieList, "./Data/ListedSeries.json") 
+        JsonUtil.UpdateJson(SerieList, "./Data/ListedSeries.json")
+        
 
     def Add(self):
         Name:str = self.GetEntry(self.SetEntryIndex.AddAnime.Name)
@@ -712,7 +690,7 @@ class ExecuteFunctions:
             for i in range(NameList.__len__()):
                 Selected:str = NameList[i]
                 if (not Finded and Selected.count(Name) > 0):
-                    if (os.path.exists(f"./Data/AnimeData/{Watch.TrueName(Selected)}.json")):
+                    if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Selected)}.json")):
                         Watch.UpdateEpisode(Selected)
                         Finded = True
                         self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
@@ -733,7 +711,7 @@ class ExecuteFunctions:
             for i in range(NameList.__len__()):
                 Selected:str = NameList[i]
                 if (not Finded and Selected.count(Name) > 0):
-                    if (os.path.exists(f"./Data/AnimeData/{Watch.TrueName(Selected)}.json")):
+                    if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Selected)}.json")):
                         Watch.UpdateEpisode(Selected, True, int(SetEP))
                         Finded = True
                         self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
@@ -790,7 +768,7 @@ class ExecuteFunctions:
     def SetSeasonLink(self):
         Name = self.GetEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
         Link = self.GetEntry(self.SetEntryIndex.SetSeasonLink.Link)
-        if (os.path.exists(f"./Data/Seasons/{Watch.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(Name)}.json")):
             Info:dict  = {f"{Name}": Link}
             if (os.path.exists("./Data/SeasonsLinks.json")):
                 Seasonslinks:dict = JsonUtil.LoadJson("./Data/SeasonsLinks.json")
@@ -830,7 +808,7 @@ class ExecuteFunctions:
             for i in range(NameList.__len__()):
                 Selected:str = NameList[i]
                 if (not Finded and Selected.count(Name) > 0):
-                    if (os.path.exists(f"./Data/AnimeData/{Watch.TrueName(Selected)}.json")):
+                    if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Selected)}.json")):
                         self.Gui.Texto.PrintDisplay(Watch.GetStatus(Selected))
                         Finded = True
                         self.ClearEntry(self.GetEntryIndex.GetStatus.Name)
@@ -848,11 +826,11 @@ class ExecuteFunctions:
     
     def PrintStatusList(self):
         Info:str = self.GetEntry(self.GetEntryIndex.PrintStatusList.StatusID)
-        if (os.path.exists("./Data/StatusList.json")):
-            Status:dict = JsonUtil.LoadJson("./Data/StatusList.json")
+        if (os.path.exists("./Data/AnimeStatusList.json")):
+            Status:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
         else:
             print("StatusList path not found")
-        if (Info != "" and os.path.exists("./Data/StatusList.json")):
+        if (Info != "" and os.path.exists("./Data/AnimeStatusList.json")):
             if (Info == "Watching"):
                 NameList:list[str] = Status.get("Watching", [])
                 NewList:list[str] = []
@@ -871,7 +849,7 @@ class ExecuteFunctions:
                 else:
                     print("Status not found")
         else:
-            if (os.path.exists("./Data/StatusList.json")):
+            if (os.path.exists("./Data/AnimeStatusList.json")):
                 self.Gui.Texto.PrintDisplay(Status)
                 self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
             else:
@@ -879,7 +857,7 @@ class ExecuteFunctions:
 
     def OpenLink(self):
         Name:str = self.GetEntry(self.GetEntryIndex.OpenLink.Name)
-        if (os.path.exists(f"./Data/AnimeData/{Watch.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             link = Watch.GetAnime(Name).MyAnimeListLink
             web.open(link)
             self.ClearEntry(self.GetEntryIndex.OpenLink.Name)
@@ -906,7 +884,7 @@ class ExecuteFunctions:
 
     def OpenSeasonLink(self):
         Name = self.GetEntry(self.GetEntryIndex.OpenSeasonLink.SeasonID)        
-        if (os.path.exists(f"./Data/Seasons/{Watch.TrueName(Name)}.json")):
+        if (os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(Name)}.json")):
             Info:dict = JsonUtil.LoadJson(f"./Data/SeasonsLinks.json")
             if (Info.get(Name) != None):
                 Link = Info[f"{Name}"]

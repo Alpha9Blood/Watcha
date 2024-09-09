@@ -1,66 +1,66 @@
 
 class AnimeSet:
-    class EntryIndex(int):
+    class EntryIndex():
 
-        class AddAnime(int):
-            Name = 0
-            MaxEp = 1
+        class AddAnime():
+            Name = 5
+            MaxEp = 4
             Status = 2
             Season = 3
             Serie = 4
-        class DeleteAnime(int):
+        class DeleteAnime():
             Name = 5
-        class AddEpisode(int):
+        class AddEpisode():
             Name = 6
             Ep = 7
-        class UpdateScore(int):
+        class UpdateScore():
             Name = 8
             Score = 9
-        class SetCurrentStatus(int):
+        class SetCurrentStatus():
             Name = 10
             Status = 11
-        class MyAnimeListLink(int):
+        class MyAnimeListLink():
             Name = 12
             Link = 13
-        class AddToCallendar(int):
+        class AddToCallendar():
             Name = 14
             Day = 15
-        class SetSeasonLink(int):
+        class SetSeasonLink():
             SeasonID = 16
             Link = 17
         
 
-    class TextIndex(int):
-        class AddAnime(int):
+    class TextIndex():
+        class AddAnime():
             Name = 0
             MaxEp = 1
             Status = 2
             Season = 3
             Serie = 4
-        class DeleteAnime(int):
+        class DeleteAnime():
             Name = 5
-        class AddEpisode(int):
-            AddEpisode = 6
+        class AddEpisode():
+            Title = 6
             Name = 7
-        class UpdateScore(int):
+        class UpdateScore():
             Name = 8
-        class SetCurrentStatus(int):
+        class SetCurrentStatus():
             Name = 9
             SetStatus = 10
-        class MyAnimeListLink(int):
+        class MyAnimeListLink():
             Name = 11
             Link = 12
-        class AddToCallendar(int):
+        class AddToCallendar():
             Name = 13
             Day = 14
-        class SetSeasonLink(int):
+        class SetSeasonLink():
             SeasonID = 15
 
-    class ButtonIndex(int):
+    class ButtonIndex():
         AddAnime = 0
         DeleteAnime = 1
-        AddEp = 2
-        SetEp = 3
+        AddEpisode = 2
+        SetEpisode = 3
         UpdateScore = 4
         RemoveLeastAdded = 5
         SetCurrentStatus = 6
@@ -69,39 +69,39 @@ class AnimeSet:
         SetSeasonLink = 9
 
 class AnimeGet:
-    class EntryIndex(int):
-        class GetStatus(int):
+    class EntryIndex():
+        class GetStatus():
             Name = 0
-        class PrintSeason(int):
+        class PrintSeason():
             SeasonID = 1     
-        class PrintStatusList(int):
+        class PrintStatusList():
             StatusID = 2
-        class OpenLink(int):
+        class OpenLink():
             Name = 3
-        class PrintSerie(int):
+        class PrintSerie():
             Name = 4
-        class PrintCallendar(int):
+        class PrintCallendar():
             SeasonID = 5
-        class OpenSeasonLink(int):
+        class OpenSeasonLink():
             SeasonID = 6
 
-    class TextIndex(int):
-        class GetStatus(int):
+    class TextIndex():
+        class GetStatus():
             Name = 0
-        class PrintSeason(int):
+        class PrintSeason():
             SeasonID = 1     
-        class PrintStatusList(int):
+        class PrintStatusList():
             StatusID = 2
-        class OpenLink(int):
+        class OpenLink():
             Name = 3
-        class PrintSerie(int):
+        class PrintSerie():
             Name = 4
-        class PrintCallendar(int):
+        class PrintCallendar():
             SeasonID = 5
-        class OpenSeasonLink(int):
+        class OpenSeasonLink():
             SeasonID = 6
     
-    class ButtonIndex(int):
+    class ButtonIndex():
         GetStatus = 0
         PrintSeason = 1
         PrintStatusList = 2
@@ -113,3 +113,82 @@ class AnimeGet:
         PrintCallendar = 8
         OpenSeasonLink = 9
 
+class MangaSet():
+    class EntryIndex():
+        class AddNewManga():
+            Name = 0
+            Chapters = 1
+            Status = 2
+        class DeleteManga():
+            Name = 3
+        class SetStatus():
+            Name = 4
+            Status = 5
+        class SetLink():
+            Name = 6
+            Link = 7
+        class EditFavorites():
+            Name = 8
+        class UpdateChapters():
+            Name = 8
+            Chapters = 9
+        
+        class EditScore():
+            Name = 10
+            Score = 11
+
+    class TextIndex():
+        class AddNewManga():
+            Name = 0
+            Chapters = 1
+            Status = 2
+        class DeleteManga():
+            Name = 3
+        class SetStatus():
+            Name = 4
+            Status = 5
+        class SetLink():
+            Name = 6
+            Link = 7
+        class EditFavorites():
+            Name = 8
+        class UpdateChapters():
+            Name = 8
+            Title = 9
+        
+        class EditScore():
+            Name = 10
+        
+    class ButtonIndex():
+        AddNewManga = 0
+        DeleteManga = 1
+        SetStatus = 2
+        SetLink = 3
+        AddFavorite = 4
+        DeleteFavorite = 5
+        AddChapters = 6
+        SetChapters = 7
+        EditScore = 8
+
+class MangaGet():
+    class EntryIndex():
+        class PrintManga():
+            Name = 0
+        class PrintCurrentStatus():
+            Status = 1
+        class OpenLink():
+            Name = 2
+
+    class TextIndex():
+        class PrintManga():
+            Name = 0
+        class PrintCurrentStatus():
+            Status = 1
+        class OpenLink():
+            Name = 2
+
+    class ButtonIndex():
+        PrintManga = 0
+        PrintCurrentStatus = 1
+        OpenLink = 2
+        PrintFavorites = 3
