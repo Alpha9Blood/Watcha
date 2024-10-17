@@ -79,15 +79,17 @@ class AnimeGet:
         class OpenLink():
             Name = 3
         class PrintSerie():
-            Name = 4
+            SerieID = 4
         class PrintCallendar():
             SeasonID = 5
         class OpenSeasonLink():
             SeasonID = 6
+        class FilterOptions():
+            Selected = 7
 
     class TextIndex():
         class GetStatus():
-            Name = 0
+            StatusID = 0
         class PrintSeason():
             SeasonID = 1     
         class PrintStatusList():
@@ -95,11 +97,13 @@ class AnimeGet:
         class OpenLink():
             Name = 3
         class PrintSerie():
-            Name = 4
+            SerieID = 4
         class PrintCallendar():
             SeasonID = 5
         class OpenSeasonLink():
             SeasonID = 6
+        class Filter():
+            Selected = 7
     
     class ButtonIndex():
         GetStatus = 0
