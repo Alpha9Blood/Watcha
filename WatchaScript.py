@@ -4,11 +4,10 @@ sys.path.append(os.getcwd())
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
 import webbrowser as web
 from Script.GUI_Index import *
-from Script.Utils import JsonUtils
+from Script.Utils import JsonUtil
 from Script.Data.AnimeLists import GetAnimeList
 
 
-JsonUtil = JsonUtils()
 
 class Anime:
 
@@ -124,13 +123,13 @@ class Anime:
     def AnimeData(self) -> dict:
         return {
             "Anime": {
-                "Name": self.Name,
+                "Name": JsonUtil.CursedStoreName(self.Name),
                 "EpisodesStatus": self.CurrentEpisodeStatus(),
                 "Status": self.CurrentStatus,
                 "Season": self.Season,
                 "MaxEpisodes": self.MaxEpisodes,
                 "Episode": self.Episode,
-                "SerieName": self.SerieName,
+                "SerieName": JsonUtil.CursedStoreName(self.SerieName),
                 "MyAnimeListLink": self.MyAnimeListLink,
                 "Score": self.Score
             }
@@ -303,7 +302,8 @@ class Watcha:
             if (os.path.exists("./Data/ListedAnimeSeasons.json")):
                 ListedSeasons:list[str] = JsonUtil.LoadJson(f"./Data/ListedAnimeSeasons.json")
                 if (self.selected.Season in ListedSeasons):
-                    ListedSeasons.remove(self.selected.Season)
+                    if (len(GetAnimeList.GetSeason(self.selected.Season)) == 0):
+                        ListedSeasons.remove(self.selected.Season)
                 else:
                     print("Anime not found in season list")
 
@@ -815,13 +815,13 @@ class WatchaExecute:
             print("AddToCalendar not found")
 
     def SetSeasonLink(self):
-        Name = self.GetEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
+        SeasonID = self.GetEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
         Link = self.GetEntry(self.SetEntryIndex.SetSeasonLink.Link)
-        if (os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(Name)}.json")):
-            Info:dict  = {f"{Name}": Link}
+        if (os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(SeasonID)}.json")):
+            Info:dict  = {f"{SeasonID}": Link}
             if (os.path.exists("./Data/SeasonsLinks.json")):
                 Seasonslinks:dict = JsonUtil.LoadJson("./Data/SeasonsLinks.json")
-                if (Seasonslinks.get(Name) == None):
+                if (SeasonID not in Seasonslinks):
                     JsonUtil.AddToDictJson(Info, "./Data/SeasonsLinks.json")
                     self.ClearEntry(self.SetEntryIndex.SetSeasonLink.SeasonID)
                     self.ClearEntry(self.SetEntryIndex.SetSeasonLink.Link)

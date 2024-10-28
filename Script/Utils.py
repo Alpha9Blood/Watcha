@@ -35,8 +35,19 @@ class JsonUtils:
         """
 
 
-        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|"]
-        for i in range(len(CursedChars)):
-            if (Name.count(CursedChars[i]) > 0):
-                Name = Name.replace(CursedChars[i], "_")
+        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|", "!", "'", '"']
+        for curse in CursedChars:
+            if (curse in Name):
+                Name = Name.replace(curse, "_")
         return Name
+
+    def CursedStoreName(self, Name:str) -> str:
+        CursedList:list[str] = ["’"]
+        
+        for curse in CursedList:
+            if (curse in Name):
+                Name = Name.replace(curse, "_")
+
+        return Name
+
+JsonUtil = JsonUtils()

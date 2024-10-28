@@ -1,7 +1,7 @@
 import tkinter as tk
-from Script.Utils import JsonUtils
+from Script.Utils import JsonUtil
 
-JsonUtil:JsonUtils = JsonUtils()
+
 
 class TextManager:
 

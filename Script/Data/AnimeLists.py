@@ -32,6 +32,13 @@ class AnimeLists:
             print("AnimeStatusList anime not found")
             return {}
     
+    def GetSeason(self, Season:str) -> list[str]:
+        if (os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(Season)}.json")):
+            return JsonUtil.LoadJson(f"./Data/Seasons/{JsonUtil.TrueName(Season)}.json")
+        else:
+            print("GetSeason anime not found")
+            return []
+    
     def AnimeCurrentStatusList(self, Status:str) -> list[str]:
         
         """

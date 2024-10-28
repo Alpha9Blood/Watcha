@@ -1,13 +1,11 @@
 from tkinter import ttk
-from Script.Utils import JsonUtils
+from Script.Utils import JsonUtil
 import os
 import time
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
 import webbrowser as web
 from Script.GUI_Index import *
 from Script.Data.MangaLists import GetMangaList
-
-JsonUtil = JsonUtils()
 
 class Manga:
     def __init__(self, Name:str = "", Chapters:int = 0, Status:str = ""):
@@ -39,7 +37,7 @@ class Manga:
     def MangaData(self) -> dict:
         return {
             "Manga" : {
-                "Name": self.Name,
+                "Name": JsonUtil.CursedStoreName(self.Name),
                 "Chapters": self.Chapters,
                 "Status": self.Status,
                 "LeastTimeUpdated": self.LeastTimeUpdated,
@@ -510,6 +508,7 @@ class MangaExecute:
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             
             self.Gui.Texto.PrintDisplay(Watch.GetStatus(Name))
+            self.ClearEntry(self.GetEntryIndex.PrintManga.Name)
         else:
             print("PrintManga manga not found")
 
@@ -521,13 +520,14 @@ class MangaExecute:
                 self.Gui.Texto.PrintDisplay(Watch.GetCurrentStatus(Status))
                 self.ClearEntry(self.GetEntryIndex.PrintCurrentStatus.Status)
             else:
-                StatusList:list[str] = ["Reading", "PlanToRead", "Completed"]
+                StatusList:list[str] = ["Reading", "PlanToRead", "Completed", "Dropped"]
                 if (Status in StatusList):
                     Info:dict = JsonUtil.LoadJson(f"./Data/MangaStatusList.json")[Status]
-                    NewInfo:dict[str, str] = {}
+                    NewInfo:list[str] = []
                     for i in range(len(Info)):
                         SelectedManga:Manga = Watch.SelectManga(Info[i])
-                        NewInfo[SelectedManga.Name] = f"Chapters:{SelectedManga.Chapters}, Updated:{SelectedManga.LeastTimeUpdated}"
+                        NewInfo.append(SelectedManga.Name)
+                        NewInfo.append(f"Chapters:{SelectedManga.Chapters}, Updated:{SelectedManga.LeastTimeUpdated}")
 
                     self.Gui.Texto.PrintDisplay(NewInfo)
                     self.ClearEntry(self.GetEntryIndex.PrintCurrentStatus.Status)
@@ -553,7 +553,7 @@ class MangaExecute:
             print("OpenLink manga not found")
 
     def PrintFavorites(self):
-        if (os.path.exists(f"./Data/Favorites.json")):
-            self.Gui.Texto.PrintDisplay(JsonUtil.LoadJson(f"./Data/Favorites.json"))
+        if (os.path.exists(f"./Data/FavoriteMangaList.json")):
+            self.Gui.Texto.PrintDisplay(JsonUtil.LoadJson(f"./Data/FavoriteMangaList.json"))
         else:
             print("PrintFavorites favorites not found")
