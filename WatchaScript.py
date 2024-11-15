@@ -739,8 +739,11 @@ class WatchaExecute:
         Name = self.FindName(Name)
         
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.UpdateEpisode(Name)
-            self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
+            if (Name in GetAnimeList.OnGoingList()):
+                Watch.UpdateEpisode(Name)
+                self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
+            else:
+                print("AddEpisode is not in OnGoingList")
         else:
             print("AddEpisode path not found")
 
@@ -754,9 +757,12 @@ class WatchaExecute:
         Name = self.FindName(Name)
 
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.UpdateEpisode(Name, True, SetEP)
-            self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
-            self.ClearEntry(self.SetEntryIndex.AddEpisode.Ep)
+            if (Name in GetAnimeList.OnGoingList()):
+                Watch.UpdateEpisode(Name, True, SetEP)
+                self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
+                self.ClearEntry(self.SetEntryIndex.AddEpisode.Ep)
+            else:
+                print("SetEpisode is not in OnGoingList")
         else:
             print("SetEpisode path not found")
     
@@ -777,8 +783,7 @@ class WatchaExecute:
                 except ValueError:
                     print("UpdateScore Score must be a integer number")
             else:
-                print("UpdateScore Score is empty")
-            
+                print("UpdateScore Score is empty")        
         else:
             print("UpdateScore not found")
               
@@ -842,10 +847,10 @@ class WatchaExecute:
         web.open("https://myanimelist.net")
 
     def PrintAnimeList(self):
-        self.Gui.Texto.PrintDisplay(GetAnimeList.AnimeList())        
+        self.Gui.Text.PrintDisplay(GetAnimeList.AnimeList())        
 
     def PrintSerieList(self):
-        self.Gui.Texto.PrintDisplay(GetAnimeList.SerieList())
+        self.Gui.Text.PrintDisplay(GetAnimeList.SerieList())
 
     
     def GetAnimeStatus(self):
@@ -853,7 +858,7 @@ class WatchaExecute:
         Name = self.FindName(Name)
 
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            self.Gui.Texto.PrintDisplay(Watch.GetStatus(Name))
+            self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
             self.ClearEntry(self.GetEntryIndex.GetStatus.Name)
         else:
             print(f"GetAnimeStatus path not found: {JsonUtil.TrueName(Name)}")
@@ -861,7 +866,7 @@ class WatchaExecute:
 
     def PrintSeason(self):
         SeasonID:str = self.GetEntry(self.GetEntryIndex.PrintSeason.SeasonID)
-        self.Gui.Texto.PrintDisplay(Watch.PrintSeason(SeasonID))
+        self.Gui.Text.PrintDisplay(Watch.PrintSeason(SeasonID))
         self.ClearEntry(self.GetEntryIndex.PrintSeason.SeasonID)
     
     def PrintStatusList(self):
@@ -883,7 +888,7 @@ class WatchaExecute:
                             NewList.append(name)
                             NewList.append(f" //CurrentEP: {SelectedAnime.EpisodeStatus}, Season: {SelectedAnime.Season}")
 
-                    self.Gui.Texto.PrintDisplay(NewList)
+                    self.Gui.Text.PrintDisplay(NewList)
                     self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
                 else:
                     StatusList:list[str] = ["Completed", "PlanToWatch", "Dropped"]
@@ -891,7 +896,7 @@ class WatchaExecute:
                     if (Info in StatusList):     
                         if (Filter == "All"):
                             Selected:list[str] = NameList
-                            self.Gui.Texto.PrintDisplay(Selected)
+                            self.Gui.Text.PrintDisplay(Selected)
                             self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
                         else:
                             NewList:list[str] = []
@@ -900,7 +905,7 @@ class WatchaExecute:
                                 if (SelectedAnime.Season == Filter):
                                     NewList.append(name)
 
-                            self.Gui.Texto.PrintDisplay(NewList)
+                            self.Gui.Text.PrintDisplay(NewList)
                             self.ClearEntry(self.GetEntryIndex.PrintStatusList.StatusID)
                     else:
                         print("Status not found")
@@ -914,7 +919,7 @@ class WatchaExecute:
                             NewStatus[f"{status}"].append(name)
                         elif (SelectedAnime.Season == Filter):
                             NewStatus[f"{status}"].append(name)
-                self.Gui.Texto.PrintDisplay(NewStatus)
+                self.Gui.Text.PrintDisplay(NewStatus)
         else:
             print("StatusList path not found")
         
@@ -940,7 +945,7 @@ class WatchaExecute:
         self.FindName(Name, True)
         if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(Name)}.json")):
             Info:dict = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(Name)}.json")
-            self.Gui.Texto.PrintDisplay(Info)
+            self.Gui.Text.PrintDisplay(Info)
             self.ClearEntry(self.GetEntryIndex.PrintSerie.SerieID)
         else:
             print("PrintSerie path not found")
@@ -949,7 +954,7 @@ class WatchaExecute:
         SeasonID:str = self.GetEntry(self.GetEntryIndex.PrintCallendar.SeasonID)
         if (os.path.exists(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")):
             Info:dict = JsonUtil.LoadJson(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")
-            self.Gui.Texto.PrintDisplay(Info)
+            self.Gui.Text.PrintDisplay(Info)
             self.ClearEntry(self.GetEntryIndex.PrintCallendar.SeasonID)
         else:
             print("PrintSeasonCalendar path not found")

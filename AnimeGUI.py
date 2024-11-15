@@ -40,8 +40,8 @@ class SalameGUI:
         self.Button.GuiInit(self)
         self.Entry = EntryManager()
         self.Entry.GuiInit(self)
-        self.Texto = TextManager()
-        self.Texto.GuiInit(self)
+        self.Text = TextManager()
+        self.Text.GuiInit(self)
 
         
         self.AnimeDataLists = AnimeListManager()

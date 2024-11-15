@@ -433,25 +433,28 @@ class MangaExecute:
     def UpdateChapters(self, Set:bool):
         Name:str = self.GetEntry(self.SetEntryIndex.UpdateChapters.Name)
         Name = self.FindName(Name)
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):      
-            if (Set):
-                Cap:str = self.GetEntry(self.SetEntryIndex.UpdateChapters.Chapters)
-                if (Cap != ""):
-                    try:
-                        Chapters:int = int(Cap)
-                        if (Chapters >= 0):
-                            Watch.EditChapters(Name, Set, Chapters)
-                            self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
-                            self.ClearEntry(self.SetEntryIndex.UpdateChapters.Chapters)
-                        else:
-                            print("UpdateChapters chapters must be a positive number")
-                    except ValueError:
-                        print("UpdateChapters Chapters must be a integer number")       
+        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            if (Name in GetMangaList.MangaList()):     
+                if (Set):
+                    Cap:str = self.GetEntry(self.SetEntryIndex.UpdateChapters.Chapters)
+                    if (Cap != ""):
+                        try:
+                            Chapters:int = int(Cap)
+                            if (Chapters >= 0):
+                                Watch.EditChapters(Name, Set, Chapters)
+                                self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
+                                self.ClearEntry(self.SetEntryIndex.UpdateChapters.Chapters)
+                            else:
+                                print("UpdateChapters chapters must be a positive number")
+                        except ValueError:
+                            print("UpdateChapters Chapters must be a integer number")       
+                    else:
+                        print("UpdateChapters chapters is empty")                    
                 else:
-                    print("UpdateChapters chapters is empty")                    
+                    Watch.EditChapters(Name)
+                    self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
             else:
-                Watch.EditChapters(Name)
-                self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)     
+                print("Name is not in MangaList")     
         else:
             print("SetChapters manga not found")
 
@@ -507,7 +510,7 @@ class MangaExecute:
         Name = self.FindName(Name)
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             
-            self.Gui.Texto.PrintDisplay(Watch.GetStatus(Name))
+            self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
             self.ClearEntry(self.GetEntryIndex.PrintManga.Name)
         else:
             print("PrintManga manga not found")
@@ -517,7 +520,7 @@ class MangaExecute:
         if (os.path.exists(f"./Data/MangaStatusList.json")):
             
             if (Status == ""):
-                self.Gui.Texto.PrintDisplay(Watch.GetCurrentStatus(Status))
+                self.Gui.Text.PrintDisplay(Watch.GetCurrentStatus(Status))
                 self.ClearEntry(self.GetEntryIndex.PrintCurrentStatus.Status)
             else:
                 StatusList:list[str] = ["Reading", "PlanToRead", "Completed", "Dropped"]
@@ -529,7 +532,7 @@ class MangaExecute:
                         NewInfo.append(SelectedManga.Name)
                         NewInfo.append(f"Chapters:{SelectedManga.Chapters}, Updated:{SelectedManga.LeastTimeUpdated}")
 
-                    self.Gui.Texto.PrintDisplay(NewInfo)
+                    self.Gui.Text.PrintDisplay(NewInfo)
                     self.ClearEntry(self.GetEntryIndex.PrintCurrentStatus.Status)
                 else:
                     print("PrintCurrentStatus status not found")
@@ -554,6 +557,6 @@ class MangaExecute:
 
     def PrintFavorites(self):
         if (os.path.exists(f"./Data/FavoriteMangaList.json")):
-            self.Gui.Texto.PrintDisplay(JsonUtil.LoadJson(f"./Data/FavoriteMangaList.json"))
+            self.Gui.Text.PrintDisplay(JsonUtil.LoadJson(f"./Data/FavoriteMangaList.json"))
         else:
             print("PrintFavorites favorites not found")

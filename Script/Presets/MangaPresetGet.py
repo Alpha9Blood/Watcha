@@ -14,7 +14,7 @@ class MangaPresetGet:
         self.ButtonIndex.PrintManga = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.ButtonIndex.PrintManga].config(width=12)
 
-        self.Gui.Texto.CreateText("Name", 80, 1, 30)
+        self.Gui.Text.CreateText("Name", 80, 1, 30)
         self.TextIndex.PrintManga.Name = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.PrintManga.Name], "Can be simplified.")
         self.Gui.Entry.CreateEntry(170, 1, 39)
@@ -27,7 +27,7 @@ class MangaPresetGet:
         self.ButtonIndex.PrintCurrentStatus = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.ButtonIndex.PrintCurrentStatus].config(width=18)
 
-        self.Gui.Texto.CreateText("Status", 80, 1, 150)
+        self.Gui.Text.CreateText("Status", 80, 1, 150)
         self.TextIndex.PrintCurrentStatus.Status = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.PrintCurrentStatus.Status], "Can be Reading, PlanToRead, Completed or Dropped. If nothing is selected, all statuses will be printed.")
         self.Gui.Entry.CreateEntry(180, 1, 160)
@@ -39,7 +39,7 @@ class MangaPresetGet:
         self.Gui.Button.CreateBut('OpenLink', self.Gui.MangaExec.OpenLink , 230, 1 , 320)
         self.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
 
-        self.Gui.Texto.CreateText("Name", 80, 1, 270)
+        self.Gui.Text.CreateText("Name", 80, 1, 270)
         self.TextIndex.OpenLink.Name = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.OpenLink.Name], "Can be simplified.")
         self.Gui.Entry.CreateEntry(180, 1, 280)

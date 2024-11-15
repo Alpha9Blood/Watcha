@@ -48,6 +48,14 @@ class MangaLists:
         else:
             print("MangaCurrentStatusList manga not found") 
             return []
+    
+    def OnGoingList(self) -> list[str]:
+        if (os.path.exists("./Data/MangaStatusList.json")):
+            StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/MangaStatusList.json")
+            return StatusList["Reading"] + StatusList["PlanToRead"]
+        else:
+            print("MangaStatusList manga not found")
+            return []
         
     def CurrentStatusTypeList(self):
         return ["Reading", "PlanToRead", "Completed", "Dropped"]

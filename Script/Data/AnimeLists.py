@@ -58,6 +58,14 @@ class AnimeLists:
         else:
             print("AnimeCurrentStatusList anime not found") 
             return []
+        
+    def OnGoingList(self) -> list[str]:
+        if (os.path.exists("./Data/AnimeStatusList.json")):
+            StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
+            return StatusList["Watching"] + StatusList["PlanToWatch"]
+        else:
+            print("AnimeStatusList anime not found")
+            return []
     
     def CurrentStatusTypeList(self) -> list[str]:
         return ["PlanToWatch", "Watching", "Completed", "Dropped"]

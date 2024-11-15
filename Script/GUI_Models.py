@@ -10,7 +10,7 @@ class GUI_Models:
         from AnimeGUI import SalameGUI
         self.Gui:SalameGUI = SetGUI
         self.Gui.janela.configure(bg='#000000')
-        self.Gui.janela.title('Janela Edit')
+        self.Gui.janela.title('Watcha')
         self.Gui.janela.geometry('1600x800')
 
     def WhiteModel(self):
@@ -29,7 +29,7 @@ class GUI_Models:
             self.BlackModel()
     
     def InitDisplay(self):
-        self.Gui.Texto.GetList = [tk.Text(self.Gui.janela), tk.Scrollbar(self.Gui.janela)]
+        self.Gui.Text.GetList = [tk.Text(self.Gui.janela), tk.Scrollbar(self.Gui.janela)]
 
     
     

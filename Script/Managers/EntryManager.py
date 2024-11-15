@@ -10,13 +10,6 @@ class EntryManager():
         self.janela = self.Gui.janela
         self.EntryType:EntryTypeList = EntryTypeList()
 
-    
-    def TestButton(self):
-        NewEntry:ttk.Combobox = CustomEntry(self.janela)
-        NewEntry.place(x=550, y=100)
-        NewEntry.configure(font=('Arial', 14))
-        NewEntry.config(width=6)
-    
     def PresetEntryPosition(self, Entry:ttk.Combobox, PositionX:int, PositionTag:int, DefaultPos:int = 0):           
         CutYPos:int = ((PositionTag - 1) * 50)
         if (PositionTag == 1):

@@ -9,7 +9,7 @@ class AnimePresetGet:
         self.TextIndex = AnimeGet.TextIndex()
     
     def Filter(self):
-        self.Gui.Texto.CreateText("Filter", 900, 1, 20)
+        self.Gui.Text.CreateText("Filter", 900, 1, 20)
         self.TextIndex.Filter.Selected = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(980, 1, 25)
@@ -27,7 +27,7 @@ class AnimePresetGet:
         self.Gui.ButList[self.ButtonIndex.GetStatus].config(width=12)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.ButtonIndex.GetStatus], "Print the data of the selected anime.")
         
-        self.Gui.Texto.CreateText("Name", 80, 1, 30)
+        self.Gui.Text.CreateText("Name", 80, 1, 30)
         self.TextIndex.GetStatus.StatusID = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.GetStatus.StatusID], "Can be simplified.")
 
@@ -43,7 +43,7 @@ class AnimePresetGet:
         self.ButtonIndex.PrintSeason = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.ButtonIndex.PrintSeason].config(width=12)
 
-        self.Gui.Texto.CreateText("SeasonID", 80, 1, 150)
+        self.Gui.Text.CreateText("SeasonID", 80, 1, 150)
         self.TextIndex.PrintSeason.SeasonID = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.PrintSeason.SeasonID], "File name containing season data.")
 
@@ -59,7 +59,7 @@ class AnimePresetGet:
         self.Gui.ButList[self.ButtonIndex.PrintStatusList].config(width=14)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.ButtonIndex.PrintStatusList], "If StatusID is empty, all status will be printed.")
 
-        self.Gui.Texto.CreateText("StatusID", 80, 1, 270)
+        self.Gui.Text.CreateText("StatusID", 80, 1, 270)
         self.TextIndex.PrintStatusList.StatusID = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.PrintStatusList.StatusID], "Can be Watching, Completed, Dropped, or PlanToWatch.")
 
@@ -73,7 +73,7 @@ class AnimePresetGet:
         self.Gui.Button.CreateBut('OpenLink', self.Gui.WatchaExec.OpenLink , 170, 1 , 560)
         self.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
 
-        self.Gui.Texto.CreateText("Name", 80, 1, 510)
+        self.Gui.Text.CreateText("Name", 80, 1, 510)
         self.TextIndex.OpenLink.Name = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.OpenLink.Name], "Can be simplified.")
 
@@ -88,7 +88,7 @@ class AnimePresetGet:
         self.Gui.Button.CreateBut('PrintSerie', self.Gui.WatchaExec.PrintSerie , 170, 1 , 440)
         self.ButtonIndex.PrintSerie = self.Gui.Presets.UpdateButtonIndex()
 
-        self.Gui.Texto.CreateText("SerieID", 80, 1, 390)
+        self.Gui.Text.CreateText("SerieID", 80, 1, 390)
         self.TextIndex.PrintSerie.SerieID = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.PrintSerie.SerieID], "Can be simplified.")
 
@@ -122,7 +122,7 @@ class AnimePresetGet:
         self.Gui.ButList[self.ButtonIndex.PrintCallendar].config(width=13)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.ButtonIndex.PrintCallendar], "Show season calendar")
 
-        self.Gui.Texto.CreateText("SeasonID", 600, 1, 630)
+        self.Gui.Text.CreateText("SeasonID", 600, 1, 630)
         self.TextIndex.PrintCallendar.SeasonID = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.TextIndex.PrintCallendar.SeasonID], "File name containing season data")
 
@@ -137,7 +137,7 @@ class AnimePresetGet:
         self.ButtonIndex.OpenSeasonLink = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.ButtonIndex.OpenSeasonLink].config(width=16)
 
-        self.Gui.Texto.CreateText("SeasonID", 80, 1, 630)
+        self.Gui.Text.CreateText("SeasonID", 80, 1, 630)
         self.TextIndex.OpenSeasonLink.SeasonID = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(170, 1, 639)
