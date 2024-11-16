@@ -131,6 +131,7 @@ class AnimePresetSet:
     def SetCurrentStatus(self):        
         self.Gui.Button.CreateBut('SetCurrentStatus', self.Gui.WatchaExec.OverrideCurrentStatus, 1340, 1 , 500)
         self.ButtonIndex.SetCurrentStatus = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.ButtonIndex.SetCurrentStatus].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
         self.Gui.ButList[self.ButtonIndex.SetCurrentStatus].config(width=14)
         
         self.Gui.Text.CreateText("Name", 1080, 1, 450)

@@ -7,8 +7,6 @@ from Script.GUI_Index import *
 from Script.Utils import JsonUtil
 from Script.Data.AnimeLists import GetAnimeList
 
-
-
 class Anime:
 
     def __init__(self, name:str = "", maxepisodes:int = 0, status:str = "", Season:str = ""):
@@ -155,18 +153,20 @@ class Watcha:
         Name = Selected.Name
         if (os.path.exists(f"./Data/AnimeStatusList.json")):
             Status:dict[str, list[str]] = GetAnimeList.AnimeStatusList()
+            SelectedList:list[str] = Status[Selected.CurrentStatus]
+
             if (UpdateStatus):
                 Selected.UpdateStatus()
-            SelectedList:list[str] = Status[Selected.CurrentStatus]
-            for status in Status:
-                if (status != Selected.CurrentStatus):
-                    if (Name in Status[status]):
-                        Status[status].remove(Name)
-                        return
+
             if (Name in SelectedList):
                 return
             else:
                 SelectedList.append(Name)
+            
+            for status in Status:
+                if (status != Selected.CurrentStatus):
+                    if (Name in Status[status]):
+                        Status[status].remove(Name)            
 
             JsonUtil.UpdateJson(Status, f"./Data/AnimeStatusList.json")
         else:

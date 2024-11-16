@@ -1,9 +1,8 @@
-
 from enum import Enum
 import tkinter as tk
+
 class GUI_Models:
     def __init__(self):      
-        self.PerfilList:list[Enum] = [self.Presets.Default, self.Presets.AnimeSet, self.Presets.AnimeGet]
         self.SelectedPreset:Enum = self.Presets.Default
     
     def GuiInit(self, SetGUI):

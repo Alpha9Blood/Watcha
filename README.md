@@ -27,4 +27,4 @@ The program is a graphical user interface (GUI) application, built using the Tki
 **Myself**
 
 - I could improve this in various aspects, but for now its usable, and this is more than i wanted when started building this.
-- This was a test to learn python and the creation of database using json and graphical interface and i'm adadpting it to my needs.
+- This was a test to learn python and the creation of database using json. Now i add a graphical interface and i'm adapting it to my needs.
