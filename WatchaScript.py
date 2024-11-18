@@ -153,11 +153,11 @@ class Watcha:
         Name = Selected.Name
         if (os.path.exists(f"./Data/AnimeStatusList.json")):
             Status:dict[str, list[str]] = GetAnimeList.AnimeStatusList()
-            SelectedList:list[str] = Status[Selected.CurrentStatus]
-
+            
             if (UpdateStatus):
                 Selected.UpdateStatus()
 
+            SelectedList:list[str] = Status[Selected.CurrentStatus]
             if (Name in SelectedList):
                 return
             else:
@@ -287,6 +287,7 @@ class Watcha:
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.selected.UpdateData(Name)
 
+            # remove anime from its season
             if (os.path.exists(f"./Data/Seasons/{self.selected.Season}.json")):
                 Season:list = JsonUtil.LoadJson(f"./Data/Seasons/{self.selected.Season}.json")
                 if (Name in Season):
@@ -299,6 +300,7 @@ class Watcha:
                 else:
                     JsonUtil.UpdateJson(Season, f"./Data/Seasons/{self.selected.Season}.json")
             
+            # remove season from listed seasons
             if (os.path.exists("./Data/ListedAnimeSeasons.json")):
                 ListedSeasons:list[str] = JsonUtil.LoadJson(f"./Data/ListedAnimeSeasons.json")
                 if (self.selected.Season in ListedSeasons):
@@ -311,7 +313,8 @@ class Watcha:
                     os.remove(f"./Data/ListedAnimeSeasons.json")
                 else:
                     JsonUtil.UpdateJson(ListedSeasons, f"./Data/ListedAnimeSeasons.json")
-                    
+
+            # remove anime from its serie       
             if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")):
                 SerieList:list = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
                 
@@ -340,6 +343,7 @@ class Watcha:
             else:
                 print("RemoveSerieData not found")
             
+            # remove anime from its status
             AnimeStatusListInfo:dict[str, list[str]] = GetAnimeList.AnimeStatusList()
             Info:list[str] = AnimeStatusListInfo[self.selected.CurrentStatus]
             if (Name in Info):
@@ -347,7 +351,8 @@ class Watcha:
                 JsonUtil.UpdateJson(AnimeStatusListInfo, "./Data/AnimeStatusList.json")
             else:
                 print("Anime not found in status list")
-            
+
+            # remove anime from listed animes 
             if (os.path.exists(f"./Data/ListedAnimes.json")):
                 ListedAnimes:list = JsonUtil.LoadJson(f"./Data/ListedAnimes.json")
                 if (Name in ListedAnimes):
@@ -360,6 +365,7 @@ class Watcha:
                 else:
                     JsonUtil.UpdateJson(ListedAnimes, "./Data/ListedAnimes.json")
 
+            # remove anime data
             os.remove(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
         else:
             print("RemoveAnime not found")
@@ -390,7 +396,8 @@ class Watcha:
             - Calls the "UpdateData" method with the anime name as an argument.
         """
         NewAnime = Anime(name, maxpisodes, currentstatus, Season)
-
+        
+        # set serie nameif it is not empty
         if (not seriename == ""):
             
             if (os.path.exists(f"./Data/ListedSeries.json")):
@@ -415,6 +422,7 @@ class Watcha:
 
             NewAnime.SerieName = seriename
         
+        # set season
         if (os.path.exists(f"./Data/Seasons/{NewAnime.Season}.json")):
             SeasonList:list = JsonUtil.LoadJson(f"./Data/Seasons/{NewAnime.Season}.json")
             if (NewAnime.Name not in SeasonList):
@@ -426,6 +434,7 @@ class Watcha:
             SeasonList:list = [NewAnime.Name]
             JsonUtil.CreateJson(SeasonList, f"./Data/Seasons/{NewAnime.Season}.json")
         
+        # set listed seasons
         if (os.path.exists(f"./Data/ListedAnimeSeasons.json")):
             ListedSeasons:list[str] = JsonUtil.LoadJson(f"./Data/ListedAnimeSeasons.json")
             if (NewAnime.Season not in ListedSeasons):
@@ -435,6 +444,7 @@ class Watcha:
             ListedSeasons:list[str] = [NewAnime.Season]
             JsonUtil.CreateJson(ListedSeasons, f"./Data/ListedAnimeSeasons.json")
 
+        # set statuslist
         if (os.path.exists("./Data/AnimeStatusList.json")):
             StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
             Status:list[str] = StatusList[NewAnime.CurrentStatus]
@@ -448,6 +458,7 @@ class Watcha:
             StatusList[NewAnime.CurrentStatus].append(NewAnime.Name)
             JsonUtil.CreateJson(StatusList, "./Data/AnimeStatusList.json")
         
+        # set listed animes
         if (os.path.exists(f"./Data/ListedAnimes.json")):
             AnimeList:list = JsonUtil.LoadJson(f"./Data/ListedAnimes.json")
             if (NewAnime.Name not in AnimeList):
@@ -459,6 +470,7 @@ class Watcha:
             AnimeList:list = [NewAnime.Name]
             JsonUtil.CreateJson(AnimeList, f"./Data/ListedAnimes.json")
 
+        # save data
         NewAnime.StoreData(True)
 
     def UpdateMyAnimeListLink(self, Name, Link):

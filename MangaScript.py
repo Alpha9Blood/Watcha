@@ -107,20 +107,24 @@ class Watcha:
             return self.selected
     
     def UpdateStatusList(self, Selected:Manga, UpdateStatus:bool = True):
-        Status:dict[str, list[str]] = GetMangaList.MangaStatusList()
         Name = Selected.Name
+        Status:dict[str, list[str]] = GetMangaList.MangaStatusList()
+        
+        
         if (UpdateStatus):
             Selected.UpdateStatus()
+
         SelectedList:list[str] = Status[Selected.Status]
-        for status in Status:
-            if (status != Selected.Status):
-                if (Name in Status[status]):
-                    Status[status].remove(Name)
         if (Name in SelectedList):
             return
         else:
             SelectedList.append(Name)
 
+        for status in Status:
+            if (status != Selected.Status):
+                if (Name in Status[status]):
+                    Status[status].remove(Name)
+        
         JsonUtil.UpdateJson(Status, f"./Data/MangaStatusList.json")
         
     
@@ -189,6 +193,7 @@ class Watcha:
             self.selected.UpdateData(Name, False)
             self.selected.Status = Status
             self.selected.StoreData(UpdateStatus = False)
+
             if (os.path.exists("./Data/MangaStatusList.json")):
                 self.selected.Status = Status
                 self.UpdateStatusList(self.selected, False)
@@ -261,6 +266,7 @@ class Watcha:
     def GetStatus(self, Name:str) -> dict:
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             Info:dict = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")["Manga"]
+            
             PrintInfo:dict[str, str] = {
                 "Name": Info["Name"],
                 "Chapters": Info["Chapters"],
@@ -268,6 +274,7 @@ class Watcha:
                 "LeastTimeUpdated": Info["LeastTimeUpdated"],
                 "Score": Info["Score"]
             }
+
             Score:float = float(PrintInfo["Score"])
             if (Score == 0):
                 PrintInfo["Score"] = "N/A"
@@ -327,8 +334,7 @@ class MangaExecute:
         EntryList:list[CustomEntry] = self.Gui.EntryList
         return EntryList[index].get()
     
-    def ClearEntry(self, Index:int = -1, IndexList:list = []):
-        EntryList:list[CustomEntry] = self.Gui.EntryList
+    def ClearEntry(self, Index:int = -1, IndexList:list = []):  
         """
         Clears the entry fields in the GUI.
 
@@ -337,8 +343,11 @@ class MangaExecute:
             IndexList (list): A list of indices of entry fields to clear. Defaults to an empty list.
 
         """
+        EntryList:list[CustomEntry] = self.Gui.EntryList
+
         if (Index > -1):
             EntryList[Index].delete(0, 'end')
+
         if (IndexList != []):
             for i in IndexList:
                 Entry:ttk.Combobox = EntryList[i]
@@ -392,6 +401,7 @@ class MangaExecute:
     
     def DeleteManga(self):
         Name:str = self.GetEntry(self.SetEntryIndex.DeleteManga.Name)
+
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             Watch.RemoveManga(Name)
             self.ClearEntry(self.SetEntryIndex.DeleteManga.Name)
@@ -508,6 +518,7 @@ class MangaExecute:
     def PrintManga(self):
         Name:str = self.GetEntry(self.GetEntryIndex.PrintManga.Name)
         Name = self.FindName(Name)
+
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             
             self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
@@ -542,6 +553,7 @@ class MangaExecute:
     def OpenLink(self):
         Name:str = self.GetEntry(self.GetEntryIndex.OpenLink.Name)
         Name = self.FindName(Name)
+
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             if (Name in GetMangaList.MangaList()):
                 SelectedManga:Manga = Watch.SelectManga(Name)

@@ -93,9 +93,11 @@ class MangaPresetSet:
     def EditChapters(self):
         self.Gui.Button.CreateBut('AddChapters', self.Gui.MangaExec.AddChapters , 1180, 1 , 150)
         self.ButtonIndex.AddChapters = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.ButtonIndex.AddChapters].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
         self.Gui.Button.CreateBut('SetChapters', self.Gui.MangaExec.SetChapters , 1315, 1 , 150)
         self.ButtonIndex.SetChapters = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.ButtonIndex.SetChapters].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
         self.Gui.Text.CreateText("EditChapters", 1250, 1, 25)
         self.TextIndex.UpdateChapters.Title = self.Gui.Presets.UpdateTextIndex()

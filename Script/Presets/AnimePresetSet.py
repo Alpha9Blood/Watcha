@@ -79,10 +79,12 @@ class AnimePresetSet:
     def AddEpisode(self):
         self.Gui.Button.CreateBut('AddEp', self.Gui.WatchaExec.AddEppisode , 1180, 1 , 150)
         self.ButtonIndex.AddEpisode = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.ButtonIndex.AddEpisode].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
 
         self.Gui.Button.CreateBut('SetEp', self.Gui.WatchaExec.SetEpisode , 1315, 1 , 150)
         self.ButtonIndex.SetEpisode = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.ButtonIndex.SetEpisode].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
         self.Gui.Text.CreateText("AddEpisode", 1250, 1, 25)
         self.TextIndex.AddEpisode.Title = self.Gui.Presets.UpdateTextIndex()
