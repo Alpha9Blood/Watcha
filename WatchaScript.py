@@ -566,14 +566,14 @@ class Watcha:
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             Days:list[str] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             
-            SeasonDict:dict[str, list[str]] = JsonUtil.LoadJson(f"./Data/SeasonsCalendar/{AnimeID.Season}.json")
-            Monday:list[str] = SeasonDict.get("Monday", [])
-            Tuesday:list[str] = SeasonDict.get("Tuesday", [])
-            Wednesday:list[str] = SeasonDict.get("Wednesday", [])
-            Thursday:list[str] = SeasonDict.get("Thursday", [])
-            Friday:list[str] =  SeasonDict.get("Friday", [])
-            Saturday:list[str] = SeasonDict.get("Saturday", [])
-            Sunday:list[str] = SeasonDict.get("Sunday", [])
+            SeasonDict:dict[str, list[str]] = JsonUtil.LoadJson(f"./Data/SeasonsCalendar/{AnimeID.Season}.json")[AnimeID.Season]
+            Monday:list[str] = SeasonDict["Monday"]
+            Tuesday:list[str] = SeasonDict["Tuesday"]
+            Wednesday:list[str] = SeasonDict["Wednesday"]
+            Thursday:list[str] = SeasonDict["Thursday"]
+            Friday:list[str] =  SeasonDict["Friday"]
+            Saturday:list[str] = SeasonDict["Saturday"]
+            Sunday:list[str] = SeasonDict["Sunday"]
             DaysList:list[list[str]] = [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
 
             if (Name not in DaysList[Days.index(Day)]):
@@ -645,7 +645,7 @@ class WatchaExecute:
         EntryList:list[CustomEntry] = self.Gui.EntryList
         return EntryList[index].get()
         
-    def FindName(self, Name:str, Serie:bool = False) -> str:
+    def FindName(self, Name:str, Serie:bool = False, CustomData:list[str] = []) -> str:
         """
         Finds an anime by name in the list of anime stored in the "./Data/ListedAnimes.json" file.
 
@@ -658,25 +658,29 @@ class WatchaExecute:
         Notes:
             This function is case-insensitive.
         """
-        if (Serie):
-            List:list[str] = GetAnimeList.SerieList()
-            Result:str = ""
-            for i in range(len(List)):
-                Selected:str = List[i]
-                if (Name.lower() in Selected.lower()):
-                    Result = List[i]
-                    return Result
+        if not CustomData:
+            AnimeList:list[str] = GetAnimeList.AnimeList()
         else:
-            List:list[str] = GetAnimeList.AnimeList()
+            AnimeList:list[str] = CustomData
+
+        if (Serie):
+            SerieList:list[str] = GetAnimeList.SerieList()
             Result:str = ""
-            for i in range(len(List)):
-                Selected:str = List[i]
+            for i in range(len(SerieList)):
+                Selected:str = SerieList[i]
                 if (Name.lower() in Selected.lower()):
-                    Result = List[i]
+                    Result = SerieList[i]
+                    return Result
+        else:    
+            Result:str = ""
+            for i in range(len(AnimeList)):
+                Selected:str = AnimeList[i]
+                if (Name.lower() in Selected.lower()):
+                    Result = AnimeList[i]
                     return Result
         
         if (Result == ""):
-            print("FindName Anime not found")
+            print("FindName anime not found")
         
         return Result
     
@@ -748,14 +752,12 @@ class WatchaExecute:
 
     def AddEppisode(self):
         Name:str = self.GetEntry(self.SetEntryIndex.AddEpisode.Name)
-        Name = self.FindName(Name)
+        OnGoingList:list[str] = GetAnimeList.OnGoingList()
+        Name = self.FindName(Name, CustomData = OnGoingList)
         
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            if (Name in GetAnimeList.OnGoingList()):
-                Watch.UpdateEpisode(Name)
-                self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
-            else:
-                print("AddEpisode is not in OnGoingList")
+            Watch.UpdateEpisode(Name)
+            self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
         else:
             print("AddEpisode path not found")
 
@@ -766,15 +768,14 @@ class WatchaExecute:
         except ValueError:
             print("SetEpisode EP must be an integer number")
             return
-        Name = self.FindName(Name)
+        
+        OnGoingList:list[str] = GetAnimeList.OnGoingList()
+        Name = self.FindName(Name, CustomData= OnGoingList)
 
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            if (Name in GetAnimeList.OnGoingList()):
-                Watch.UpdateEpisode(Name, True, SetEP)
-                self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
-                self.ClearEntry(self.SetEntryIndex.AddEpisode.Ep)
-            else:
-                print("SetEpisode is not in OnGoingList")
+            Watch.UpdateEpisode(Name, True, SetEP)
+            self.ClearEntry(self.SetEntryIndex.AddEpisode.Name)
+            self.ClearEntry(self.SetEntryIndex.AddEpisode.Ep)
         else:
             print("SetEpisode path not found")
     
@@ -827,7 +828,6 @@ class WatchaExecute:
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             Watch.CreateCalendar(Name, Day)
             self.ClearEntry(self.SetEntryIndex.AddToCallendar.Name)
-            """ self.ClearEntry(self.SetEntryIndex.AddToCallendar.Day) """
         else:
             print("AddToCalendar not found")
 

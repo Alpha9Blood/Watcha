@@ -353,11 +353,16 @@ class MangaExecute:
                 Entry:ttk.Combobox = EntryList[i]
                 Entry.delete(0, 'end')
     
-    def FindName(self, Name:str) -> str:
-        List:list[str] = GetMangaList.MangaList()
+    def FindName(self, Name:str, CustomData:list[str] = []) -> str:
+        
         Result:str = ""
-        for i in range(len(List)):
-            Selected:str = List[i]
+        if not CustomData:
+            MangaList:list[str] = GetMangaList.MangaList()
+        else:
+            MangaList:list[str] = CustomData
+        
+        for i in range(len(MangaList)):
+            Selected:str = MangaList[i]
             if (Name.lower() in Selected.lower()):
                 Result = Selected
                 return Result
@@ -442,29 +447,29 @@ class MangaExecute:
     
     def UpdateChapters(self, Set:bool):
         Name:str = self.GetEntry(self.SetEntryIndex.UpdateChapters.Name)
-        Name = self.FindName(Name)
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            if (Name in GetMangaList.MangaList()):     
-                if (Set):
-                    Cap:str = self.GetEntry(self.SetEntryIndex.UpdateChapters.Chapters)
-                    if (Cap != ""):
-                        try:
-                            Chapters:int = int(Cap)
-                            if (Chapters >= 0):
-                                Watch.EditChapters(Name, Set, Chapters)
-                                self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
-                                self.ClearEntry(self.SetEntryIndex.UpdateChapters.Chapters)
-                            else:
-                                print("UpdateChapters chapters must be a positive number")
-                        except ValueError:
-                            print("UpdateChapters Chapters must be a integer number")       
-                    else:
-                        print("UpdateChapters chapters is empty")                    
+        OnGoingList:list[str] = GetMangaList.OnGoingList()
+
+        Name = self.FindName(Name, OnGoingList)
+        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):    
+            if (Set):
+                Cap:str = self.GetEntry(self.SetEntryIndex.UpdateChapters.Chapters)
+                if (Cap != ""):
+                    try:
+                        Chapters:int = int(Cap)
+                        if (Chapters >= 0):
+                            Watch.EditChapters(Name, Set, Chapters)
+                            self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
+                            self.ClearEntry(self.SetEntryIndex.UpdateChapters.Chapters)
+                        else:
+                            print("UpdateChapters chapters must be a positive number")
+                    except ValueError:
+                        print("UpdateChapters Chapters must be a integer number")       
                 else:
-                    Watch.EditChapters(Name)
-                    self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
+                    print("UpdateChapters chapters is empty")                    
             else:
-                print("Name is not in MangaList")     
+                Watch.EditChapters(Name)
+                self.ClearEntry(self.SetEntryIndex.UpdateChapters.Name)
+    
         else:
             print("SetChapters manga not found")
 
