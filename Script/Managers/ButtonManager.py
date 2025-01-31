@@ -4,8 +4,8 @@ from Script.Managers.CustomTypes.CustomButton import CustomButton
 class ButtonManager():
 
         def GuiInit(self, SetGUI):
-            from AnimeGUI import SalameGUI
-            self.Gui:SalameGUI = SetGUI
+            from WatchaGUI import WatchaGUI
+            self.Gui:WatchaGUI = SetGUI
             self.janela = self.Gui.janela
         
         def PresetButPosition(self,But:tk.Button, PositionX:int, PositionTag:int, DefaultPos:int = 0):

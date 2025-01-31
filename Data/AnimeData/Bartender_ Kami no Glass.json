@@ -1,13 +1,14 @@
 {
     "Anime": {
         "Name": "Bartender: Kami no Glass",
-        "EpisodesStatus": "12/12",
+        "EpisodeStatus": "12/12",
         "Status": "Completed",
         "Season": "Spring_2024",
         "MaxEpisodes": 12,
         "Episode": 12,
         "SerieName": "Bartender",
         "MyAnimeListLink": "https://myanimelist.net/anime/53407/Bartender__Kami_no_Glass",
+        "WatchLink": "",
         "Score": 7.0
     }
 }

@@ -1,6 +1,6 @@
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
 
-class EntryTypeList():
+class EntryFilterList():
     def __init__(self) -> None:
         self.AnimeList:list[CustomEntry] = []
         self.MangaList:list[CustomEntry] = []

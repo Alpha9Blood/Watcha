@@ -1,8 +1,8 @@
+from io import BytesIO
 import json
 import os
+
 class JsonUtils:
-    def __init__(self):
-        pass
 
     def CreateJson(self, content: str | list | dict, path:str):
         parhdir:str = os.path.dirname(path)
@@ -21,7 +21,7 @@ class JsonUtils:
     def AddToDictJson(self, content: dict, path:str):
         Info:dict = json.load(open(path))
         Info.update(content)
-        json.dump(Info, open(path, "a"), indent=4)
+        json.dump(Info, open(path, "w"), indent=4)
     
     def TrueName(self, Name:str) -> str:
         """
@@ -35,7 +35,7 @@ class JsonUtils:
         """
 
 
-        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|", "!", "'", '"']
+        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|", "'", '"']
         for curse in CursedChars:
             if (curse in Name):
                 Name = Name.replace(curse, "_")
@@ -49,5 +49,13 @@ class JsonUtils:
                 Name = Name.replace(curse, "_")
 
         return Name
+
+    def StoreImage(self, content: bytes, path:str):
+        parhdir:str = os.path.dirname(path)
+        os.makedirs(parhdir, exist_ok=True)
+        open(path, "wb").write(content)
+
+    def LoadImage(self, path:str) -> BytesIO:
+        return BytesIO(open(path, "rb").read())
 
 JsonUtil = JsonUtils()
