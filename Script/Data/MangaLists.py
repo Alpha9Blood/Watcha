@@ -65,25 +65,5 @@ class MangaLists:
             return JsonUtil.LoadJson("./Data/FavoriteMangaList.json")
         else:
             return []
-    
-    def HasMAL_LinkList(self) -> list[str]:
-        Selected:str = ""
-        AnimeList:list[str] = self.MangaList()
-        List:list[str] = []
-        for i in AnimeList:
-            Selected = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(i)}.json")["Manga"]["MyAnimeListLink"]
-            if (Selected != ""):
-                List.append(i)
-        return List
-    
-    def HasMangaLinkList(self) -> list[str]:
-        Selected:str = ""
-        AnimeList:list[str] = self.MangaList()
-        List:list[str] = []
-        for i in AnimeList:
-            Selected = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(i)}.json")["Manga"]["MangaLink"]
-            if (Selected != ""):
-                List.append(i)
-        return List
 
 GetMangaList = MangaLists()

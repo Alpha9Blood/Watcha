@@ -1,28 +1,28 @@
-from Script.ManageData.Anime.AnimeLists import GetAnimeList
-from AnimeScript import Watch
-from Script.GUI_Index import CustomI
+from Script.Data.AnimeLists import GetAnimeList
+from WatchaScript import Watch
+from Script.GUI_Index import AnimeGet
 
 class AnimeListManager:
     def __init__(self):
         self.Options:list[str] = self.GetList()
         self.SelectedFilter = self.GetList()[0]
         self.SelectedList:list[str] = []
-        self.CustomIndex = CustomI()
+        self.EntryIndex = AnimeGet.EntryIndex()
     
     def GuiInit(self, SetGUI):
-        from WatchaGUI import WatchaGUI
-        self.Gui:WatchaGUI = SetGUI
+        from AnimeGUI import SalameGUI
+        self.Gui:SalameGUI = SetGUI
     
     def ClearCustomLists(self):
-        self.Gui.Entry.EntryFilter.AnimeList.clear()
-        self.Gui.Entry.EntryFilter.UpdateList.clear()
+        self.Gui.Entry.EntryType.AnimeList.clear()
+        self.Gui.Entry.EntryType.UpdateList.clear()
     
     def GetList(self) -> list[str]:
         List:list[str] = ["All"] + GetAnimeList.GetListedSeasons()
         return List
 
     def UpdateFilter(self):
-        Entry = self.Gui.EntryList[self.CustomIndex.Filter.EntryIndex.Selected].get()
+        Entry = self.Gui.EntryList[self.EntryIndex.FilterOptions.Selected].get()
         self.SelectedFilter = Entry
         
     
@@ -32,7 +32,7 @@ class AnimeListManager:
             self.SelectedList = GetAnimeList.AnimeList()
         else:
             if (self.SelectedFilter in GetAnimeList.GetListedSeasons()):
-                self.SelectedList = GetAnimeList.GetSeason(self.SelectedFilter)
+                self.SelectedList = Watch.GetSeason(self.SelectedFilter)
             else:
                 print("Season not found")
                 self.SelectedList = []

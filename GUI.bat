@@ -1,1 +1,1 @@
-python -c "from WatchaGUI import InicializeGUI; InicializeGUI()"
+python -c "from AnimeGUI import InicializeGUI; InicializeGUI()"

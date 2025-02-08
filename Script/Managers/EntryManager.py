@@ -1,14 +1,14 @@
 from tkinter import ttk
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
-from Script.Managers.EntryFilterList import EntryFilterList
+from Script.Managers.EntryTypeList import EntryTypeList
 
 class EntryManager():
 
     def GuiInit(self, SetGUI):
-        from WatchaGUI import WatchaGUI
-        self.Gui:WatchaGUI = SetGUI
+        from AnimeGUI import SalameGUI
+        self.Gui:SalameGUI = SetGUI
         self.janela = self.Gui.janela
-        self.EntryFilter:EntryFilterList = EntryFilterList()
+        self.EntryType:EntryTypeList = EntryTypeList()
 
     def PresetEntryPosition(self, Entry:ttk.Combobox, PositionX:int, PositionTag:int, DefaultPos:int = 0):           
         CutYPos:int = ((PositionTag - 1) * 50)
@@ -20,12 +20,11 @@ class EntryManager():
     
     def UpdateFilterEntrys(self):
         self.Gui.AnimeDataLists.UpdateList()
-        for i in self.Gui.Entry.EntryFilter.AnimeList:
+        for i in self.Gui.Entry.EntryType.AnimeList:
             i["values"] = self.Gui.AnimeDataLists.SelectedList
-        self.UpdateEntrysOptions()
     
     def UpdateEntrysOptions(self):
-        for i in self.Gui.Entry.EntryFilter.UpdateList:
+        for i in self.Gui.Entry.EntryType.UpdateList:
             i.UpdateOptions()
 
     def CreateEntry(self, PositionX:int, PositionTag:int, DefaultPos:int = 0, CustomYPosition:int = 0):

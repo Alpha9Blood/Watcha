@@ -1,14 +1,13 @@
 {
     "Anime": {
         "Name": "testa",
-        "EpisodeStatus": "9/12",
+        "EpisodesStatus": "9/12",
         "Status": "Dropped",
         "Season": "Spring_2024",
         "MaxEpisodes": 12,
         "Episode": 9,
         "SerieName": "tes",
         "MyAnimeListLink": "",
-        "WatchLink": "",
         "Score": 0
     }
 }

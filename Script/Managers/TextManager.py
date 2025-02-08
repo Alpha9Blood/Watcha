@@ -6,8 +6,8 @@ from Script.Utils import JsonUtil
 class TextManager:
 
     def GuiInit(self, SetGUI):
-        from WatchaGUI import WatchaGUI
-        self.Gui:WatchaGUI = SetGUI         
+        from AnimeGUI import SalameGUI
+        self.Gui:SalameGUI = SetGUI         
         self.janela = self.Gui.janela
         self.GetList:list = [tk.Text(self.janela), tk.Scrollbar(self.janela)]
 
@@ -25,13 +25,19 @@ class TextManager:
                 self.Gui.EntryList[i].delete(0, 'end')
     
     def UpdateDisplay(self):
-        self.Gui.ImageSlot.ClearImages()
         self.Display:tk.Text = self.GetList[0]
         self.DisplayScrollbar:tk.Scrollbar = self.GetList[1]
         
     def PrintDisplay(self, Info:dict | list | str):
+        """
+        Prints the given information to the display text box.
 
-        self.UpdateDisplay()     
+        Automatically turn the text to ident 4.
+
+        Args:
+            Info (dict | list | str): The information to be printed to the display text box.
+        """
+        self.UpdateDisplay()
         self.Display.place(x=550, y=150)
         self.Display.config(width=50, height=20, font=('Arial', 15), bg="gray")
 

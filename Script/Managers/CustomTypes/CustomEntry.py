@@ -23,7 +23,6 @@ class CustomEntry(ttk.Combobox):
         self.UpdateOptions()
         if (readonly):
             self.Readonly()
-            self.set(self.options[0])
         else:
             self.SetAutoComplete()
     
