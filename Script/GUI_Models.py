@@ -6,8 +6,8 @@ class GUI_Models:
         self.SelectedPreset:Enum = self.Presets.Default
     
     def GuiInit(self, SetGUI):
-        from AnimeGUI import SalameGUI
-        self.Gui:SalameGUI = SetGUI
+        from WatchaGUI import WatchaGUI
+        self.Gui:WatchaGUI = SetGUI
         self.Gui.janela.configure(bg='#000000')
         self.Gui.janela.title('Watcha')
         self.Gui.janela.geometry('1600x800')
@@ -52,151 +52,196 @@ class GUI_Models:
             
             self.Gui.janela.children.clear()
             
-            
             self.Gui.Presets.ResetIndex()
             self.Gui.DefaultList()
             self.SelectedPreset = self.Presets.Default
         
         
     
-    def AnimeSet(self):
-        """
-        Sets up the AnimeSet GUI.
+    def AnimeAddPreset(self):
 
-        This function creates and configures the necessary GUI elements for the AnimeSet preset.
-        If the selected preset is not the AnimeSet, it deletes the existing preset and creates
-        the AnimeSet preset.
+        if (self.SelectedPreset != self.Presets.AnimeAddInfo):
+            self.DeletePreset()
+            Preset:Enum = self.Presets.AnimeAddInfo
 
-        """
+            self.Gui.Presets.AnimeAddInfo.AddAnime()
+
+            self.Gui.Presets.AnimeAddInfo.SetMyAnimeListLink()
+
+            self.Gui.Presets.AnimeAddInfo.SetWatchLink()
+
+            self.Gui.Presets.AnimeAddInfo.AddToCalendar()
+
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
+
+            self.SelectedPreset = Preset
+        else:
+            print(f"Already in AnimeAddInfo")
         
 
-        if (self.SelectedPreset != self.Presets.AnimeSet):
+    def AnimeEditPreset(self):
+
+        if (self.SelectedPreset != self.Presets.AnimeEditInfo):    
             self.DeletePreset()
+            Preset:Enum = self.Presets.AnimeEditInfo
 
-            self.Gui.Presets.AnimeSet.AddAnime()
+            self.Gui.Presets.AnimeEditInfo.UpdateEpisode()
 
-            self.Gui.Presets.AnimeSet.DeleteAnime()
+            self.Gui.Presets.AnimeEditInfo.DeleteAnime()
 
-            self.Gui.Presets.AnimeSet.AddEpisode()
+            self.Gui.Presets.AnimeEditInfo.EditAnimeInfo()
 
-            self.Gui.Presets.AnimeSet.UpdateScore()
+            self.Gui.Presets.AnimeEditInfo.RemoveLeastAdded()
 
-            self.Gui.Presets.AnimeSet.RemoveLeastAdded()
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
 
-            self.Gui.Presets.AnimeSet.SetCurrentStatus()
-            
-            self.Gui.Presets.AnimeSet.SetMyAnimeListLink()
-
-            self.Gui.Presets.AnimeSet.AddToCalendar()
-            
-            self.Gui.Presets.AnimeSet.SetSeasonLink()
-
-
-            self.SelectedPreset = self.Presets.AnimeSet
+            self.SelectedPreset = Preset
         else:
-            print("Already in AnimeSet")
+            print("Already in AnimeEditPreset")
+    
+    def AnimeOpenPreset(self):
+
+        if (self.SelectedPreset != self.Presets.AnimeOpenLinks):
+            self.DeletePreset()
+            Preset:Enum = self.Presets.AnimeOpenLinks
+
+            self.Gui.Presets.AnimeOpenLinks.OpenMyAnimeListHomePage()
+
+            self.Gui.Presets.AnimeOpenLinks.OpenSeasonLink()
+
+            self.Gui.Presets.AnimeOpenLinks.OpenMyAnimeListLink()
+
+            self.Gui.Presets.AnimeOpenLinks.OpenWatchLink()
+
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
+
+            self.SelectedPreset = Preset
+        else:
+            print(f"Already in AnimeOpenPreset")
+    
+    def AnimeViewPreset(self):
+
+        if (self.SelectedPreset != self.Presets.AnimeViewInfo):
+            self.DeletePreset()
+            self.InitDisplay()
+            Preset:Enum = self.Presets.AnimeViewInfo
+
+            self.Gui.Presets.CustomPresets.Filter()
+
+            self.Gui.Presets.AnimeViewInfo.PrintInfo()
+
+            self.Gui.Presets.AnimeViewInfo.PrintStatusList()
+
+            self.Gui.Presets.AnimeViewInfo.PrintSeason()
+
+            self.Gui.Presets.AnimeViewInfo.PrintSerie()
+
+            self.Gui.Presets.AnimeViewInfo.PrintAnimeList()
+
+            self.Gui.Presets.AnimeViewInfo.PrintSerieList()
+
+            self.Gui.Presets.AnimeViewInfo.PrintCalendar()
+
+            self.Gui.Presets.CustomPresets.ReturnToMenu()            
+
+            self.SelectedPreset = Preset
+        else:
+            print(f"Already in AnimeViewPreset")
+    
+    def MangaAddPreset(self):
+
+        if (self.SelectedPreset != self.Presets.MangaAddInfo):
+            self.DeletePreset()
+            Preset:Enum = self.Presets.MangaAddInfo
+
+            self.Gui.Presets.MangaAddInfo.AddNewManga()
+
+            self.Gui.Presets.MangaAddInfo.SetLink()
+
+            self.Gui.Presets.MangaAddInfo.SetMyAnimeListLink()
+
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
+
+            self.SelectedPreset = Preset
+        else:
+            print("Already in MangaAddInfo")
+    
+    def MangaEditPreset(self):
+
+        if (self.SelectedPreset != self.Presets.MangaEditInfo):
+            self.DeletePreset()
+            Preset:Enum = self.Presets.MangaEditInfo
+
+            self.Gui.Presets.MangaEditInfo.EditChapters()
+
+            self.Gui.Presets.MangaEditInfo.RemoveManga()
+
+            self.Gui.Presets.MangaEditInfo.EditInfo()
+
+            self.Gui.Presets.MangaEditInfo.EditFavorites()
+
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
+
+            self.SelectedPreset = Preset
+        else:
+            print("Already in MangaEditInfo")
         
 
-    def AnimeGet(self):
-        """
-        Initializes the AnimeGet preset by deleting the current preset, 
-        initializing the display, and creating various GUI elements for 
-        anime-related operations such as getting status, printing seasons, 
-        printing status lists, opening links, printing series, and printing 
-        anime lists.
+    def MangaOpenPreset(self):
 
-        """
+        if (self.SelectedPreset != self.Presets.MangaOpenLinks):
+            self.DeletePreset()
+            Preset:Enum = self.Presets.MangaOpenLinks
 
-        if (self.SelectedPreset != self.Presets.AnimeGet):    
+            self.Gui.Presets.MangaOpenLinks.OpenLink()
+
+            self.Gui.Presets.MangaOpenLinks.OpenMyAnimeListLink()
+
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
+
+            self.SelectedPreset = Preset
+        else:
+            print("Already in MangaOpenLinks")
+    
+    def MangaViewPreset(self):
+
+        if (self.SelectedPreset != self.Presets.MangaViewInfo):
             self.DeletePreset()
             self.InitDisplay()
+            Preset:Enum = self.Presets.MangaViewInfo
 
-            self.Gui.Presets.AnimeGet.Filter()
+            self.Gui.Presets.MangaViewInfo.PrintInfo()
 
-            self.Gui.Presets.AnimeGet.GetStatus()
+            self.Gui.Presets.MangaViewInfo.PrintCurrentStatus()
 
-            self.Gui.Presets.AnimeGet.PrintSeason()
+            self.Gui.Presets.MangaViewInfo.PrintFavorites()
 
-            self.Gui.Presets.AnimeGet.PrintStatusList()
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
 
-            self.Gui.Presets.AnimeGet.OpenLink()
-
-            self.Gui.Presets.AnimeGet.PrintSerie()
-
-            self.Gui.Presets.AnimeGet.PrintAnimeList()
-
-            self.Gui.Presets.AnimeGet.PrintSerieList()
-
-            self.Gui.Presets.AnimeGet.OpenMyAnimeList()
-
-            self.Gui.Presets.AnimeGet.PrintCalendar()
-
-            self.Gui.Presets.AnimeGet.OpenSeasonLink()
-
-
-            self.SelectedPreset = self.Presets.AnimeGet
+            self.SelectedPreset = Preset
         else:
-            print("Already in AnimeGet")
+            print("Already in MangaViewInfo")
     
-    def MangaSet(self):
-        """
-        Initializes the MangaSet preset by deleting the current preset, 
-        initializing the display, and creating various GUI elements for 
-        manga-related operations such as adding new manga, setting links, 
-        removing manga, editing favorites, editing chapters, setting status, 
-        and editing scores.
+    def MenuPreset(self):
 
-        """
-        if (self.SelectedPreset != self.Presets.MangaSet):
+        if (self.SelectedPreset != self.Presets.Menu):
             self.DeletePreset()
+            Preset:Enum = self.Presets.Menu
 
-            self.Gui.Presets.MangaSet.AddNewManga()
+            self.Gui.Presets.MenuPreset.Geral()
 
-            self.Gui.Presets.MangaSet.SetLink()
-
-            self.Gui.Presets.MangaSet.RemoveManga()
-
-            self.Gui.Presets.MangaSet.EditFavorites()
-
-            self.Gui.Presets.MangaSet.EditChapters()
-
-            self.Gui.Presets.MangaSet.SetStatus()
-
-            self.Gui.Presets.MangaSet.EditScore()
-
-            self.SelectedPreset = self.Presets.MangaSet
+            self.SelectedPreset = Preset
         else:
-            print("Already in MangaSet")
-    
-    def MangaGet(self):
-        """
-        Initializes the MangaGet preset by deleting the current preset, 
-        initializing the display, and creating various GUI elements for 
-        manga-related operations such as printing manga, printing current status, 
-        and opening links.
-
-        """
-    
-        if (self.SelectedPreset != self.Presets.MangaGet):
-            self.DeletePreset()
-            self.InitDisplay()
-
-            self.Gui.Presets.MangaGet.PrintManga()
-
-            self.Gui.Presets.MangaGet.PrintCurrentStatus()
-
-            self.Gui.Presets.MangaGet.OpenLink()
-
-            self.Gui.Presets.MangaGet.PrintFavorites()
-
-            self.SelectedPreset = self.Presets.MangaGet
-        else:
-            print("Already in MangaGet")
-            
+            print("Already in Menu")
     
     class Presets(Enum):
-        Default = 0
-        AnimeSet = 1
-        AnimeGet = 2
-        MangaSet = 3
-        MangaGet = 4
+        Default = -1
+        Menu = 0 
+        AnimeAddInfo = 1
+        AnimeEditInfo = 2
+        AnimeOpenLinks = 3
+        AnimeViewInfo = 4
+        MangaAddInfo = 5
+        MangaEditInfo = 6
+        MangaOpenLinks = 7
+        MangaViewInfo = 8

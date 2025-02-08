@@ -1,7 +1,5 @@
-import os
-import sys
 import tkinter as tk
-from WatchaScript import WatchaExecute
+from AnimeScript import AnimeExecute
 from MangaScript import MangaExecute
 from tktooltip.tooltip import ToolTip
 from Script.GUI_Index import *
@@ -13,10 +11,12 @@ from Script.Managers.EntryManager import EntryManager
 from Script.Managers.TextManager import TextManager
 from Script.Managers.ButtonManager import ButtonManager
 from Script.Managers.PresetsManager import PresetsManager
+from Script.Managers.ImageManager import ImageManager
+from Script.ManageData.ImageExtractor import ImageControler
 
 
 
-class SalameGUI:
+class WatchaGUI:
     
     def __init__(self):
 
@@ -24,17 +24,20 @@ class SalameGUI:
         self.TextList:list[tk.Label] = []
         self.EntryList:list[CustomEntry] = []
         self.ToolTipList:list[ToolTip] = []
+        self.LabelList:list[tk.Label] = []
 
         self.janela = tk.Tk()
         
-        self.WatchaExec = WatchaExecute()
-        self.WatchaExec.GuiInit(self)
+        self.ImageExtractor = ImageControler()
+
+        self.AnimeExec = AnimeExecute()
+        self.AnimeExec.GuiInit(self)
         self.MangaExec = MangaExecute()
         self.MangaExec.GuiInit(self)
 
         self.Models = GUI_Models()
         self.Models.GuiInit(self)
-
+        
         
         self.Button = ButtonManager()
         self.Button.GuiInit(self)
@@ -42,6 +45,11 @@ class SalameGUI:
         self.Entry.GuiInit(self)
         self.Text = TextManager()
         self.Text.GuiInit(self)
+        self.ImageSlot = ImageManager()
+        self.ImageSlot.GuiInit(self)
+        
+
+        
 
         
         self.AnimeDataLists = AnimeListManager()
@@ -53,19 +61,6 @@ class SalameGUI:
         self.Menu = tk.Menu(self.janela)
 
         SalameMenu:tk.Menu = tk.Menu(self.Menu, tearoff=0)
-        AnimeMenu:tk.Menu = tk.Menu(self.Menu, tearoff=0)
-        MangaMenu:tk.Menu = tk.Menu(self.Menu, tearoff=0)
-
-
-        self.Menu.add_cascade(label='Anime', menu=AnimeMenu)
-        self.Menu.add_cascade(label='Manga', menu=MangaMenu)
-
-
-        AnimeMenu.add_command(label='AnimeSet', command=self.Models.AnimeSet)
-        AnimeMenu.add_command(label='AnimeGet', command=self.Models.AnimeGet)
-
-        MangaMenu.add_command(label='MangaSet', command=self.Models.MangaSet)
-        MangaMenu.add_command(label='MangaGet', command=self.Models.MangaGet)
 
         SalameMenu.add_command(label='SwitchBackgrounColor', command=self.Models.SwitchModels)
         SalameMenu.add_command(label='PrintAllTk', command=self.AllTk)
@@ -73,11 +68,14 @@ class SalameGUI:
         
         
         self.Menu.add_cascade(label='Salame', menu=SalameMenu)
-        self.Menu.add_command(label='Reset', command=self.DeleteAll)
+        self.Menu.add_command(label='Reset', command=self.Models.MenuPreset)
         self.Menu.add_command(label='Quit w', command=self.janela.destroy)
         
         
         self.janela.config(menu=self.Menu)
+
+        self.Models.MenuPreset()
+
         self.janela.mainloop()
 
 
@@ -88,6 +86,7 @@ class SalameGUI:
         self.TextList.clear()
         self.EntryList.clear()
         self.ToolTipList.clear()
+        self.LabelList.clear()
         self.AnimeDataLists.ClearCustomLists()
         
 
@@ -102,6 +101,7 @@ class SalameGUI:
                     i.destroy()
 
             self.janela.children.clear()
+            
                        
             self.Presets.ResetIndex()
             self.DefaultList()
@@ -109,4 +109,4 @@ class SalameGUI:
 
 
 def InicializeGUI():
-    return SalameGUI()  
+    return WatchaGUI()  

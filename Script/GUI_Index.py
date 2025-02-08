@@ -1,198 +1,373 @@
 
-class AnimeSet:
-    class EntryIndex():
+class AnimeI:
+    class AddAnime():
+        class ButtonIndex():
+            AddAnime = 0
 
-        class AddAnime():
-            Name = 5
-            MaxEp = 4
+        class EntryIndex():
+            Name = 0
+            MaxEp = 1
             Status = 2
-            Season = 3
-            Serie = 4
-        class DeleteAnime():
-            Name = 5
-        class AddEpisode():
-            Name = 6
-            Ep = 7
-        class UpdateScore():
-            Name = 8
-            Score = 9
-        class SetCurrentStatus():
-            Name = 10
-            Status = 11
-        class MyAnimeListLink():
-            Name = 12
-            Link = 13
-        class AddToCallendar():
-            Name = 14
-            Day = 15
-        class SetSeasonLink():
-            SeasonID = 16
-            Link = 17
+            SeasonName = 3
+            SeasonYear = 4
+            Serie = 5
         
-
-    class TextIndex():
-        class AddAnime():
+        class TextIndex():
             Name = 0
             MaxEp = 1
             Status = 2
             Season = 3
-            Serie = 4
-        class DeleteAnime():
-            Name = 5
-        class AddEpisode():
-            Title = 6
-            Name = 7
-        class UpdateScore():
-            Name = 8
-        class SetCurrentStatus():
-            Name = 9
-            SetStatus = 10
-        class MyAnimeListLink():
-            Name = 11
-            Link = 12
-        class AddToCallendar():
-            Name = 13
-            Day = 14
-        class SetSeasonLink():
-            SeasonID = 15
+            Year = 4
+            Serie = 5
 
-    class ButtonIndex():
-        AddAnime = 0
-        DeleteAnime = 1
-        AddEpisode = 2
-        SetEpisode = 3
-        UpdateScore = 4
-        RemoveLeastAdded = 5
-        SetCurrentStatus = 6
-        SetMyAnimeListLink = 7
-        AddToCallendar = 8
-        SetSeasonLink = 9
 
-class AnimeGet:
-    class EntryIndex():
-        class GetStatus():
+    class SetMyAnimeListLink():  
+        class ButtonIndex():
+            MyAnimeListLink = 0
+
+        class EntryIndex():
             Name = 0
-        class PrintSeason():
-            SeasonID = 1     
-        class PrintStatusList():
-            StatusID = 2
-        class OpenLink():
-            Name = 3
-        class PrintSerie():
-            SerieID = 4
-        class PrintCallendar():
-            SeasonID = 5
-        class OpenSeasonLink():
-            SeasonID = 6
-        class FilterOptions():
-            Selected = 7
+            Link = 1
 
-    class TextIndex():
-        class GetStatus():
-            StatusID = 0
-        class PrintSeason():
-            SeasonID = 1     
-        class PrintStatusList():
-            StatusID = 2
-        class OpenLink():
-            Name = 3
-        class PrintSerie():
-            SerieID = 4
-        class PrintCallendar():
-            SeasonID = 5
-        class OpenSeasonLink():
-            SeasonID = 6
-        class Filter():
-            Selected = 7
+        class TextIndex():
+            Name = 0
+            Link = 1
     
-    class ButtonIndex():
-        GetStatus = 0
-        PrintSeason = 1
-        PrintStatusList = 2
-        OpenLink = 3
-        PrintSerie = 4
-        PrintAnimeList = 5
-        PrintSerieList = 6
-        OpenMyAnimeList = 7
-        PrintCallendar = 8
-        OpenSeasonLink = 9
 
-class MangaSet():
-    class EntryIndex():
-        class AddNewManga():
+    class SetWatchLink():
+        class ButtonIndex():
+            WatchLink = 0
+        
+        class EntryIndex():
+            Name = 0
+            Link = 1
+        
+        class TextIndex():
+            Name = 0
+            Link = 1
+    
+    class AddToCallendar():
+        class ButtonIndex():
+            AddToCallendar = 0
+
+        class EntryIndex():
+            Name = 0
+            Day = 1
+        
+        class TextIndex():
+            Name = 0
+            Day = 1
+    
+    class DeleteAnime():
+        class EntryIndex():
+            Name = 5
+        class ButtonIndex():
+            DeleteAnime = 1
+        class TextIndex():
+            Name = 0
+    
+    class UpdateEpisode():
+        class EntryIndex():
+            Name = 0
+            Ep = 1
+        class ButtonIndex():
+            AddEpisode = 0
+            SetEpisode = 1
+        class TextIndex():
+            Title = 0
+            Name = 1
+    
+    class UpdateScore():
+        class EntryIndex():
+            Name = 8
+            Score = 9
+        class ButtonIndex():
+            UpdateScore = 3
+        class TextIndex():
+            Name = 8
+            Score = 9
+
+    class RemoveLeastAdded():
+        class ButtonIndex():
+            RemoveLeastAdded = 0
+
+    
+    class EditInfo():
+        class EntryIndex():
+            Name = 0
+            MaxEp = 1
+            Status = 2
+            Serie = 3
+            Score = 4
+        class ButtonIndex():
+            UpdateInfo = 4
+        class TextIndex():
+            Name = 0
+            MaxEp = 1
+            Status = 2
+            Serie = 3
+            Score = 4
+    
+
+    class OpenMyAnimeListLink():
+        class ButtonIndex():
+            OpenLink = 0
+
+        class EntryIndex():
+            Name = 0
+            Link = 1
+
+        class TextIndex():
+            Name = 0
+            Link = 1
+
+    class OpenMyAnimeListHomePage():
+        class ButtonIndex():
+            OpenLink = 0
+
+    
+    class OpenWatchLink():
+        class ButtonIndex():
+            OpenLink = 0
+
+        class EntryIndex():
+            Name = 0
+        
+        class TextIndex():
+            Name = 0
+    
+    class OpenSeasonLink():
+        class ButtonIndex():
+            OpenLink = 0
+
+        class EntryIndex():
+            SeasonID = 0
+        
+        class TextIndex():
+            SeasonID = 0
+    class PrintInfo():
+        class ButtonIndex():
+            GetInfo = 0
+
+        class EntryIndex():
+            Name = 0
+        
+        class TextIndex():
+            Name = 0
+        
+        class LabelIndex():
+            Image = 0
+    
+    class PrintSeason():
+        class ButtonIndex():
+            PrintSeason = 0
+
+        class EntryIndex():
+            SeasonID = 0
+        
+        class TextIndex():
+            SeasonID = 0
+
+    class PrintStatusList():
+        class ButtonIndex():
+            PrintStatusList = 0
+
+        class EntryIndex():
+            StatusID = 0
+        
+        class TextIndex():
+            StatusID = 0
+
+    class PrintAnimeList():
+        class ButtonIndex():
+            PrintList = 0
+        
+    class PrintSerieList():
+        class ButtonIndex():
+            PrintList = 0
+    
+    class PrintCallendar():
+        class ButtonIndex():
+            PrintCallendar = 0
+        
+        class EntryIndex():
+            SeasonID = 0
+        
+        class TextIndex():
+            SeasonID = 0
+    
+    class PrintSerie():
+        class ButtonIndex():
+            PrintSerie = 0
+        
+        class EntryIndex():
+            SerieID = 0
+        
+        class TextIndex():
+            SerieID = 0
+
+class MangaI():
+    class AddNewManga():
+        class ButtonIndex():
+            AddNewManga = 0
+
+        class EntryIndex():
             Name = 0
             Chapters = 1
             Status = 2
-        class DeleteManga():
-            Name = 3
-        class SetStatus():
-            Name = 4
-            Status = 5
-        class SetLink():
-            Name = 6
-            Link = 7
-        class EditFavorites():
-            Name = 8
-        class UpdateChapters():
-            Name = 8
-            Chapters = 9
         
-        class EditScore():
-            Name = 10
-            Score = 11
-
-    class TextIndex():
-        class AddNewManga():
+        class TextIndex():
             Name = 0
             Chapters = 1
             Status = 2
-        class DeleteManga():
-            Name = 3
-        class SetStatus():
-            Name = 4
-            Status = 5
-        class SetLink():
-            Name = 6
-            Link = 7
-        class EditFavorites():
-            Name = 8
-        class UpdateChapters():
-            Name = 8
-            Title = 9
-        
-        class EditScore():
-            Name = 10
-        
-    class ButtonIndex():
-        AddNewManga = 0
-        DeleteManga = 1
-        SetStatus = 2
-        SetLink = 3
-        AddFavorite = 4
-        DeleteFavorite = 5
-        AddChapters = 6
-        SetChapters = 7
-        EditScore = 8
+    
+    class SetLink():
+        class ButtonIndex():
+            SetLink = 0
 
-class MangaGet():
-    class EntryIndex():
-        class PrintManga():
+        class EntryIndex():
             Name = 0
-        class PrintCurrentStatus():
-            Status = 1
-        class OpenLink():
-            Name = 2
+            Link = 1
 
-    class TextIndex():
-        class PrintManga():
+        class TextIndex():
             Name = 0
-        class PrintCurrentStatus():
-            Status = 1
-        class OpenLink():
-            Name = 2
+            Link = 1
+    
+    class SetMyAnimeListLink():
+        class ButtonIndex():
+            AddLink = 0
 
-    class ButtonIndex():
-        PrintManga = 0
-        PrintCurrentStatus = 1
-        OpenLink = 2
-        PrintFavorites = 3
+        class EntryIndex():
+            Name = 0
+            Link = 1
+
+        class TextIndex():
+            Name = 0
+            Link = 1
+    
+    class EditChapters():
+        class ButtonIndex():
+            AddChapters = 0
+            SetChapters = 1
+
+        class EntryIndex():
+            Name = 0
+            Chapters = 1
+        
+        class TextIndex():
+            Name = 0
+            Chapters = 1
+            Title = 2
+        
+    class RemoveManga():
+        class ButtonIndex():
+            RemoveManga = 0
+
+        class EntryIndex():
+            Name = 0
+        
+        class TextIndex():
+            Name = 0
+    
+    class EditInfo():
+        class ButtonIndex():
+            SetStatus = 0
+
+        class EntryIndex():
+            Name = 0
+            Status = 1
+            Score = 2
+        
+        class TextIndex():
+            Name = 0
+            Status = 1
+            Score = 2
+    
+    class EditFavorites():
+        class ButtonIndex():
+            AddFavorites = 0
+            DeleteFavorites = 1
+
+        class EntryIndex():
+            Name = 0
+            Favorites = 2
+        
+        class TextIndex():
+            Name = 0
+            Favorites = 2
+    
+    class OpenLink():
+        class ButtonIndex():
+            OpenLink = 0
+
+        class EntryIndex():
+            Name = 0
+
+        class TextIndex():
+            Name = 0
+    
+    class OpenMyAnimeListLink():
+        class ButtonIndex():
+            OpenLink = 0
+        
+        class EntryIndex():
+            Name = 0
+        
+        class TextIndex():
+            Name = 0
+    
+    class PrintInfo():
+        class ButtonIndex():
+            PrintInfo = 0
+
+        class EntryIndex():
+            Name = 0
+        
+        class TextIndex():
+            Name = 0
+        
+        class LabelIndex():
+            Image = 0
+    
+    class PrintCurrentStatus():
+        class ButtonIndex():
+            PrintCurrentStatus = 0
+
+        class EntryIndex():
+            Status = 0
+        
+        class TextIndex():
+            Status = 0
+        
+    class PrintFavorites():
+        class ButtonIndex():
+            PrintFavorites = 0
+
+class MenuI():
+    class Anime():
+        class ButtonIndex():
+            AddInfo = 0
+            EditInfo = 1
+            OpenLink = 2
+            ViewInfo = 3
+    
+        class TextIndex():
+            Anime = 0
+    
+    class Manga():
+        class ButtonIndex():
+            AddInfo = 0
+            EditInfo = 1
+            OpenLink = 2
+            ViewInfo = 3
+    
+        class TextIndex():
+            Manga = 0
+
+class CustomI():
+    class Filter():
+        class EntryIndex():
+            Selected = 0
+                
+        class TextIndex():
+            Selected = 0
