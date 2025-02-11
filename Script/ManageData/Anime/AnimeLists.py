@@ -11,7 +11,7 @@ class AnimeLists:
         """
         
         if (os.path.exists("./Data/ListedAnimes.json")):
-            return JsonUtil.LoadJson("./Data/ListedAnimes.json")
+            return JsonUtil.LoadJson("./Data/ListedAnimes.json")[::-1]
         else:
             raise Exception(f"AnimeList: Path not found: ./Data/ListedAnimes.json")
     
@@ -66,7 +66,7 @@ class AnimeLists:
 
     def SerieList(self) -> list[str]:
         if (os.path.exists("./Data/ListedSeries.json")):
-            return JsonUtil.LoadJson("./Data/ListedSeries.json")
+            return JsonUtil.LoadJson("./Data/ListedSeries.json")[::-1]
         else:
             raise Exception("SerieList: path not found: ./Data/ListedSeries.json")
 

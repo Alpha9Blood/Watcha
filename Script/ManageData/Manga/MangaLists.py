@@ -7,13 +7,13 @@ class MangaLists:
         Retrieves the list of all manga stored in the database.
 
         Returns:
-            list[str]: A list of strings containing the names of all manga in the database.
+            list[str]: A list of strings containing the names of all masnga in the database.
         """
         
         if (os.path.exists("./Data/MangaList.json")):
-            return JsonUtil.LoadJson("./Data/MangaList.json")
+            return JsonUtil.LoadJson("./Data/MangaList.json")[::-1]
         else:
-            return []
+            raise Exception("MangaList: Path not found: ./Data/MangaList.json")
     def MangaStatusList(self) -> dict[str, list[str]]:
         
         """

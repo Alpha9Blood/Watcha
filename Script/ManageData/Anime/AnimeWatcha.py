@@ -15,8 +15,7 @@ class AnimeWatcha:
             self.selected.UpdateData(Name)
             return self.selected
         else:
-            print("SelectAnime anime not found")
-            return self.selected
+            raise Exception("SelectAnime anime not found")
     
     def UpdateStatusList(self, Selected:Anime, UpdateStatus:bool = True):
         Name = Selected.Name
@@ -61,8 +60,7 @@ class AnimeWatcha:
                 PrintInfo["Score"] = "N/A"
             return PrintInfo
         else:
-            print("GetStatus Anime not found")
-            return {}
+            raise Exception("GetStatus Anime not found")
 
     def GetCurrentStatus(self, currentStatus:str = "") -> list[str] | dict[str, list[str]]:
         if (os.path.exists(f"./Data/AnimeStatusList.json")):        
@@ -73,8 +71,7 @@ class AnimeWatcha:
                 StatusList:list[str] = GetAnimeList.AnimeCurrentStatusList(currentStatus)
                 return StatusList
         else:
-            print("GetCurrentStatus Anime not found")
-            return {}
+            raise Exception("GetCurrentStatus Anime not found")
             
 
     def UpdateEpisode(self, Name:str, Set:bool = False, Episode:str = ""):
@@ -117,9 +114,8 @@ class AnimeWatcha:
         
         try:
             ScoreF:float = float(Score)
-        except ValueError:
-            print("SetScore Score must be a integer number")
-            return
+        except:
+            raise ValueError("SetScore Score must be a integer number")
         
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
 
@@ -136,9 +132,8 @@ class AnimeWatcha:
         
         try:
             MaxEpI:int = int(MaxEp)
-        except ValueError:
-            print("EditMaxEp MaxEp must be a integer number")
-            return
+        except:
+            raise ValueError("EditMaxEp: MaxEp must be a integer number")
         
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             self.selected.UpdateData(Name)
@@ -398,8 +393,7 @@ class AnimeWatcha:
             List:list = JsonUtil.LoadJson(f"./Data/Seasons/{SeasonID}.json")
             return f"{SeasonID}: {List}"
         else:
-            print("PrintSeason path not found")
-            return ""
+            raise Exception(f"PrintSeason: path not found / SeasonID: {SeasonID}")
             
 
     def AddToSerie(self, Seriename, Animename):
@@ -451,7 +445,7 @@ class AnimeWatcha:
                 
                 JsonUtil.CreateJson(Calendar, f"./Data/SeasonsCalendar/{AnimeID.Season}.json")
             else:
-                print("CreateCalendar AnimeID season not found")
+                raise Exception("CreateCalendar: season is empty")
 
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             Days:list[str] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -483,9 +477,9 @@ class AnimeWatcha:
                 }
                 JsonUtil.UpdateJson(Calendar, f"./Data/SeasonsCalendar/{AnimeID.Season}.json")
             else:
-                print("CreateCalendar add not found or already exists")
+                print("CreateCalendar: add not found or already exists")
         else:
-            print("CreateCalendar name path not found")
+            print("CreateCalendar: name path not found")
     
     
     def AddWatchLink(self, Name:str, Link:str):
@@ -494,11 +488,6 @@ class AnimeWatcha:
             Info["Anime"]["WatchLink"] = Link
             JsonUtil.UpdateJson(Info, f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
         else:
-            print("AddWatchLink not found")
-    
-
-        
-        
-        
-        
+            print("AddWatchLink: anime not found")
+       
 Watch = AnimeWatcha()

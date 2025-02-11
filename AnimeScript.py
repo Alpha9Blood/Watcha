@@ -198,8 +198,7 @@ class AnimeExecute:
                 raise Exception("AddAnime: invalid season")
             
             SeasonYear:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonYear)
-            if (not SeasonYear.isdigit()):
-                raise ValueError("AddAnime: SeasonYear must be a integer number: " + SeasonYear)
+            
             
             
             #TODO: Test ordem status
@@ -216,6 +215,8 @@ class AnimeExecute:
                 self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Serie)
             
             if (SeasonYear != ""):
+                if (not SeasonYear.isdigit()):
+                    raise ValueError("AddAnime: SeasonYear must be a integer number: " + SeasonYear)
                 Season:str = f"{SeasonName}_{SeasonYear}"
                 SeasonManager.EditAnimeSeason(Name, Season)
             
