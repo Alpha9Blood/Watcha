@@ -7,58 +7,62 @@ class ManageSeries:
 
     def EditAnimeSerie(self, Name:str, NewSerieName:str):
         if (NewSerieName == ""):
+            print("EditAnimeSerie NewSerieName is empty")
             return
         
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            self.selected.UpdateData(Name)
-            
-            if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")):
-                Serie:list[str] = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
-                Series:list[str] = JsonUtil.LoadJson("./Data/ListedSeries.json")
-                
-                #Remove name or delete 
-                if (self.selected.Name in Serie):
-                    if (len(Serie) == 1):
-                        os.remove(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
-                    else:
-                        Serie.pop(Serie.index(self.selected.Name))
-                        JsonUtil.UpdateJson(Serie, f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")     
-                else:
-                    print("EditAnimeSerie selected name not found in serie file.")
-                
-                #Update series
-                if (os.path.exists(f"./Data/ListedSeries.json")):
-                    if (self.selected.SerieName in Series):
-                        Series.pop(Series.index(self.selected.SerieName))
-                        if (NewSerieName not in Series):
-                            Series.append(NewSerieName)
-                            JsonUtil.UpdateJson(Series, "./Data/ListedSeries.json")
-                        else:
-                            print("EditAnimeSerie newname already in series")
-                    else:
-                        print("EditAnimeSerie selected serie name not found in series file.")
-                else:
-                    print("EditAnimeSerie series file not found")
-                
-                self.selected.SerieName = NewSerieName
-
-                #Update or add serie
-                if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")):
-                    Serie = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
-                    if (self.selected.Name not in Serie):
-                        Serie.append(self.selected.Name)
-                        JsonUtil.UpdateJson(Serie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
-                    else:
-                        print("EditAnimeSerie newname already in serie")
-                else:
-                    NewSerie:list[str] = [self.selected.Name]
-                    JsonUtil.CreateJson(NewSerie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
-                
-                self.selected.StoreData()
-            else:
-                print("EditAnimeSerie serie not found")
-                return    
-        else:
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print("EditAnimeSerie not found")
+            return
+        
+        self.selected.UpdateData(Name)
+        
+        if (not os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")):
+            print("EditAnimeSerie serie not found")
+            return
+        
+        if (not os.path.exists("./Data/ListedSeries.json")):
+            print("EditAnimeSerie series file not found")
+            return
+        
+        Serie:list[str] = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
+        Series:list[str] = JsonUtil.LoadJson("./Data/ListedSeries.json")
+
+        if (NewSerieName in Series):
+            print("EditAnimeSerie newname already in series")
+            return
+        
+        #Remove name or delete 
+        
+        if (self.selected.Name in Serie):   
+            if (len(Serie) == 1):
+                os.remove(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")       
+                Series.pop(Series.index(self.selected.SerieName))
+            else:
+                Serie.pop(Serie.index(self.selected.Name))
+                JsonUtil.UpdateJson(Serie, f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")
+        else:
+            print(f"EditAnimeSerie selected {self.selected.Name = } not found in serie file: {Serie}.")
+        
+        #Update series
+
+        Series.append(NewSerieName)
+        JsonUtil.UpdateJson(Series, "./Data/ListedSeries.json")
+   
+        self.selected.SerieName = NewSerieName
+
+        #Update or add serie
+        if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")):
+            Serie = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
+            if (self.selected.Name in Serie):
+                print(f"EditAnimeSerie {NewSerieName = } already in {Serie = }")
+                return
+            
+            Serie.append(self.selected.Name)
+            JsonUtil.UpdateJson(Serie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
+        else:
+            NewSerie:list[str] = [self.selected.Name]
+            JsonUtil.CreateJson(NewSerie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json") 
+        
+        self.selected.StoreData()
 
 SerieManager:ManageSeries = ManageSeries()

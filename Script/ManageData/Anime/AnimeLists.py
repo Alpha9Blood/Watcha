@@ -14,6 +14,9 @@ class AnimeLists:
             return JsonUtil.LoadJson("./Data/ListedAnimes.json")[::-1]
         else:
             raise Exception(f"AnimeList: Path not found: ./Data/ListedAnimes.json")
+
+    def DaysList(self) -> list[str]:
+        return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     
     def AnimeStatusList(self) -> dict[str, list[str]]:
         
@@ -57,7 +60,7 @@ class AnimeLists:
     def OnGoingList(self) -> list[str]:
         if (os.path.exists("./Data/AnimeStatusList.json")):
             StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
-            return StatusList["Watching"] + StatusList["PlanToWatch"]
+            return (StatusList["PlanToWatch"] + StatusList["Watching"])[::-1]
         else:
             raise Exception("AnimeStatusList: path not found: ./Data/AnimeStatusList.json")
     
@@ -87,9 +90,12 @@ class AnimeLists:
         AnimeList:list[str] = self.AnimeList()
         List:list[str] = []
         for i in AnimeList:
-            Selected = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(i)}.json")["Anime"]["MyAnimeListLink"]
-            if (Selected != ""):
-                List.append(i)
+            try:
+                Selected = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(i)}.json")["Anime"]["MyAnimeListLink"]
+                if (Selected != ""):
+                    List.append(i)
+            except:
+                raise Exception(f"HasMAL_LinkList: anime not found: ./Data/AnimeData/{JsonUtil.TrueName(i)}.json or wrong format")
         return List
     
     def HasWatchLinkList(self) -> list[str]:
@@ -97,14 +103,12 @@ class AnimeLists:
         AnimeList:list[str] = self.AnimeList()
         List:list[str] = []
         for i in AnimeList:
-            Selected = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(i)}.json")["Anime"]["WatchLink"]
-            if (Selected != ""):
-                List.append(i)
+            try:
+                Selected = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(i)}.json")["Anime"]["WatchLink"]
+                if (Selected != ""):
+                    List.append(i)
+            except:
+                raise Exception(f"HasWatchLinkList: anime not found: ./Data/AnimeData/{JsonUtil.TrueName(i)}.json or wrong format")
         return List
-
-    
-    def DaysList(self) -> list[str]:
-        return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    
 
 GetAnimeList = AnimeLists()

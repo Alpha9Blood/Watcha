@@ -60,7 +60,7 @@ class AnimeI:
     
     class DeleteAnime():
         class EntryIndex():
-            Name = 5
+            Name = 0
         class ButtonIndex():
             DeleteAnime = 1
         class TextIndex():
@@ -100,7 +100,7 @@ class AnimeI:
             Serie = 3
             Score = 4
         class ButtonIndex():
-            UpdateInfo = 4
+            UpdateInfo = 0
         class TextIndex():
             Name = 0
             MaxEp = 1

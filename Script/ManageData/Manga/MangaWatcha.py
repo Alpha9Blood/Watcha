@@ -44,6 +44,11 @@ class MangaWatcha:
     
 
     def AddManga(self, Name:str, Chapters:int, Status:str):
+
+        if (Status not in GetMangaList.CurrentStatusTypeList()):
+            print(f"AddManga status not found: {Status}")
+            return
+        
         NewManga:Manga = Manga(Name, Chapters, Status)
 
         if (os.path.exists("./Data/MangaList.json")):
@@ -226,8 +231,7 @@ class MangaWatcha:
                 PrintInfo["Score"] = "N/A"
             return PrintInfo
         else:
-            print("GetStatus manga not found")
-            return {}
+            raise Exception("GetStatus manga not found")
 
     def GetCurrentStatus(self, currentStatus:str = "") -> list[str] | dict[str, list[str]]:
         if (os.path.exists(f"./Data/MangaStatusList.json")):        
@@ -238,8 +242,7 @@ class MangaWatcha:
                 StatusList:list[str] = GetMangaList.MangaCurrentStatusList(currentStatus)
                 return StatusList
         else:
-            print("GetCurrentStatus manga not found")
-            return {}
+            raise Exception("GetCurrentStatus manga not found")
 
     def OpenLink(self, Name:str):
         if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):

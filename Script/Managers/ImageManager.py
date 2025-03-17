@@ -38,7 +38,6 @@ class ImageManager():
     def ProcessPhoto(self, Obj:Anime | Manga):
         self.ClearImages()
         
-        
         AnimeOrManga:str = list(JsonUtil.LoadJson(Obj.Path).keys())[0].lower()
 
     
@@ -52,24 +51,23 @@ class ImageManager():
             print("ProcessPhoto: Invalid MAL link")
             return
         
-        
-
         if (Obj.MyAnimeListLink == ""):
             self.__NoImage()
             self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.LabelIndex.PrintInfo.LabelIndex.Image], "Missing MyAnimeListLink or alike.")
             print("ProcessPhoto: Empty MAL Link")
             return
 
-        if (Obj.Name in List):
-            self.Photo = self.__GetCover(self.Gui.ImageExtractor.GetImage(Obj))
-            self.Gui.ImageSlot.CreateImage(self.Photo, 1170, 1, 220)
-            
-        else:
+        if (Obj.Name not in List):
             print("ProcessPhoto: Invalid Name")
+            return
+        
+        self.Photo = self.__GetCover(self.Gui.ImageExtractor.GetImage(Obj))
+        self.Gui.ImageSlot.CreateImage(self.Photo, 1170, 1, 220)
 
     def ClearImages(self):
         if (len(self.Gui.LabelList) == 0): 
             return
+        
         for image in self.Gui.LabelList:
             image.destroy()
         self.Gui.LabelList.clear()

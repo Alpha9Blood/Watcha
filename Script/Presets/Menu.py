@@ -50,5 +50,4 @@ class Menu:
         self.MenuIndex.Manga.ButtonIndex.ViewInfo = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MenuIndex.Manga.ButtonIndex.ViewInfo].config(width=8, font=('Arial', 16))
 
-        """ self.Gui.Text.CreateText('Settings', 1400, 1, 500) """
         

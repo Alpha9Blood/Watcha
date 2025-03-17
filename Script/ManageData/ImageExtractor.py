@@ -76,7 +76,6 @@ class ImageControler():
             
             ImageBytes:BytesIO = JsonUtil.LoadImage(ImagePath)
             return ImageBytes
-        except Exception as e:
-            print("GetImage: ", e)
-            raise
+        except Exception:
+            raise Exception(f"GetImage: Image error on load.")
             

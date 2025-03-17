@@ -11,7 +11,6 @@ from Script.ManageData.Anime.ManageSeries import SerieManager
 
 class AnimeExecute:
     
-    
     def __init__(self):
         self.AnimeIndex = AnimeI()
     
@@ -21,6 +20,8 @@ class AnimeExecute:
     
     
     #Tools
+
+
     def __ClearEntry(self, Index:int = -1, IndexList:list[int] = []):           
         """
         Clears the entry fields in the GUI.
@@ -42,18 +43,20 @@ class AnimeExecute:
         EntryList:list[CustomEntry] = self.Gui.EntryList
         return EntryList[index].get()
         
-    def __FindName(self, Name:str, Serie:bool = False, CustomData:list[str] = []) -> str:
+    def __FindName(self, Name:str, Serie:bool = False, CustomData:list[str] = []) -> str:  
         """
-        Finds an anime by name in the list of anime stored in the "./Data/ListedAnimes.json" file.
+        Finds the full name of an anime in the list of anime names.
 
         Args:
             Name (str): The name of the anime to search for.
+            Serie (bool): If the search should be done in the list of series. Defaults to False.
+            CustomData (list[str]): A custom list of anime names to search in. Defaults to an empty list.
 
         Returns:
-            str: The name of the anime found, or an empty string if not found.
+            str: The full name of the anime.
 
-        Notes:
-            This function is case-insensitive.
+        Raises:
+            Exception: If the anime is not found in the list.
         """
         if (Name == ""):
             raise Exception("__FindName: name is empty")
@@ -70,199 +73,220 @@ class AnimeExecute:
         else:
             List:list[str] = AnimeList
 
+        if (Name in List):
+            return Name
+        
         for var in List:
             if (Name in var.lower()):
                 Name = var
                 return Name
         
-        raise Exception("__FindName: anime not found: " + Name)
-
-    #ExecFuncs
-
+        raise Exception(f"__FindName: anime not found: {Name} in {List}")
 
     #Set
 
     
-    
-
     def Add(self):
         Name:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.Name)
-        if (Name != ""):
-            MaxEpisode:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.MaxEp)
-            if (MaxEpisode != ""):
-                try:
-                    MaxEpisodeI = int(MaxEpisode)
-                    if (MaxEpisodeI < 0):
-                        MaxEpisodeI = 0
-                except ValueError:
-                    print("AddAnime: MaxEpisode must be an integer:" + MaxEpisode)
-                    return
-            else:
-                MaxEpisodeI = 0
-            
-            Status:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.Status)
+        if (Name == ""):
+            print("AddAnime: Anime name is empty")
+            return
+        if (Name in GetAnimeList.AnimeList()):
+            print(f"AddAnime: Anime already exists: {Name}")
+            return
+        
+        Status:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.Status)
+        if (Status not in GetAnimeList.CurrentStatusTypeList()):
+            print("AddAnime: invalid status")
+            return
 
-            SeasonName:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonName)
-            if (SeasonName not in SeasonManager.SeasonsOrder):
-                raise Exception("AddAnime: invalid season")
-            
-            SeasonYear:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonYear)
-            if (not SeasonYear.isdigit()):
-                raise ValueError("AddAnime: SeasonYear must be a integer number: " + SeasonYear)
-            
-            Season:str = f"{SeasonName}_{SeasonYear}"
-            
-            Serie:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.Serie)
-
-            def AddIsComplete() -> bool:
-                if (MaxEpisodeI >= 0 and Status != ""):
-                    return True
-                else:
-                    return False
-            
-            NameList:list[str] = GetAnimeList.AnimeList()
-            if (Name not in NameList):
-                if (AddIsComplete()):
-                    Watch.SetNewAnime(Name, MaxEpisodeI, Status, Season, Serie)
-                    Entrys:list[int] = [
-                        self.AnimeIndex.AddAnime.EntryIndex.Name,
-                        self.AnimeIndex.AddAnime.EntryIndex.MaxEp,
-                        self.AnimeIndex.AddAnime.EntryIndex.Status,
-                        self.AnimeIndex.AddAnime.EntryIndex.SeasonName,
-                        self.AnimeIndex.AddAnime.EntryIndex.SeasonYear,
-                        self.AnimeIndex.AddAnime.EntryIndex.Serie
-                        ]
-                    self.__ClearEntry(IndexList = Entrys)
-                else:
-                    raise Exception("AddAnime: MaxEpisode < 0 or Status is empty")
-            else:
-                raise Exception(f"AddAnime: Anime already exists:" + Name)
+        SeasonName:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonName)
+        if (SeasonName not in SeasonManager.SeasonsOrder):
+            print("AddAnime: invalid season")
+            return
+        
+        SeasonYear:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonYear)
+        if (not SeasonYear.isdigit()):
+            print("AddAnime: SeasonYear must be a integer number: " + SeasonYear)
+            return
+        
+        MaxEpisode:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.MaxEp)
+        if (MaxEpisode != ""):
+            try:
+                MaxEpisodeI = int(MaxEpisode)
+                if (MaxEpisodeI < 0):
+                    MaxEpisodeI = 0
+            except ValueError:
+                raise ValueError("AddAnime: MaxEpisode must be an integer:" + MaxEpisode)
         else:
-            raise Exception("AddAnime: Anime name is empty")
-    
+            MaxEpisodeI = 0
+        
+        Season:str = f"{SeasonName}_{SeasonYear}"
+        Serie:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.Serie)
+
+        Watch.SetNewAnime(Name, MaxEpisodeI, Status, Season, Serie)
+        Entrys:list[int] = [
+            self.AnimeIndex.AddAnime.EntryIndex.Name,
+            self.AnimeIndex.AddAnime.EntryIndex.MaxEp,
+            self.AnimeIndex.AddAnime.EntryIndex.Status,
+            self.AnimeIndex.AddAnime.EntryIndex.SeasonName,
+            self.AnimeIndex.AddAnime.EntryIndex.SeasonYear,
+            self.AnimeIndex.AddAnime.EntryIndex.Serie
+            ]
+        self.__ClearEntry(IndexList = Entrys)
+            
     def RemoveAnime(self):
         Name:str = self.__GetEntry(self.AnimeIndex.DeleteAnime.EntryIndex.Name)
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.Remove(Name)
-            self.__ClearEntry(self.AnimeIndex.DeleteAnime.EntryIndex.Name)
-        else:
-            print("AnimeRemove not found")
-    
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print(f"AnimeRemove not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+            return
+        
+        Watch.Remove(Name)
+        self.__ClearEntry(self.AnimeIndex.DeleteAnime.EntryIndex.Name)
+            
     def RemoveLeastAdded(self):   
         Namelist = GetAnimeList.AnimeList()
         if (Namelist == []):
             print("RemoveLeastAdded AnimeList is empty")
             return
+        
         Name:str = Namelist[::-1][0]
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.Remove(Name)
-        else:
-            print("RemoveLeastAdded anime not found")
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print(f"RemoveLeastAdded anime not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+            return
+        
+        Watch.Remove(Name)
 
     def AddEppisode(self):
         Name:str = self.__GetEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Name)
-        OnGoingList:list[str] = GetAnimeList.OnGoingList()
-        Name = self.__FindName(Name, CustomData = OnGoingList)
+        if (Name == ""):
+            print("AddEpisode: name is empty")
+            return
         
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.UpdateEpisode(Name)
-            self.__ClearEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Name)
-        else:
-            print("AddEpisode path not found")
+        OnGoingList:list[str] = GetAnimeList.OnGoingList()
+        Name = self.__FindName(Name, CustomData = OnGoingList) 
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print(f"AddEpisode path not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+            return
+        
+        Watch.UpdateEpisode(Name)
+        self.__ClearEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Name)
 
     def SetEpisode(self):
         Name:str = self.__GetEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Name)
+
+        if (Name == ""):
+            print("SetEpisode: name is empty")
+            return
         
         OnGoingList:list[str] = GetAnimeList.OnGoingList()
         Name = self.__FindName(Name, CustomData = OnGoingList)
-
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Episode:str = self.__GetEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Ep)
-
-            Watch.UpdateEpisode(Name, True, Episode)
-            self.__ClearEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Name)
-            self.__ClearEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Ep)
-        else:
-            print("SetEpisode path not found")
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print(f"SetEpisode path not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+            return
+        
+        Episode:str = self.__GetEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Ep)
+        Watch.UpdateEpisode(Name, True, Episode)
+        self.__ClearEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Name)
+        self.__ClearEntry(self.AnimeIndex.UpdateEpisode.EntryIndex.Ep)
     
     def EditAnimeInfo(self):
         Name:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Name)
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Status:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Status)
-            Score:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Score)
-            MaxEp:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.MaxEp)
-            Serie:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Serie)
 
-            SeasonName:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonName)
-            if (SeasonName not in SeasonManager.SeasonsOrder):
-                raise Exception("AddAnime: invalid season")
-            
-            SeasonYear:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonYear)
-            
-            
-            
-            #TODO: Test ordem status
-            if (Score != ""):
-                Watch.SetScore(Name, Score)
-                self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Score)
-            
-            if (MaxEp != ""):
-                Watch.EditMaxEp(Name, MaxEp)
-                self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.MaxEp)
-
-            if (Serie != ""):
-                SerieManager.EditAnimeSerie(Name, Serie)
-                self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Serie)
-            
-            if (SeasonYear != ""):
-                if (not SeasonYear.isdigit()):
-                    raise ValueError("AddAnime: SeasonYear must be a integer number: " + SeasonYear)
-                Season:str = f"{SeasonName}_{SeasonYear}"
-                SeasonManager.EditAnimeSeason(Name, Season)
-            
-            if (Status != ""):
-                Watch.SetCurrentStatus(Name, Status)
-                self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Status)
-            
-            self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Name)
-        else:
+        if (Name == ""):
+            print("EditAnimeInfo: name is empty")
+            return
+        
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print(f"EditAnimeInfo anime not found: {Name}")
+            return
+        
+        Status:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Status)
+        Score:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Score)
+        MaxEp:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.MaxEp)
+        Serie:str = self.__GetEntry(self.AnimeIndex.EditInfo.EntryIndex.Serie)
 
+        SeasonName:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonName)
+        if (SeasonName not in SeasonManager.SeasonsOrder):
+            print("AddAnime: invalid season")
+            return
+        
+        SeasonYear:str = self.__GetEntry(self.AnimeIndex.AddAnime.EntryIndex.SeasonYear)
+        
+        if (SeasonYear != ""):
+            if (not SeasonYear.isdigit()):
+                raise ValueError("AddAnime: SeasonYear must be a integer number: " + SeasonYear)
+            
+            Season:str = f"{SeasonName}_{SeasonYear}"
+            SeasonManager.EditAnimeSeason(Name, Season)
+
+        if (Score != ""):
+            Watch.SetScore(Name, Score)
+            self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Score)
+        
+        if (MaxEp != ""):
+            Watch.EditMaxEp(Name, MaxEp)
+            self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.MaxEp)
+
+        if (Serie != ""):
+            SerieManager.EditAnimeSerie(Name, Serie)
+            self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Serie)
+        
+        #TODO: Test ordem status
+        if (Status != ""):
+            Watch.SetCurrentStatus(Name, Status)
+            self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Status)
+        
+        self.__ClearEntry(self.AnimeIndex.EditInfo.EntryIndex.Name)
 
     def AddMyAnimeListLink(self):
         Name = self.__GetEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Name)
+        
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print(f"AddMyAnimeListLink not found:./Data/MangaData/{JsonUtil.TrueName(Name)}.json")
+            return
+        
         Link = self.__GetEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Link)
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.UpdateMyAnimeListLink(Name, Link)
-            self.Gui.ImageExtractor.StoreExtractedImage(Name, Link)
-            self.__ClearEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Name)
-            self.__ClearEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Link)
-        else:
-            raise Exception(f"AddMyAnimeListLink not found: Name:{Name}, Path:./Data/MangaData/{JsonUtil.TrueName(Name)}.json")
-
+        if (Link == ""):
+            print("AddMyAnimeListLink link is empty")
+            return
+        
+        Watch.UpdateMyAnimeListLink(Name, Link)
+        self.Gui.ImageExtractor.StoreExtractedImage(Name, Link)
+        self.__ClearEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Name)
+        self.__ClearEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Link)
+            
 
     def AddToCalendar(self):
         Name = self.__GetEntry(self.AnimeIndex.AddToCallendar.EntryIndex.Name)
-        Day = self.__GetEntry(self.AnimeIndex.AddToCallendar.EntryIndex.Day)
+        
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.CreateCalendar(Name, Day)
-            self.__ClearEntry(self.AnimeIndex.AddToCallendar.EntryIndex.Name)
-        else:
-            print("AddToCalendar not found")
+            print(f"AddToCalendar not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+            return
+        
+        Day = self.__GetEntry(self.AnimeIndex.AddToCallendar.EntryIndex.Day)
+        Watch.CreateCalendar(Name, Day)
+        self.__ClearEntry(self.AnimeIndex.AddToCallendar.EntryIndex.Name)
 
     def SetWatchLink(self):
         Name = self.__GetEntry(self.AnimeIndex.SetWatchLink.EntryIndex.Name)
+        
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print(f"SetWatchLink path not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+            return
+
         Link = self.__GetEntry(self.AnimeIndex.SetWatchLink.EntryIndex.Link)
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Watch.AddWatchLink(Name, Link)
-            self.__ClearEntry(self.AnimeIndex.SetWatchLink.EntryIndex.Name)
-            self.__ClearEntry(self.AnimeIndex.SetWatchLink.EntryIndex.Link)
-        else:
-            print("SetWatchLink path not found")
-              
+        if (Link == ""):
+            print("SetWatchLink link is empty")
+            return
+        
+        Watch.AddWatchLink(Name, Link)
+        self.__ClearEntry(self.AnimeIndex.SetWatchLink.EntryIndex.Name)
+        self.__ClearEntry(self.AnimeIndex.SetWatchLink.EntryIndex.Link)      
 
 
     #Get
+
 
     def OpenMALHomePage(self):
         web.open("https://myanimelist.net")
@@ -272,28 +296,32 @@ class AnimeExecute:
 
     def PrintSerieList(self):
         self.Gui.Text.PrintDisplay(GetAnimeList.SerieList())
-
     
     def __LoadImage(self, Name:str):
-        Selected:Anime = Anime()
-        Selected.UpdateData(Name)
+        Selected:Anime = Watch.SelectAnime(Name)
         self.Gui.ImageSlot.ProcessPhoto(Selected)
 
     
     def GetAnimeStatus(self):
         Name:str = self.__GetEntry(self.AnimeIndex.PrintInfo.EntryIndex.Name)
+
+        if (Name == ""):
+            print("SetEpisode: name is empty")
+            return
+        
         Name = self.__FindName(Name)
 
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            if (Name in self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options):
-                self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
-                self.__LoadImage(Name)
-                self.__ClearEntry(self.AnimeIndex.PrintInfo.EntryIndex.Name)
-            else:
-                print(f"GetAnimeStatus name not found: {Name} in {self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options}")
-        else:
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print(f"GetAnimeStatus path not found: {JsonUtil.TrueName(Name)}")
-
+            return
+        
+        if (Name not in self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options):
+            print(f"GetAnimeStatus name not found: {Name} in EntryOptions: {self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options}")
+            return
+        
+        self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
+        self.__LoadImage(Name)
+        self.__ClearEntry(self.AnimeIndex.PrintInfo.EntryIndex.Name)
 
     def PrintSeason(self):
         SeasonID:str = self.__GetEntry(self.AnimeIndex.PrintSeason.EntryIndex.SeasonID)
@@ -303,122 +331,144 @@ class AnimeExecute:
     def PrintStatusList(self):
         Info:str = self.__GetEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
         if (os.path.exists("./Data/AnimeStatusList.json")):
-            Status:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
-            Filter = self.Gui.AnimeDataLists.GetFilter()
-            if (Info != ""):  
-                if (Info == "Watching"):
-                    NameList:list[str] = Status.get("Watching", [])
+            print("StatusList path not found")
+            return
+        
+        Status:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
+        Filter = self.Gui.AnimeDataLists.GetFilter()
+        if (Info != ""):  
+            if (Info == "Watching"):
+                NameList:list[str] = Status.get("Watching", [])
+                NewList:list[str] = []
+                
+                for name in NameList:
+                    SelectedAnime:Anime = Watch.SelectAnime(name)
+                    if (Filter == "All"):
+                        NewList.append(name)
+                        NewList.append(f" //CurrentEP: {SelectedAnime.EpisodeStatus}, Season: {SelectedAnime.Season}")
+                    elif (SelectedAnime.Season == Filter):
+                        NewList.append(name)
+                        NewList.append(f" //CurrentEP: {SelectedAnime.EpisodeStatus}, Season: {SelectedAnime.Season}")
+
+                self.Gui.Text.PrintDisplay(NewList)
+                self.__ClearEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
+            else:
+                StatusList:list[str] = ["Completed", "PlanToWatch", "Dropped"]
+                NameList:list[str] = Status[f"{Info}"]
+                if (Info not in StatusList):
+                    print("Status not found")
+                    return
+                
+                if (Filter == "All"):
+                    Selected:list[str] = NameList
+                    self.Gui.Text.PrintDisplay(Selected)
+                    self.__ClearEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
+                else:
                     NewList:list[str] = []
-                    
                     for name in NameList:
                         SelectedAnime:Anime = Watch.SelectAnime(name)
-                        if (Filter == "All"):
+                        if (SelectedAnime.Season == Filter):
                             NewList.append(name)
-                            NewList.append(f" //CurrentEP: {SelectedAnime.EpisodeStatus}, Season: {SelectedAnime.Season}")
-                        elif (SelectedAnime.Season == Filter):
-                            NewList.append(name)
-                            NewList.append(f" //CurrentEP: {SelectedAnime.EpisodeStatus}, Season: {SelectedAnime.Season}")
 
                     self.Gui.Text.PrintDisplay(NewList)
                     self.__ClearEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
-                else:
-                    StatusList:list[str] = ["Completed", "PlanToWatch", "Dropped"]
-                    NameList:list[str] = Status[f"{Info}"]
-                    if (Info in StatusList):     
-                        if (Filter == "All"):
-                            Selected:list[str] = NameList
-                            self.Gui.Text.PrintDisplay(Selected)
-                            self.__ClearEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
-                        else:
-                            NewList:list[str] = []
-                            for name in NameList:
-                                SelectedAnime:Anime = Watch.SelectAnime(name)
-                                if (SelectedAnime.Season == Filter):
-                                    NewList.append(name)
-
-                            self.Gui.Text.PrintDisplay(NewList)
-                            self.__ClearEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
-                    else:
-                        print("Status not found")
-            else:
-                NewStatus:dict[str, list[str]] = {"Watching": [], "Completed": [], "PlanToWatch": [], "Dropped": []}
-                for status in Status:
-                    NameList:list[str] = Status[f"{status}"]
-                    for name in NameList:
-                        SelectedAnime:Anime = Watch.SelectAnime(name)
-                        if (Filter == "All"):
-                            NewStatus[f"{status}"].append(name)
-                        elif (SelectedAnime.Season == Filter):
-                            NewStatus[f"{status}"].append(name)
-                self.Gui.Text.PrintDisplay(NewStatus)
+                    
         else:
-            print("StatusList path not found")
-        
-
+            NewStatus:dict[str, list[str]] = {"Watching": [], "Completed": [], "PlanToWatch": [], "Dropped": []}
+            for status in Status:
+                NameList:list[str] = Status[f"{status}"]
+                for name in NameList:
+                    SelectedAnime:Anime = Watch.SelectAnime(name)
+                    if (Filter == "All"):
+                        NewStatus[f"{status}"].append(name)
+                    elif (SelectedAnime.Season == Filter):
+                        NewStatus[f"{status}"].append(name)
+            self.Gui.Text.PrintDisplay(NewStatus)
+            
     def OpenMyAnimeListLink(self):
         Name:str = self.__GetEntry(self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name)
-        Name = self.__FindName(Name)
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            if (Name in self.Gui.EntryList[self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name].options):
-                link:str = Watch.SelectAnime(Name).MyAnimeListLink
-                if (link != ""):
-                    web.open(link)
-                    self.__ClearEntry(self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name)
-                else:
-                    print("OpenLink anime link is empty")
-            else:
-                print("OpenLink name not not found")
-        else:
-            print("OpenLink path not found")
 
+        if (Name == ""):
+            print("SetEpisode: name is empty")
+            return
+        
+        Name = self.__FindName(Name)
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print("OpenLink path not found")
+            return
+        
+        if (Name not in self.Gui.EntryList[self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name].options):
+            print("OpenLink name not found")
+            return
+        
+        link:str = Watch.SelectAnime(Name).MyAnimeListLink
+        if (link == ""):
+            print("OpenLink anime link is empty")
+            return
+        
+        web.open(link)
+        self.__ClearEntry(self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name)
 
     def PrintSerie(self):
         Name:str = self.__GetEntry(self.AnimeIndex.PrintSerie.EntryIndex.SerieID)
+
+        if (Name == ""):
+            print("SetEpisode: name is empty")
+            return
+        
         self.__FindName(Name, True)
-        if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(Name)}.json")):
-            Info:dict = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(Name)}.json")
-            self.Gui.Text.PrintDisplay(Info)
-            self.__ClearEntry(self.AnimeIndex.PrintSerie.EntryIndex.SerieID)  
-        else:
+        if (not os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(Name)}.json")):
             print("PrintSerie path not found")
+            return
+    
+        Info:dict = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(Name)}.json")
+        self.Gui.Text.PrintDisplay(Info)
+        self.__ClearEntry(self.AnimeIndex.PrintSerie.EntryIndex.SerieID)  
     
     def PrintSeasonCalendar(self):
         SeasonID:str = self.__GetEntry(self.AnimeIndex.PrintCallendar.EntryIndex.SeasonID)
-        if (os.path.exists(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")):
-            Info:dict = JsonUtil.LoadJson(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")[SeasonID]
-            self.Gui.Text.PrintDisplay(Info)
-            self.__ClearEntry(self.AnimeIndex.PrintCallendar.EntryIndex.SeasonID)
-        else:
+        if (not os.path.exists(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")):
             print("PrintSeasonCalendar path not found")
+            return
+        
+        Info:dict = JsonUtil.LoadJson(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")[SeasonID]
+        self.Gui.Text.PrintDisplay(Info)
+        self.__ClearEntry(self.AnimeIndex.PrintCallendar.EntryIndex.SeasonID)
 
     def OpenSeasonLink(self):
         Season = self.__GetEntry(self.AnimeIndex.OpenSeasonLink.EntryIndex.SeasonID)        
-        if (os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(Season)}.json")):
-            SeasonsLinks:dict = JsonUtil.LoadJson(f"./Data/SeasonsLinks.json")
-
-            if (Season in SeasonsLinks and SeasonsLinks[Season] != ""):
-                Link = SeasonsLinks[Season]
-
-                web.open(Link)                
-                self.__ClearEntry(self.AnimeIndex.OpenSeasonLink.EntryIndex.SeasonID)
-            else:
-                print("OpenSeasonLink season not found")
-        else:
+        if (not os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(Season)}.json")):
             print("OpenSeasonLink season path not found")
+            return
+        
+        SeasonsLinks:dict = JsonUtil.LoadJson(f"./Data/SeasonsLinks.json")[str(SeasonManager.GetSeasonYear(Season))]
+        if (Season not in SeasonsLinks):
+            print("OpenSeasonLink season not found")
+            return
+        
+        Link = SeasonsLinks[Season]
+        if (Link == ""):
+            print("OpenSeasonLink link is empty")
+            return
+
+        web.open(Link)
+        self.__ClearEntry(self.AnimeIndex.OpenSeasonLink.EntryIndex.SeasonID)
     
     def OpenWatchLink(self):
         Name = self.__GetEntry(self.AnimeIndex.OpenWatchLink.EntryIndex.Name)
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Info:dict = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")["Anime"]
-
-            if (Info["WatchLink"] == ""):
-                raise Exception("OpenWatchLink: link is empty")
-            
-            if (Name in self.Gui.EntryList[self.AnimeIndex.OpenWatchLink.EntryIndex.Name].options):
-                web.open(Info["WatchLink"])
-                self.__ClearEntry(self.AnimeIndex.OpenWatchLink.EntryIndex.Name)
-            else:
-                raise Exception("OpenWatchLink: name not found")
-        else:
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print("OpenWatchLink season path not found")
+            return
         
+        Info:dict = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")["Anime"]
+
+        if (Info["WatchLink"] == ""):
+            print("OpenWatchLink: link is empty")
+            return
+        
+        if (Name not in self.Gui.EntryList[self.AnimeIndex.OpenWatchLink.EntryIndex.Name].options):
+            print("OpenWatchLink: name not found")
+            return
+
+        web.open(Info["WatchLink"])
+        self.__ClearEntry(self.AnimeIndex.OpenWatchLink.EntryIndex.Name)

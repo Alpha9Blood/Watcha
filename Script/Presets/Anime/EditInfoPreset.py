@@ -23,31 +23,35 @@ class EditInfo:
 
 
     def UpdateEpisode(self):
-        self.Gui.Button.CreateBut('AddEp', self.Gui.AnimeExec.AddEppisode , 1180, 1 ,250)
-        self.AnimeIndex.UpdateEpisode.ButtonIndex.AddEpisode = self.Gui.Presets.UpdateButtonIndex()
-        self.Gui.ButList[self.AnimeIndex.UpdateEpisode.ButtonIndex.AddEpisode].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
-
-        self.Gui.Button.CreateBut('SetEp', self.Gui.AnimeExec.SetEpisode , 1315, 1 ,250)
-        self.AnimeIndex.UpdateEpisode.ButtonIndex.SetEpisode = self.Gui.Presets.UpdateButtonIndex()
-        self.Gui.ButList[self.AnimeIndex.UpdateEpisode.ButtonIndex.SetEpisode].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
-
+        # Title Text
         self.Gui.Text.CreateText("UpdateEpisode", 1250, 1, 125)
         self.AnimeIndex.UpdateEpisode.TextIndex.Title = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.TextList[self.AnimeIndex.UpdateEpisode.TextIndex.Title].config(width=16, height= 3, font=('Arial', 13))
+        self.Gui.TextList[self.AnimeIndex.UpdateEpisode.TextIndex.Title].config(width=16, height=3, font=('Arial', 13))
 
-        self.Gui.Text.CreateText("Name", 1072, 1,202)
+        # Name Label and Entry
+        self.Gui.Text.CreateText("Name", 1072, 1, 202)
         self.AnimeIndex.UpdateEpisode.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.UpdateEpisode.TextIndex.Name], "Can be simplified.")
-        
-        self.Gui.Entry.CreateEntry(1168, 1,210)
+
+        self.Gui.Entry.CreateEntry(1168, 1, 210)
         self.AnimeIndex.UpdateEpisode.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.AnimeIndex.UpdateEpisode.EntryIndex.Name].AddList(GetAnimeList.OnGoingList)
         self.Gui.Entry.EntryFilter.UpdateList.append(self.Gui.EntryList[self.AnimeIndex.UpdateEpisode.EntryIndex.Name])
-        self.Gui.EntryList[self.AnimeIndex.UpdateEpisode.EntryIndex.Name].config(width=25)     
-        
-        self.Gui.Entry.CreateEntry(1355, 1,326)
+        self.Gui.EntryList[self.AnimeIndex.UpdateEpisode.EntryIndex.Name].config(width=25)
+
+        # Episode Entry
+        self.Gui.Entry.CreateEntry(1355, 1, 326)
         self.AnimeIndex.UpdateEpisode.EntryIndex.Ep = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.AnimeIndex.UpdateEpisode.EntryIndex.Ep].config(width=2)
+
+        # Action Buttons
+        self.Gui.Button.CreateBut('AddEp', self.Gui.AnimeExec.AddEppisode, 1180, 1, 250)
+        self.AnimeIndex.UpdateEpisode.ButtonIndex.AddEpisode = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.AnimeIndex.UpdateEpisode.ButtonIndex.AddEpisode].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
+
+        self.Gui.Button.CreateBut('SetEp', self.Gui.AnimeExec.SetEpisode, 1315, 1, 250)
+        self.AnimeIndex.UpdateEpisode.ButtonIndex.SetEpisode = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.AnimeIndex.UpdateEpisode.ButtonIndex.SetEpisode].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
 
     def RemoveLeastAdded(self):

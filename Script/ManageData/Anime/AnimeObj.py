@@ -23,10 +23,10 @@ class Anime:
         self.Path = ""    
     
     def CurrentEpisodeStatus(self) -> str:
-        if (self.Episode > 0 and self.MaxEpisodes != 0):
+        if (self.MaxEpisodes > 0):
             return f"{self.Episode}/{self.MaxEpisodes}"
-        else:
-            return f"{self.Episode}/Undefined"
+        
+        return f"{self.Episode}/Undefined"
         
     def DirectoryPath(self) -> str:
         return f"./Data/AnimeData/{JsonUtil.TrueName(self.Name)}.json"
@@ -87,29 +87,32 @@ class Anime:
             if (os.path.exists(Path)):
                 JsonUtil.UpdateJson(Data, Path)
             else:
-                print("Store directory not found")
+                print(f"Store directory not found: {Path = }")
         else:
             if (self.Name != ""):
                 JsonUtil.CreateJson(Data, Path)
             else:
-                print("StoreData anime name not found")
+                print(f"StoreData anime {self.Name} not found")
     
     def UpdateData(self, Name:str, UpdateStatus:bool = True):
         if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            Info:dict = self.GetData(Name)
-            self.Name = Info["Name"]
-            self.EpisodeStatus = Info["EpisodeStatus"]
-            self.CurrentStatus = Info["Status"]
-            self.Season = Info["Season"]
-            self.MaxEpisodes = Info["MaxEpisodes"]
-            self.Episode = Info["Episode"]
-            self.SerieName = Info["SerieName"]
-            self.MyAnimeListLink = Info["MyAnimeListLink"]
-            self.WatchLink = Info["WatchLink"] 
-            self.Score = Info["Score"]
-            self.Path = self.DirectoryPath()
-            if (UpdateStatus):
-                self.UpdateStatus()
+            try:
+                Info:dict = self.GetData(Name)
+                self.Name = Info["Name"]
+                self.EpisodeStatus = Info["EpisodeStatus"]
+                self.CurrentStatus = Info["Status"]
+                self.Season = Info["Season"]
+                self.MaxEpisodes = Info["MaxEpisodes"]
+                self.Episode = Info["Episode"]
+                self.SerieName = Info["SerieName"]
+                self.MyAnimeListLink = Info["MyAnimeListLink"]
+                self.WatchLink = Info["WatchLink"] 
+                self.Score = Info["Score"]
+                self.Path = self.DirectoryPath()
+                if (UpdateStatus):
+                    self.UpdateStatus()
+            except Exception:
+                raise Exception("UpdateData anime error")
         else:
             print("UpdateData anime not found")
     
