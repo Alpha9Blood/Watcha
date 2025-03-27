@@ -11,12 +11,11 @@ class MangaWatcha:
         self.selected:Manga = Manga()
 
     def SelectManga(self, Name:str) -> Manga:
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            self.selected.UpdateData(Name)
-            return self.selected
-        else:
-            print("SelectManga manga not found")
-            return self.selected
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("SelectManga manga not found")
+        
+        self.selected.UpdateData(Name)
+        return self.selected
     
     def UpdateStatusList(self, Selected:Manga, UpdateStatus:bool = True):
         Name = Selected.Name
@@ -46,8 +45,7 @@ class MangaWatcha:
     def AddManga(self, Name:str, Chapters:int, Status:str):
 
         if (Status not in GetMangaList.CurrentStatusTypeList()):
-            print(f"AddManga status not found: {Status}")
-            return
+            raise Exception(f"AddManga status not found: {Status}")
         
         NewManga:Manga = Manga(Name, Chapters, Status)
 
@@ -118,140 +116,136 @@ class MangaWatcha:
         
     
     def SetCurrentStatus(self, Name:str, Status:str):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            StatusList:list[str] = GetMangaList.CurrentStatusTypeList()
-            if (Status not in StatusList):
-                print("SetCurrentStatus status not found")
-                return
-            
-            self.selected.UpdateData(Name, False)
-            self.selected.Status = Status
-            self.selected.StoreData(UpdateStatus = False)
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("SetCurrentStatus manga not found")
+        
+        StatusList:list[str] = GetMangaList.CurrentStatusTypeList()
+        if (Status not in StatusList):
+            raise Exception("SetCurrentStatus status not found")
+        
+        self.selected.UpdateData(Name, False)
+        self.selected.Status = Status
+        self.selected.StoreData(UpdateStatus = False)
 
-            if (os.path.exists("./Data/MangaStatusList.json")):
-                self.selected.Status = Status
-                self.UpdateStatusList(self.selected, False)
-                self.selected.StoreData(UpdateStatus = False)
-            else:
-                MangaStatusListInfo:dict[str, list[str]] = {"Reading": [], "Completed": [], "PlanToRead": [], "Dropped": []}
-                Info:list[str] = MangaStatusListInfo[Status]
-                Info.append(Name)
-                JsonUtil.CreateJson(MangaStatusListInfo, "./Data/MangaStatusList.json")
+        if (os.path.exists("./Data/MangaStatusList.json")):
+            self.selected.Status = Status
+            self.UpdateStatusList(self.selected, False)
+            self.selected.StoreData(UpdateStatus = False)
         else:
-            print("SetCurrentStatus manga not found")
+            MangaStatusListInfo:dict[str, list[str]] = {"Reading": [], "Completed": [], "PlanToRead": [], "Dropped": []}
+            Info:list[str] = MangaStatusListInfo[Status]
+            Info.append(Name)
+            JsonUtil.CreateJson(MangaStatusListInfo, "./Data/MangaStatusList.json")
 
     def AddLink(self, Name:str, Link:str):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            self.selected.UpdateData(Name)
-            self.selected.MangaLink = Link
-            self.selected.StoreData()
-        else:
-            print("AddLink manga not found")
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("AddLink manga not found")
+        
+        self.selected.UpdateData(Name)
+        self.selected.MangaLink = Link
+        self.selected.StoreData()
 
     def EditFavorite(self, Name:str, Add:bool = True):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            if (os.path.exists("./Data/FavoriteMangaList.json")):
-                if (Add):
-                    MangaListInfo:list[str] = GetMangaList.FavoriteMangaList()
-                    MangaListInfo.append(Name)
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("EditFavorite manga not found")     
+        
+        if (os.path.exists("./Data/FavoriteMangaList.json")):
+            if (Add):
+                MangaListInfo:list[str] = GetMangaList.FavoriteMangaList()
+                MangaListInfo.append(Name)
+                JsonUtil.UpdateJson(MangaListInfo, "./Data/FavoriteMangaList.json")
+            else:
+                MangaListInfo:list[str] = GetMangaList.FavoriteMangaList()
+                if (Name in MangaListInfo):
+                    MangaListInfo.remove(Name)
                     JsonUtil.UpdateJson(MangaListInfo, "./Data/FavoriteMangaList.json")
                 else:
-                    MangaListInfo:list[str] = GetMangaList.FavoriteMangaList()
-                    if (Name in MangaListInfo):
-                        MangaListInfo.remove(Name)
-                        JsonUtil.UpdateJson(MangaListInfo, "./Data/FavoriteMangaList.json")
-                    else:
-                        print("EditFavorite manga not found in the list")
-            else:
-                if (Add):
-                    MangaListInfo:list[str] = [Name]
-                    JsonUtil.CreateJson(MangaListInfo, "./Data/FavoriteMangaList.json")
-                else:
-                    print("EditFavorite manga not found")
+                    print("EditFavorite manga not found in the list")
         else:
-            print("EditFavorite manga not found")     
+            if (Add):
+                MangaListInfo:list[str] = [Name]
+                JsonUtil.CreateJson(MangaListInfo, "./Data/FavoriteMangaList.json")
+            else:
+                print("EditFavorite manga not found")
 
     def EditChapters(self, Name:str, Set:bool = False, Chapters:str = ""):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            self.selected.UpdateData(Name, False)
-            
-            if (Set):
-                try:
-                    ChaptersI = int(Chapters)
-                    if (ChaptersI < 0):
-                        ChaptersI = 0
-                    self.selected.Chapters = ChaptersI
-                except:
-                    raise ValueError("EditChapters Chapters must be a integer number")
-            else:
-                self.selected.Chapters += 1
-            
-            self.selected.LeastTimeUpdated = time.strftime("%d/%m/%Y")
-            self.UpdateStatusList(self.selected)
-            self.selected.StoreData()
-            
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("EditChapters manga not found")
+        
+        self.selected.UpdateData(Name, False)
+        
+        if (Set):
+            try:
+                ChaptersI = int(Chapters)
+                if (ChaptersI < 0):
+                    ChaptersI = 0
+                self.selected.Chapters = ChaptersI
+            except:
+                raise ValueError("EditChapters Chapters must be a integer number")
         else:
-            print("EditChapters manga not found")
+            self.selected.Chapters += 1
+        
+        self.selected.LeastTimeUpdated = time.strftime("%d/%m/%Y")
+        self.UpdateStatusList(self.selected)
+        self.selected.StoreData()
     
     def EditScore(self, Name:str, Score:str):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            if (Score == ""):
-                return
-            
-            try:
-                ScoreF = float(Score)
-            except:
-                print("EditScore needs to be a number")
-                return
-            
-            self.selected.UpdateData(Name)
-            self.selected.Score = ScoreF
-            self.selected.StoreData(UpdateStatus = False)
-        else:
-            print("EditScore manga not found")
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("EditScore manga not found")
+        
+        if (Score == ""):
+            raise Exception("EditScore Score is empty")
+        try:
+            ScoreF = float(Score)
+        except ValueError:
+            raise ValueError(f"EditScore: {Score = } needs to be a number")
+        
+        self.selected.UpdateData(Name)
+        self.selected.Score = ScoreF
+        self.selected.StoreData(UpdateStatus = False)
 
 
     #Get
 
 
     def GetStatus(self, Name:str) -> dict:
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            Info:dict = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")["Manga"]
-            
-            PrintInfo:dict[str, str] = {
-                "Name": Info["Name"],
-                "Chapters": Info["Chapters"],
-                "Status": Info["Status"],
-                "LeastTimeUpdated": Info["LeastTimeUpdated"],
-                "Score": Info["Score"]
-            }
-
-            Score:float = float(PrintInfo["Score"])
-            if (Score == 0):
-                PrintInfo["Score"] = "N/A"
-            return PrintInfo
-        else:
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             raise Exception("GetStatus manga not found")
+        
+        Info:dict = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")["Manga"]
+        
+        PrintInfo:dict[str, str] = {
+            "Name": Info["Name"],
+            "Chapters": Info["Chapters"],
+            "Status": Info["Status"],
+            "LeastTimeUpdated": Info["LeastTimeUpdated"],
+            "Score": Info["Score"]
+        }
+
+        Score:float = float(PrintInfo["Score"])
+        if (Score == 0):
+            PrintInfo["Score"] = "N/A"
+        return PrintInfo
 
     def GetCurrentStatus(self, currentStatus:str = "") -> list[str] | dict[str, list[str]]:
-        if (os.path.exists(f"./Data/MangaStatusList.json")):        
-            if (currentStatus == ""):
-                CurrentStatusList:dict[str, list[str]] = GetMangaList.MangaStatusList()
-                return CurrentStatusList
-            else:
-                StatusList:list[str] = GetMangaList.MangaCurrentStatusList(currentStatus)
-                return StatusList
-        else:
+        if (not os.path.exists(f"./Data/MangaStatusList.json")):        
             raise Exception("GetCurrentStatus manga not found")
+        
+        if (currentStatus == ""):
+            CurrentStatusList:dict[str, list[str]] = GetMangaList.MangaStatusList()
+            return CurrentStatusList
+        else:
+            StatusList:list[str] = GetMangaList.MangaCurrentStatusList(currentStatus)
+            return StatusList
 
     def OpenLink(self, Name:str):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            self.selected.UpdateData(Name)
-            if (self.selected.MangaLink != ""):
-                web.open(self.selected.MangaLink)
-            else:
-                print("OpenLink manga not found")
-        else:
-            print("OpenLink manga not found")    
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("OpenLink manga not found")    
+        
+        self.selected.UpdateData(Name)
+        if (self.selected.MangaLink == ""):
+            raise Exception("OpenLink manga not found")
+        
+        web.open(self.selected.MangaLink)
     
 Watch = MangaWatcha()

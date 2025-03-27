@@ -95,30 +95,30 @@ class Anime:
                 print(f"StoreData anime {self.Name} not found")
     
     def UpdateData(self, Name:str, UpdateStatus:bool = True):
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            try:
-                Info:dict = self.GetData(Name)
-                self.Name = Info["Name"]
-                self.EpisodeStatus = Info["EpisodeStatus"]
-                self.CurrentStatus = Info["Status"]
-                self.Season = Info["Season"]
-                self.MaxEpisodes = Info["MaxEpisodes"]
-                self.Episode = Info["Episode"]
-                self.SerieName = Info["SerieName"]
-                self.MyAnimeListLink = Info["MyAnimeListLink"]
-                self.WatchLink = Info["WatchLink"] 
-                self.Score = Info["Score"]
-                self.Path = self.DirectoryPath()
-                if (UpdateStatus):
-                    self.UpdateStatus()
-            except Exception:
-                raise Exception("UpdateData anime error")
-        else:
-            print("UpdateData anime not found")
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("UpdateData anime not found")
+        
+        try:
+            Info:dict = self.GetData(Name)
+            self.Name = Info["Name"]
+            self.EpisodeStatus = Info["EpisodeStatus"]
+            self.CurrentStatus = Info["Status"]
+            self.Season = Info["Season"]
+            self.MaxEpisodes = Info["MaxEpisodes"]
+            self.Episode = Info["Episode"]
+            self.SerieName = Info["SerieName"]
+            self.MyAnimeListLink = Info["MyAnimeListLink"]
+            self.WatchLink = Info["WatchLink"] 
+            self.Score = Info["Score"]
+            self.Path = self.DirectoryPath()
+            if (UpdateStatus):
+                self.UpdateStatus()
+        except Exception:
+            raise Exception("UpdateData anime error")
     
     
   
-    def AnimeData(self) -> dict:
+    def AnimeData(self) -> dict[str, dict]:
         return {
             "Anime": {
                 "Name": JsonUtil.CursedStoreName(self.Name),

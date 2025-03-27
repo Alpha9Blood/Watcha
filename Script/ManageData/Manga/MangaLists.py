@@ -10,10 +10,10 @@ class MangaLists:
             list[str]: A list of strings containing the names of all masnga in the database.
         """
         
-        if (os.path.exists("./Data/MangaList.json")):
-            return JsonUtil.LoadJson("./Data/MangaList.json")[::-1]
-        else:
+        if (not os.path.exists("./Data/MangaList.json")):
             raise Exception("MangaList: Path not found: ./Data/MangaList.json")
+        
+        return JsonUtil.LoadJson("./Data/MangaList.json")[::-1]
         
 
     def CurrentStatusTypeList(self):
@@ -28,10 +28,10 @@ class MangaLists:
             dict[str, list[str]]: A dictionary of lists containing the names of all manga in each status list in the database.
         """
         
-        if (os.path.exists("./Data/MangaStatusList.json")):
-            return JsonUtil.LoadJson("./Data/MangaStatusList.json")
-        else:
+        if (not os.path.exists("./Data/MangaStatusList.json")):
             raise Exception("MangaStatusList manga not found")
+        
+        return JsonUtil.LoadJson("./Data/MangaStatusList.json")
     
     def MangaCurrentStatusList(self, Status:str) -> list[str]:
         
@@ -45,28 +45,28 @@ class MangaLists:
             list[str]: A list containing the names of all manga in the specified status list, or an empty list if the status list does not exist.
         """
 
-        if (os.path.exists("./Data/MangaStatusList.json")):
-            if (Status not in self.CurrentStatusTypeList()):
-                raise Exception("MangaCurrentStatusList: status not found")
-            
-            StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/MangaStatusList.json")
-            Info:list[str] = StatusList[Status]
-            return Info
-        else:
+        if (not os.path.exists("./Data/MangaStatusList.json")):
             raise Exception("MangaCurrentStatusList: manga not found: ./Data/MangaStatusList.json") 
+        
+        if (Status not in self.CurrentStatusTypeList()):
+            raise Exception("MangaCurrentStatusList: status not found")
+        
+        StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/MangaStatusList.json")
+        Info:list[str] = StatusList[Status]
+        return Info
     
     def OnGoingList(self) -> list[str]:
-        if (os.path.exists("./Data/MangaStatusList.json")):
-            StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/MangaStatusList.json")
-            return StatusList["Reading"] + StatusList["PlanToRead"]
-        else:
+        if (not os.path.exists("./Data/MangaStatusList.json")):
             raise Exception("MangaStatusList: manga not found: ./Data/MangaStatusList.json")
+        
+        StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/MangaStatusList.json")
+        return StatusList["Reading"] + StatusList["PlanToRead"]
 
     def FavoriteMangaList(self) -> list[str]:
-        if (os.path.exists("./Data/FavoriteMangaList.json")):
-            return JsonUtil.LoadJson("./Data/FavoriteMangaList.json")
-        else:
+        if (not os.path.exists("./Data/FavoriteMangaList.json")):
             raise Exception("FavoriteMangaList: manga not found: ./Data/FavoriteMangaList.json")
+        
+        return JsonUtil.LoadJson("./Data/FavoriteMangaList.json")
     
     def HasMAL_LinkList(self) -> list[str]:
         Selected:str = ""

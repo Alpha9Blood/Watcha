@@ -222,6 +222,10 @@ class MangaExecute:
             print("AddMyAnimeListLink link is empty")
             return
         
+        if ("https://myanimelist.net/manga/" not in Link):
+            print("AddMyAnimeListLink link is not myanimelist")
+            return
+        
         Watch.UpdateMyAnimeListLink(Name, Link)
         self.Gui.ImageExtractor.StoreExtractedImage(Name, Link)
         self.__ClearEntry(self.MangaIndex.SetMyAnimeListLink.EntryIndex.Name)
@@ -244,8 +248,12 @@ class MangaExecute:
         
         Name = self.__FindName(Name)
 
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             print("PrintManga manga not found")
+            return
+        
+        if (Name not in self.Gui.EntryList[self.MangaIndex.PrintInfo.EntryIndex.Name].options):
+            print(f"PrintManga {Name = } not found in options")
             return
             
         self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
@@ -296,7 +304,8 @@ class MangaExecute:
 
         if (Name not in GetMangaList.MangaList()):
             print("OpenLink manga not found in mangalist")
-            return        
+            return
+                
         if (SelectedManga.MangaLink == ""):
             print("OpenLink manga link is empty")
             return
@@ -318,7 +327,7 @@ class MangaExecute:
             print("OpenMAL_Link: manga not found")
             return
         if (Name not in self.Gui.EntryList[self.MangaIndex.OpenMyAnimeListLink.EntryIndex.Name].options):
-            print(f"OpenMAL_Link: manga name: {Name} not found in EntryOptions: {self.Gui.EntryList[self.MangaIndex.OpenMyAnimeListLink.EntryIndex.Name].options}")
+            print(f"OpenMAL_Link: manga name: {Name}")
             return
         
         SelectedManga:Manga = Watch.SelectManga(Name)

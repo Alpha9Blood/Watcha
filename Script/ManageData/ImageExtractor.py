@@ -48,7 +48,7 @@ class ImageControler():
     def StoreExtractedImage(self, Name:str, MAL_Link:str):
         AnimeOrManga:str = self.AnimeOrManga(MAL_Link)
         
-        if (AnimeOrManga == "" or "%" in  MAL_Link):
+        if (AnimeOrManga == "" or "%" in MAL_Link):
             raise Exception(f"StoreImage: Invalid url: MAL_Link: {MAL_Link}.")
             
         

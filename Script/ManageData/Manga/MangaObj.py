@@ -31,7 +31,7 @@ class Manga:
             self.Status = "Error"
     
 
-    def MangaData(self) -> dict:
+    def MangaData(self) -> dict[str, dict]:
         return {
             "Manga" : {
                 "Name": JsonUtil.CursedStoreName(self.Name),
@@ -75,20 +75,20 @@ class Manga:
                 print("StoreData manga name not found")
     
     def UpdateData(self, Name:str, UpdateStatus:bool = True):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            try:
-                Info:dict = self.GetData(Name)
-                self.Name = Info["Name"]
-                self.Chapters = Info["Chapters"]
-                self.Status = Info["Status"]
-                self.LeastTimeUpdated = Info["LeastTimeUpdated"]
-                self.MyAnimeListLink = Info["MyAnimeListLink"]
-                self.MangaLink = Info["MangaLink"]
-                self.Score = Info["Score"]
-                self.Path = self.DirectoryPath()
-                if (UpdateStatus):
-                    self.UpdateStatus()
-            except Exception:
-                raise Exception("UpdateData manga error")
-        else:
-            print("UpdateData manga not found")
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception("UpdateData manga not found")
+            
+        try:
+            Info:dict = self.GetData(Name)
+            self.Name = Info["Name"]
+            self.Chapters = Info["Chapters"]
+            self.Status = Info["Status"]
+            self.LeastTimeUpdated = Info["LeastTimeUpdated"]
+            self.MyAnimeListLink = Info["MyAnimeListLink"]
+            self.MangaLink = Info["MangaLink"]
+            self.Score = Info["Score"]
+            self.Path = self.DirectoryPath()
+            if (UpdateStatus):
+                self.UpdateStatus()
+        except Exception:
+            raise Exception("UpdateData manga error")

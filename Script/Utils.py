@@ -25,10 +25,10 @@ class JsonUtils:
     
     def TrueName(self, Name:str) -> str:
         """
-        Returns a string with all occurrences of ':' replaced with '_'.
+        Returns a string with all occurrences of certain characters that cannot be used in file names replaced with '_'.
         
         Parameters:
-            Name (str): The string to replace ':' with '_'.
+            Name (str): The string to replace certain characters with '_'.
         
         Returns:
             str: The modified string.

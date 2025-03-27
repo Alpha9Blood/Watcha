@@ -81,7 +81,7 @@ class AnimeExecute:
                 Name = var
                 return Name
         
-        raise Exception(f"__FindName: anime not found: {Name} in {List}")
+        raise Exception(f"__FindName: anime not found: {Name} in AnimeList")
 
     #Set
 
@@ -251,6 +251,10 @@ class AnimeExecute:
             print("AddMyAnimeListLink link is empty")
             return
         
+        if ("https://myanimelist.net/anime/" not in Link):
+            print("AddMyAnimeListLink link is not myanimelist")
+            return
+        
         Watch.UpdateMyAnimeListLink(Name, Link)
         self.Gui.ImageExtractor.StoreExtractedImage(Name, Link)
         self.__ClearEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Name)
@@ -260,7 +264,7 @@ class AnimeExecute:
     def AddToCalendar(self):
         Name = self.__GetEntry(self.AnimeIndex.AddToCallendar.EntryIndex.Name)
         
-        if (os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print(f"AddToCalendar not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
             return
         
@@ -316,7 +320,7 @@ class AnimeExecute:
             return
         
         if (Name not in self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options):
-            print(f"GetAnimeStatus name not found: {Name} in EntryOptions: {self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options}")
+            print(f"GetAnimeStatus {Name = } not found in options")
             return
         
         self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
@@ -330,8 +334,8 @@ class AnimeExecute:
     
     def PrintStatusList(self):
         Info:str = self.__GetEntry(self.AnimeIndex.PrintStatusList.EntryIndex.StatusID)
-        if (os.path.exists("./Data/AnimeStatusList.json")):
-            print("StatusList path not found")
+        if (not os.path.exists("./Data/AnimeStatusList.json")):
+            print(f"StatusList path: ./Data/AnimeStatusList.json not found")
             return
         
         Status:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")

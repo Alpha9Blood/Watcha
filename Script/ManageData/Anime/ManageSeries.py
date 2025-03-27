@@ -11,7 +11,7 @@ class ManageSeries:
             return
         
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            print("EditAnimeSerie not found")
+            print(f"EditAnimeSerie: {Name = } path not found")
             return
         
         self.selected.UpdateData(Name)
@@ -53,12 +53,11 @@ class ManageSeries:
         #Update or add serie
         if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")):
             Serie = JsonUtil.LoadJson(f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
-            if (self.selected.Name in Serie):
+            if (self.selected.Name not in Serie):
+                Serie.append(self.selected.Name)
+                JsonUtil.UpdateJson(Serie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
+            else:
                 print(f"EditAnimeSerie {NewSerieName = } already in {Serie = }")
-                return
-            
-            Serie.append(self.selected.Name)
-            JsonUtil.UpdateJson(Serie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json")
         else:
             NewSerie:list[str] = [self.selected.Name]
             JsonUtil.CreateJson(NewSerie, f"./Data/SerieData/{JsonUtil.TrueName(NewSerieName)}.json") 
