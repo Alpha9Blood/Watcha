@@ -1,4 +1,4 @@
-from tktooltip.tooltip import ToolTip
+from TkToolTip.TkToolTip import ToolTip
 
 class PresetsManager:
 
@@ -41,7 +41,7 @@ class PresetsManager:
         self.Gui:WatchaGUI = SetGUI
     
     def CreateTooltip(self, widget, text, delay = 0.1):
-        tooltip = ToolTip(widget, text, delay)
+        tooltip = ToolTip(widget, text= text, delay= delay)
         
         self.Gui.ToolTipList.append(tooltip)
 

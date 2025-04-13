@@ -21,8 +21,10 @@ The program is a graphical user interface (GUI) application, built using the Tki
 
 
 **Dependencies**
-
+- **python3.13** The program is built using Python 3.13.
 - **tkinter**: Used for creating the graphical user interface (GUI).
+- **requests**: Used for making HTTP requests to external APIs.
+- **pillow**: Used for working with images.
 
 **Myself**
 
