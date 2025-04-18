@@ -4,7 +4,7 @@ from tkinter import ttk
 from Script.ManageData.Manga.MangaObj import Manga
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
 from Script.GUI_Index import MangaI
-from Script.Utils import JsonUtil
+from Script.Utils import JsonUtil, Math
 from Script.ManageData.Manga.MangaLists import GetMangaList
 from Script.ManageData.Manga.MangaWatcha import Watch
 
@@ -234,10 +234,10 @@ class MangaExecute:
 
     #Get
 
-    def __LoadImage(self, Name:str):
+    def __LoadImage(self, Name:str, posXY:tuple[int, int] = (1170, 220), CoverSize:tuple = (200, 300)):
         Selected:Manga = Manga()
         Selected.UpdateData(Name)
-        self.Gui.ImageSlot.ProcessPhoto(Selected)
+        self.Gui.ImageSlot.ProcessPhoto(Selected, posXY, CoverSize)
 
     def PrintManga(self):
         Name:str = self.__GetEntry(self.MangaIndex.PrintInfo.EntryIndex.Name)
@@ -341,3 +341,41 @@ class MangaExecute:
             return
         
         self.Gui.Text.PrintDisplay(JsonUtil.LoadJson(f"./Data/FavoriteMangaList.json"))
+
+    
+    def ViewAll(self):
+        MangaList:list[str] = GetMangaList.MangaList()
+        self.Gui.Presets.ViewList.SelectList("manga" , MangaList)
+        self.Gui.Presets.ViewList.CurrentPage += 2
+        
+        Yposion:int = 120
+        inlineOptions:int = 5
+        self.Gui.Presets.ViewList.SetViewLines(self.Gui.Presets.ViewList.SelectedList)
+
+        self.Gui.Presets.ViewList.ViewReset()
+
+        TextList:list[tuple[str,int, int]] = []
+        
+        index:int = self.Gui.Presets.ViewList.ViewIndex
+        for i in range(0, 2):
+            for j in range(0, inlineOptions):
+                if (index < len(self.Gui.Presets.ViewList.SelectedList)):
+                    Xposion = 100 + j * 300
+                    self.__LoadImage(self.Gui.Presets.ViewList.SelectedList[index], (Xposion, Yposion), (150, 225))
+                    TextList.append((self.Gui.Presets.ViewList.SelectedList[index], Xposion, Yposion + 250))
+                    index += 1
+                else:
+                    break
+
+            Yposion += 300
+        
+        for name, Xposion, Yposion in TextList:
+            self.Gui.Text.CreateText(name, Xposion, CustomYPosition = Yposion, WidthHeight=(20, 1))
+
+        self.Gui.Presets.ViewList.PreviousPage = inlineOptions * 4
+        self.Gui.Presets.ViewList.ViewIndex = index
+
+    def ViewPrevious(self):
+        self.Gui.Presets.ViewList.ViewIndex -= self.Gui.Presets.ViewList.PreviousPage
+        self.Gui.Presets.ViewList.CurrentPage -= 4
+        self.ViewAll()

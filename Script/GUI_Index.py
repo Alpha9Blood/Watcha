@@ -205,6 +205,10 @@ class AnimeI:
         
         class TextIndex():
             SerieID = 0
+    
+    class ViewAllAnimes():
+        class ButtonIndex():
+            ViewAllAnimes = 0
 
 class MangaI():
     class AddNewManga():
@@ -342,6 +346,10 @@ class MangaI():
     class PrintFavorites():
         class ButtonIndex():
             PrintFavorites = 0
+        
+    class ViewAllManga():
+        class ButtonIndex():
+            ViewAllManga = 0    
 
 class MenuI():
     class Anime():

@@ -8,18 +8,18 @@ class GUI_Models:
     def GuiInit(self, SetGUI):
         from WatchaGUI import WatchaGUI
         self.Gui:WatchaGUI = SetGUI
-        self.Gui.janela.configure(bg='#000000')
-        self.Gui.janela.title('Watcha')
-        self.Gui.janela.geometry('1600x800')
+        self.Gui.window.configure(bg='#000000')
+        self.Gui.window.title('Watcha')
+        self.Gui.window.geometry('1600x800')
 
     def WhiteModel(self):
-        self.Gui.janela.configure(bg='#FFFFFF')
+        self.Gui.window.configure(bg='#FFFFFF')
         
     def BlackModel(self):
-        self.Gui.janela.configure(bg='#000000')
+        self.Gui.window.configure(bg='#000000')
     
     def SwitchModels(self):
-        if self.Gui.janela.cget('bg') == '#000000':
+        if self.Gui.window.cget('bg') == '#000000':
             self.Switch = True
         if (self.Switch):
             self.WhiteModel()
@@ -28,7 +28,7 @@ class GUI_Models:
             self.BlackModel()
     
     def InitDisplay(self):
-        self.Gui.Text.GetList = [tk.Text(self.Gui.janela), tk.Scrollbar(self.Gui.janela)]
+        self.Gui.Text.GetList = [tk.Text(self.Gui.window), tk.Scrollbar(self.Gui.window)]
 
     
     
@@ -45,12 +45,12 @@ class GUI_Models:
             - Preset indexes
 
         """
-        if (len(self.Gui.janela.winfo_children()) > 0):      
-            for i in self.Gui.janela.winfo_children():
+        if (len(self.Gui.window.winfo_children()) > 0):      
+            for i in self.Gui.window.winfo_children():
                 if (i != self.Gui.Menu):
                     i.destroy()
             
-            self.Gui.janela.children.clear()
+            self.Gui.window.children.clear()
             
             self.Gui.Presets.ResetIndex()
             self.Gui.DefaultList()
@@ -142,6 +142,8 @@ class GUI_Models:
 
             self.Gui.Presets.AnimeViewInfo.PrintCalendar()
 
+            self.Gui.Presets.AnimeViewInfo.ViewAllAnimes()
+
             self.Gui.Presets.CustomPresets.ReturnToMenu()            
 
             self.SelectedPreset = Preset
@@ -218,6 +220,8 @@ class GUI_Models:
 
             self.Gui.Presets.CustomPresets.ReturnToMenu()
 
+            self.Gui.Presets.MangaViewInfo.ViewAllManga()
+
             self.SelectedPreset = Preset
         else:
             print("Already in MangaViewInfo")
@@ -226,6 +230,8 @@ class GUI_Models:
 
         if (self.SelectedPreset != self.Presets.Menu):
             self.DeletePreset()
+            self.Gui.Presets.ViewList.ViewIndex = 0
+            self.Gui.Presets.ViewList.CurrentPage = 0
             Preset:Enum = self.Presets.Menu
 
             self.Gui.Presets.MenuPreset.Geral()

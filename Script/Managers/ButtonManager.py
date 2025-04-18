@@ -6,7 +6,7 @@ class ButtonManager():
         def GuiInit(self, SetGUI):
             from WatchaGUI import WatchaGUI
             self.Gui:WatchaGUI = SetGUI
-            self.janela = self.Gui.janela
+            self.window = self.Gui.window
         
         def PresetButPosition(self,But:tk.Button, PositionX:int, PositionTag:int, DefaultPos:int = 0):
             CutYPos:int = ((PositionTag - 1) * 50)
@@ -18,7 +18,7 @@ class ButtonManager():
 
         def CreateBut(self, Name:str, Function, PositionX:int, PositionTag:int, DefaultPos:int = 0, CustomYPosition:int = 0):
 
-            ButToCreate:tk.Button = CustomButton(self.janela)
+            ButToCreate:tk.Button = CustomButton(self.window)
             ButToCreate.configure(text=Name, font=('Arial', 14), command=Function)
             ButToCreate.config(width=10, height=2, bg= "red", border=1, relief="groove")
             if (CustomYPosition > 0):

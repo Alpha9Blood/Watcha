@@ -21,12 +21,12 @@ class WatchaGUI:
     def __init__(self):
 
         self.ButList:list[CustomButton] = []
-        self.TextList:list[tk.Label] = []
+        self.LabelList:list[tk.Label] = []
         self.EntryList:list[CustomEntry] = []
         self.ToolTipList:list[ToolTip] = []
-        self.LabelList:list[tk.Label] = []
+        self.TextList:list[tk.Text] = []
 
-        self.janela = tk.Tk()
+        self.window = tk.Tk()
         
         self.ImageExtractor = ImageControler()
 
@@ -58,7 +58,7 @@ class WatchaGUI:
         self.Presets = PresetsManager()
         self.Presets.GuiInit(self)
 
-        self.Menu = tk.Menu(self.janela)
+        self.Menu = tk.Menu(self.window)
 
         SalameMenu:tk.Menu = tk.Menu(self.Menu, tearoff=0)
 
@@ -69,38 +69,40 @@ class WatchaGUI:
         
         self.Menu.add_cascade(label='Salame', menu=SalameMenu)
         self.Menu.add_command(label='Reset', command=self.Models.MenuPreset)
-        self.Menu.add_command(label='Quit w', command=self.janela.destroy)
+        self.Menu.add_command(label='Quit w', command=self.window.destroy)
         
         
-        self.janela.config(menu=self.Menu)
+        self.window.config(menu=self.Menu)
 
         self.Models.MenuPreset()
 
-        self.janela.mainloop()
+        self.window.mainloop()
 
 
     #Func
     
     def DefaultList(self):
         self.ButList.clear()
-        self.TextList.clear()
+        self.LabelList.clear()
         self.EntryList.clear()
         self.ToolTipList.clear()
-        self.LabelList.clear()
+        self.TextList.clear()
+        self.Entry.EntryFilter.Reset()
         self.AnimeDataLists.ClearCustomLists()
+        self.ImageSlot.InstacedPhotos.clear()
         
 
     def AllTk(self):
-        print(self.janela.winfo_children())
+        print(self.window.winfo_children())
 
         
     def DeleteAll(self):
-        if (len(self.janela.winfo_children()) > 0):  
-            for i in self.janela.winfo_children():
+        if (len(self.window.winfo_children()) > 0):  
+            for i in self.window.winfo_children():
                 if (i != self.Menu):
                     i.destroy()
 
-            self.janela.children.clear()
+            self.window.children.clear()
             
                        
             self.Presets.ResetIndex()

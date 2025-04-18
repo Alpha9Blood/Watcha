@@ -5,3 +5,8 @@ class EntryFilterList():
         self.AnimeList:list[CustomEntry] = []
         self.MangaList:list[CustomEntry] = []
         self.UpdateList:list[CustomEntry] = []
+    
+    def Reset(self) -> None:
+        self.AnimeList.clear()
+        self.MangaList.clear()
+        self.UpdateList.clear()

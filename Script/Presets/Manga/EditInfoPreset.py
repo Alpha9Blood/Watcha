@@ -15,13 +15,13 @@ class EditInfo:
         self.MangaIndex.EditChapters.ButtonIndex.SetChapters = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.EditChapters.ButtonIndex.SetChapters].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
-        self.Gui.Text.CreateText("EditChapters", 1250, 1, 25)
+        self.Gui.Text.CreateLabel("EditChapters", 1250, 1, 25)
         self.MangaIndex.EditChapters.TextIndex.Title = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.TextList[self.MangaIndex.EditChapters.TextIndex.Title].config(width=12, height= 3, font=('Arial', 13))
+        self.Gui.LabelList[self.MangaIndex.EditChapters.TextIndex.Title].config(width=12, height= 3, font=('Arial', 13))
 
-        self.Gui.Text.CreateText("Name", 1072, 1, 102)
+        self.Gui.Text.CreateLabel("Name", 1072, 1, 102)
         self.MangaIndex.EditChapters.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.MangaIndex.EditChapters.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.MangaIndex.EditChapters.TextIndex.Name], "Can be simplified.")
         self.Gui.Entry.CreateEntry(1168, 1, 110)
         self.MangaIndex.EditChapters.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.MangaIndex.EditChapters.EntryIndex.Name].AddList(GetMangaList.OnGoingList)
@@ -37,7 +37,7 @@ class EditInfo:
         self.Gui.ButList[self.MangaIndex.RemoveManga.ButtonIndex.RemoveManga].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
         self.Gui.ButList[self.MangaIndex.RemoveManga.ButtonIndex.RemoveManga].config(width=12)
 
-        self.Gui.Text.CreateText("Name", 1080, 1, 580)
+        self.Gui.Text.CreateLabel("Name", 1080, 1, 580)
         self.MangaIndex.RemoveManga.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Entry.CreateEntry(1180, 1, 589)
         self.MangaIndex.RemoveManga.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
@@ -50,7 +50,7 @@ class EditInfo:
         self.MangaIndex.EditInfo.ButtonIndex.SetStatus = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.EditInfo.ButtonIndex.SetStatus].config(width=12)
 
-        self.Gui.Text.CreateText("Name", 100, 1, 120)
+        self.Gui.Text.CreateLabel("Name", 100, 1, 120)
         self.MangaIndex.EditInfo.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(200, 1, 130)
@@ -59,14 +59,14 @@ class EditInfo:
         self.Gui.Entry.EntryFilter.UpdateList.append(self.Gui.EntryList[self.MangaIndex.EditInfo.EntryIndex.Name])
         self.Gui.EntryList[self.MangaIndex.EditInfo.EntryIndex.Name].config(width=25)
 
-        self.Gui.Text.CreateText("Score", 100, 1, 200)
+        self.Gui.Text.CreateLabel("Score", 100, 1, 200)
         self.MangaIndex.EditInfo.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
         
         self.Gui.Entry.CreateEntry(200, 1, 210)
         self.MangaIndex.EditInfo.EntryIndex.Score = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.MangaIndex.EditInfo.EntryIndex.Score].config(width=3)
 
-        self.Gui.Text.CreateText("Status", 100, 2)
+        self.Gui.Text.CreateLabel("Status", 100, 2)
         self.MangaIndex.EditInfo.TextIndex.Status = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(200, 2)
@@ -83,7 +83,7 @@ class EditInfo:
         self.MangaIndex.EditFavorites.ButtonIndex.DeleteFavorites = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.EditFavorites.ButtonIndex.DeleteFavorites].config(width=14)
 
-        self.Gui.Text.CreateText("Name", 100, 1, 420)
+        self.Gui.Text.CreateLabel("Name", 100, 1, 420)
         self.MangaIndex.EditFavorites.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Entry.CreateEntry(200, 1, 429)
         self.MangaIndex.EditFavorites.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()

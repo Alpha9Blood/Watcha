@@ -35,7 +35,7 @@ class AnimeListManager:
                 self.SelectedList = GetAnimeList.GetSeason(self.SelectedFilter)
             else:
                 print("Season not found")
-                self.SelectedList = []
+                self.SelectedList.clear()
 
     def GetFilter(self) -> str:
         self.UpdateFilter()

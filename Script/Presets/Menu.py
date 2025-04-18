@@ -9,9 +9,9 @@ class Menu:
     
     def Geral(self):
         #Anime
-        self.Gui.Text.CreateText('Anime', 180, 1, 80)
+        self.Gui.Text.CreateLabel('Anime', 180, 1, 80)
         self.MenuIndex.Anime.TextIndex.Anime = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.TextList[self.MenuIndex.Anime.TextIndex.Anime].config(font=('Arial', 31))
+        self.Gui.LabelList[self.MenuIndex.Anime.TextIndex.Anime].config(font=('Arial', 31))
 
         self.Gui.Button.CreateBut('Add', self.Gui.Models.AnimeAddPreset , 150, 1, 220)
         self.MenuIndex.Anime.ButtonIndex.AddInfo = self.Gui.Presets.UpdateButtonIndex()
@@ -30,9 +30,9 @@ class Menu:
         self.Gui.ButList[self.MenuIndex.Anime.ButtonIndex.ViewInfo].config(width=8, font=('Arial', 16))
 
         #Manga
-        self.Gui.Text.CreateText('Manga', 1180, 1, 80)
+        self.Gui.Text.CreateLabel('Manga', 1180, 1, 80)
         self.MenuIndex.Manga.TextIndex.Manga = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.TextList[self.MenuIndex.Manga.TextIndex.Manga].config(font=('Arial', 31))
+        self.Gui.LabelList[self.MenuIndex.Manga.TextIndex.Manga].config(font=('Arial', 31))
 
         self.Gui.Button.CreateBut('Add', self.Gui.Models.MangaAddPreset , 1150, 1 , 220)
         self.MenuIndex.Manga.ButtonIndex.AddInfo = self.Gui.Presets.UpdateButtonIndex()

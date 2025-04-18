@@ -1,17 +1,14 @@
 import tkinter as tk
 from Script.Utils import JsonUtil
 
-
-
 class TextManager:
 
     def GuiInit(self, SetGUI):
         from WatchaGUI import WatchaGUI
         self.Gui:WatchaGUI = SetGUI         
-        self.janela = self.Gui.janela
-        self.GetList:list = [tk.Text(self.janela), tk.Scrollbar(self.janela)]
+        self.GetList:list = [tk.Text(self.Gui.window), tk.Scrollbar(self.Gui.window)]
 
-    def PresetTextPosition(self, Text:tk.Label, PositionX:int, PositionTag:int, DefaultPos:int = 0):
+    def PresetTextPosition(self, Text:tk.Label | tk.Text, PositionX:int, PositionTag:int, DefaultPos:int = 0):
         CutYPos:int = ((PositionTag - 1) * 50)
         if (PositionTag == 1):
             Text.place(x=PositionX, y=DefaultPos)
@@ -44,16 +41,32 @@ class TextManager:
         self.Display.insert(tk.END, JsonUtil.TurnIndent(Info))
 
 
-
-    
-    def CreateText(self, Text:str, PositionX:int, PositionTag:int, DefaultPos:int = 0, CustomYPosition:int = 0):
+    def CreateText(self, Text:str, PositionX:int, PositionTag:int = 1, DefaultPos:int = 0, CustomYPosition:int = 0, WidthHeight:tuple[int, int] = (24, 1)):
         
-        TextToCreate:tk.Label = tk.Label(self.janela)
-        TextToCreate.configure(text=Text, font=('Arial', 13))
-        TextToCreate.config(width=8, height=2, bg= "lightgray", border=1, relief="groove")
+        TextToCreate:tk.Text = tk.Text(self.Gui.window)
+        TextToCreate.insert(tk.END, Text)
+        TextToCreate.config(width=WidthHeight[0], height=WidthHeight[1], bg= "lightgray", state="disabled")
+        TextToCreate.bind("<Button-1>", lambda event: TextToCreate.tag_add("sel", "0.0", "end"))
         if (CustomYPosition > 0):
             TextToCreate.place(x=PositionX, y=CustomYPosition)
         else:
             self.PresetTextPosition(TextToCreate, PositionX, PositionTag, DefaultPos)
-        if (self.Gui.TextList.count(TextToCreate) == 0):
+        if (TextToCreate not in self.Gui.TextList):
             self.Gui.TextList.append(TextToCreate)
+        
+
+    
+    def CreateLabel(self, Text:str, PositionX:int, PositionTag:int, DefaultPos:int = 0, CustomYPosition:int = 0, WidthHeight:tuple[int, int] = (8, 2)):
+        
+        LabelToCreate:tk.Label = tk.Label(self.Gui.window)
+        LabelToCreate.configure(text=Text, font=('Arial', 13))
+        LabelToCreate.config(width=WidthHeight[0], height=WidthHeight[1], bg= "lightgray", border=1, relief="groove")
+        if (CustomYPosition > 0):
+            LabelToCreate.place(x=PositionX, y=CustomYPosition)
+        else:
+            self.PresetTextPosition(LabelToCreate, PositionX, PositionTag, DefaultPos)
+        if (LabelToCreate not in self.Gui.LabelList):
+            self.Gui.LabelList.append(LabelToCreate)
+    
+    def ReplaceText(self):
+        pass

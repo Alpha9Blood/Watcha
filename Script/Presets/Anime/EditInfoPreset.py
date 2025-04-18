@@ -12,7 +12,7 @@ class EditInfo:
         self.AnimeIndex.DeleteAnime.ButtonIndex.DeleteAnime = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.AnimeIndex.DeleteAnime.ButtonIndex.DeleteAnime].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
 
-        self.Gui.Text.CreateText("Name", 1100, 1, 612)
+        self.Gui.Text.CreateLabel("Name", 1100, 1, 612)
         self.AnimeIndex.DeleteAnime.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(1200, 1, 620)
@@ -24,14 +24,14 @@ class EditInfo:
 
     def UpdateEpisode(self):
         # Title Text
-        self.Gui.Text.CreateText("UpdateEpisode", 1250, 1, 125)
+        self.Gui.Text.CreateLabel("UpdateEpisode", 1250, 1, 125)
         self.AnimeIndex.UpdateEpisode.TextIndex.Title = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.TextList[self.AnimeIndex.UpdateEpisode.TextIndex.Title].config(width=16, height=3, font=('Arial', 13))
+        self.Gui.LabelList[self.AnimeIndex.UpdateEpisode.TextIndex.Title].config(width=16, height=3, font=('Arial', 13))
 
         # Name Label and Entry
-        self.Gui.Text.CreateText("Name", 1072, 1, 202)
+        self.Gui.Text.CreateLabel("Name", 1072, 1, 202)
         self.AnimeIndex.UpdateEpisode.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.UpdateEpisode.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.UpdateEpisode.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(1168, 1, 210)
         self.AnimeIndex.UpdateEpisode.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
@@ -67,7 +67,7 @@ class EditInfo:
         self.Gui.ButList[self.AnimeIndex.EditInfo.ButtonIndex.UpdateInfo].UpdateOnPress(self.Gui.Entry.UpdateEntrysOptions)
         self.Gui.ButList[self.AnimeIndex.EditInfo.ButtonIndex.UpdateInfo].config(width=14)
         
-        self.Gui.Text.CreateText("Name", 100, 1, 120)
+        self.Gui.Text.CreateLabel("Name", 100, 1, 120)
         self.AnimeIndex.EditInfo.EntryIndex.Name = self.Gui.Presets.UpdateTextIndex()             
         
         self.Gui.Entry.CreateEntry(200, 1, 130)
@@ -76,22 +76,22 @@ class EditInfo:
         self.Gui.Entry.EntryFilter.UpdateList.append(self.Gui.EntryList[self.AnimeIndex.EditInfo.EntryIndex.Name])
         self.Gui.EntryList[self.AnimeIndex.EditInfo.EntryIndex.Name].config(width=25)
         
-        self.Gui.Text.CreateText("MaxEP", 100, 1, 200)
+        self.Gui.Text.CreateLabel("MaxEP", 100, 1, 200)
         self.AnimeIndex.EditInfo.TextIndex.Status = self.Gui.Presets.UpdateTextIndex()
 
-        self.Gui.Text.CreateText("Status", 100, 2)
+        self.Gui.Text.CreateLabel("Status", 100, 2)
         self.AnimeIndex.EditInfo.TextIndex.Status = self.Gui.Presets.UpdateTextIndex()
 
-        self.Gui.Text.CreateText("Serie", 100, 3)
+        self.Gui.Text.CreateLabel("Serie", 100, 3)
         self.AnimeIndex.EditInfo.TextIndex.Serie = self.Gui.Presets.UpdateTextIndex()
 
-        self.Gui.Text.CreateText("Season", 100, 4)
+        self.Gui.Text.CreateLabel("Season", 100, 4)
         self.AnimeIndex.AddAnime.TextIndex.Season = self.Gui.Presets.UpdateTextIndex()
 
-        self.Gui.Text.CreateText("Year", 320, 4)
+        self.Gui.Text.CreateLabel("Year", 320, 4)
         self.AnimeIndex.AddAnime.TextIndex.Year = self.Gui.Presets.UpdateTextIndex()
 
-        self.Gui.Text.CreateText("Score", 100, 5)
+        self.Gui.Text.CreateLabel("Score", 100, 5)
         self.AnimeIndex.EditInfo.TextIndex.Score = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(200, 1, 210)
@@ -123,4 +123,4 @@ class EditInfo:
         self.AnimeIndex.EditInfo.EntryIndex.Score = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.AnimeIndex.EditInfo.EntryIndex.Score].config(width=5)
 
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.EditInfo.TextIndex.Status], "Can be Watching, Completed, Dropped, or PlanToWatch.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.EditInfo.TextIndex.Status], "Can be Watching, Completed, Dropped, or PlanToWatch.")

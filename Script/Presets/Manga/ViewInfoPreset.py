@@ -11,9 +11,9 @@ class ViewInfo:
         self.MangaIndex.PrintInfo.ButtonIndex.PrintInfo = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.PrintInfo.ButtonIndex.PrintInfo].config(width=12)
 
-        self.Gui.Text.CreateText("Name", 80, 1, 30)
+        self.Gui.Text.CreateLabel("Name", 80, 1, 30)
         self.MangaIndex.PrintInfo.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.MangaIndex.PrintInfo.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.MangaIndex.PrintInfo.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(170, 1, 39)
         self.MangaIndex.PrintInfo.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
@@ -25,10 +25,10 @@ class ViewInfo:
         self.MangaIndex.PrintCurrentStatus.ButtonIndex.PrintCurrentStatus = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.PrintCurrentStatus.ButtonIndex.PrintCurrentStatus].config(width=18)
 
-        self.Gui.Text.CreateText("Status", 80, 1, 150)
+        self.Gui.Text.CreateLabel("Status", 80, 1, 150)
         self.MangaIndex.PrintCurrentStatus.TextIndex.Status = self.Gui.Presets.UpdateTextIndex()
         Text:str = "Can be Reading, PlanToRead, Completed or Dropped. If nothing is selected, all statuses will be printed."
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.MangaIndex.PrintCurrentStatus.TextIndex.Status], Text)
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.MangaIndex.PrintCurrentStatus.TextIndex.Status], Text)
 
         self.Gui.Entry.CreateEntry(180, 1, 160)
         self.MangaIndex.PrintCurrentStatus.EntryIndex.Status = self.Gui.Presets.UpdateEntryIndex()
@@ -39,3 +39,9 @@ class ViewInfo:
         self.Gui.Button.CreateBut('PrintFavorites', self.Gui.MangaExec.PrintFavorites , 1200, 1, 90)
         self.MangaIndex.PrintFavorites.ButtonIndex.PrintFavorites = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.PrintFavorites.ButtonIndex.PrintFavorites].config(width=15)
+    
+    def ViewAllManga(self):
+        self.Gui.Button.CreateBut('ViewAllManga', self.Gui.MangaExec.ViewAll , 100, 1 , 700)
+        self.MangaIndex.ViewAllManga.ButtonIndex.ViewAllManga = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.MangaIndex.ViewAllManga.ButtonIndex.ViewAllManga].config(width=14)
+        self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.MangaIndex.ViewAllManga.ButtonIndex.ViewAllManga], "View all mangas.")

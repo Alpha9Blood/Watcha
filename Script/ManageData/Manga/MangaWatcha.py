@@ -74,13 +74,16 @@ class MangaWatcha:
         else:
             print("AddManga manga already exists")
     
-    def UpdateMyAnimeListLink(self, Name, Link):
-        if (os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
-            self.selected.UpdateData(Name, False)
-            self.selected.MyAnimeListLink = Link
-            self.selected.StoreData()
-        else:
-            print("UpdateMyAnimeListLink not found")
+    def UpdateMyAnimeListLink(self, Name:str, Link:str):
+        if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
+            raise Exception(f"UpdateMyAnimeListLink: Manga {Name} path not found")
+        
+        if ("?" in Link):
+            Link = Link.split("?")[0]
+        self.selected.UpdateData(Name, False)
+        self.selected.MyAnimeListLink = Link
+        self.selected.StoreData()
+
         
     def RemoveManga(self, Name:str):             
         if (os.path.exists("./Data/MangaList.json")):

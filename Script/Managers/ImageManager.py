@@ -12,30 +12,33 @@ from Script.GUI_Index import MangaI
 class ImageManager():
 
     def __init__(self):
-        self.Photo:ImageTk.PhotoImage
         self.AnimeLabelIndex = AnimeI()
         self.MangaLabelIndex = MangaI()
         self.LabelIndex:AnimeI | MangaI
+        self.InstacedPhotos:list[ImageTk.PhotoImage] = []
+        
 
     def GuiInit(self, SetGUI):
         from WatchaGUI import WatchaGUI
         self.Gui:WatchaGUI = SetGUI
-        self.janela = self.Gui.janela
+        self.window = self.Gui.window
 
-    def __GetCover(self, img:BytesIO) -> ImageTk.PhotoImage:
+
+    def __GetCover(self, img:BytesIO , CoverSize:tuple) -> ImageTk.PhotoImage:
         image = Image.open(img)
-        image = image.resize((200, 300))
+        image = image.resize(CoverSize)
         return ImageTk.PhotoImage(image)
     
-    def __NoImage(self):
+    def __NoImage(self, posXY:tuple[int, int], CoverSizePixels:tuple[int, int]):
         try:
             image:BytesIO = JsonUtil.LoadImage("./Script/Assets/NoImage.png")
-            self.Photo = self.__GetCover(image)
-            self.Gui.ImageSlot.CreateImage(self.Photo, 1170, 1, 220)
+            Photo:ImageTk.PhotoImage = self.__GetCover(image, CoverSizePixels)
+            self.InstacedPhotos.append(Photo)
+            self.Gui.ImageSlot.CreateImage(self.InstacedPhotos[-1], posXY[0], 1, posXY[1])
         except Exception as e:
             print("ProcessPhoto:", e)
     
-    def ProcessPhoto(self, Obj:Anime | Manga):
+    def ProcessPhoto(self, Obj:Anime | Manga, posXY:tuple[int, int], CoverSizePixels:tuple[int, int]):
         self.ClearImages()
         
         AnimeOrManga:str = list(JsonUtil.LoadJson(Obj.Path).keys())[0].lower()
@@ -52,25 +55,25 @@ class ImageManager():
             return
         
         if (Obj.MyAnimeListLink == ""):
-            self.__NoImage()
-            self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.LabelIndex.PrintInfo.LabelIndex.Image], "Missing MyAnimeListLink or alike.")
-            print("ProcessPhoto: Empty MAL Link")
+            self.__NoImage(posXY, CoverSizePixels)
+            print(f"ProcessPhoto: {Obj.Name} Empty MAL Link")
             return
 
         if (Obj.Name not in List):
             print("ProcessPhoto: Invalid Name")
             return
         
-        self.Photo = self.__GetCover(self.Gui.ImageExtractor.GetImage(Obj))
-        self.Gui.ImageSlot.CreateImage(self.Photo, 1170, 1, 220)
+        Photo:ImageTk.PhotoImage = self.__GetCover(self.Gui.ImageExtractor.GetImage(Obj), CoverSizePixels)
+        self.InstacedPhotos.append(Photo)
+        self.Gui.ImageSlot.CreateImage(self.InstacedPhotos[-1], posXY[0], 1, posXY[1])
 
     def ClearImages(self):
-        if (len(self.Gui.LabelList) == 0): 
+        if (len(self.Gui.TextList) == 0): 
             return
         
-        for image in self.Gui.LabelList:
+        for image in self.Gui.TextList:
             image.destroy()
-        self.Gui.LabelList.clear()
+        self.Gui.TextList.clear()
     
     
     def __PresetImagePosition(self, Entry:tk.Label, PositionX:int, PositionTag:int, DefaultPos:int = 0):           
@@ -82,11 +85,14 @@ class ImageManager():
             Entry.place(x=PositionX, y=DefaultPos + self.EntrySpaceY + CutYPos)
 
     def CreateImage(self, Image:ImageTk.PhotoImage, PositionX:int, PositionTag:int, DefaultPos:int = 0, CustomYPosition:int = 0):
-        ImageLabel = tk.Label(self.janela, image=Image) # type: ignore
+        ImageLabel = tk.Label(self.window, image=Image) # type: ignore
         if (CustomYPosition > 0):
             ImageLabel.place(x=PositionX, y=CustomYPosition)
         else:
             self.__PresetImagePosition(ImageLabel, PositionX, PositionTag, DefaultPos)
         if (ImageLabel not in self.Gui.LabelList):
             self.Gui.LabelList.append(ImageLabel)
+
+    def ReplaceImage(self):
+        pass
             

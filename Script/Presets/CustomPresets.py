@@ -5,9 +5,9 @@ class CustomPresets:
         from WatchaGUI import WatchaGUI
         self.Gui:WatchaGUI = SetGUI
         self.CustomIndex = CustomI()
-    
+
     def Filter(self):
-        self.Gui.Text.CreateText("Filter", 920, 1, 20)
+        self.Gui.Text.CreateLabel("Filter", 920, 1, 20)
         self.CustomIndex.Filter.TextIndex.Selected = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(1000, 1, 25)
@@ -17,4 +17,4 @@ class CustomPresets:
         self.Gui.EntryList[self.CustomIndex.Filter.EntryIndex.Selected].config(width=12)
     
     def ReturnToMenu(self):
-        self.Gui.Button.CreateBut('Menu', self.Gui.Models.MenuPreset , 750, 1 , 20)
+        self.Gui.Button.CreateBut('Menu', self.Gui.Models.MenuPreset , 650, 1 , 20)

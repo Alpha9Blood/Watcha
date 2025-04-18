@@ -59,3 +59,11 @@ class JsonUtils:
         return BytesIO(open(path, "rb").read())
 
 JsonUtil = JsonUtils()
+
+
+class MathUtils:
+
+    def RoundUp(self, num, divisor):
+        return -(-num // divisor)
+
+Math = MathUtils()

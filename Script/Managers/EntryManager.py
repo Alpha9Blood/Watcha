@@ -7,7 +7,7 @@ class EntryManager():
     def GuiInit(self, SetGUI):
         from WatchaGUI import WatchaGUI
         self.Gui:WatchaGUI = SetGUI
-        self.janela = self.Gui.janela
+        self.window = self.Gui.window
         self.EntryFilter:EntryFilterList = EntryFilterList()
 
     def PresetEntryPosition(self, Entry:ttk.Combobox, PositionX:int, PositionTag:int, DefaultPos:int = 0):           
@@ -21,6 +21,7 @@ class EntryManager():
     def UpdateFilterEntrys(self):
         self.Gui.AnimeDataLists.UpdateList()
         for i in self.Gui.Entry.EntryFilter.AnimeList:
+            i.GetOptions = self.Gui.AnimeDataLists.GetSelectedList
             i["values"] = self.Gui.AnimeDataLists.SelectedList
         self.UpdateEntrysOptions()
     
@@ -30,7 +31,7 @@ class EntryManager():
 
     def CreateEntry(self, PositionX:int, PositionTag:int, DefaultPos:int = 0, CustomYPosition:int = 0):
 
-        EntryToCreate:ttk.Combobox = CustomEntry(self.janela)
+        EntryToCreate:ttk.Combobox = CustomEntry(self.window)
         EntryToCreate.configure(font=('Arial', 14))
         EntryToCreate.config(width=6)
         if (CustomYPosition > 0):

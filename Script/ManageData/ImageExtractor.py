@@ -48,8 +48,11 @@ class ImageControler():
     def StoreExtractedImage(self, Name:str, MAL_Link:str):
         AnimeOrManga:str = self.AnimeOrManga(MAL_Link)
         
-        if (AnimeOrManga == "" or "%" in MAL_Link):
+        if (AnimeOrManga == ""):
             raise Exception(f"StoreImage: Invalid url: MAL_Link: {MAL_Link}.")
+        
+        if ("?" in MAL_Link):
+            MAL_Link = MAL_Link.split("?")[0]
             
         
         AnimeOrManga = AnimeOrManga[0].upper() + AnimeOrManga[1:]
@@ -77,5 +80,5 @@ class ImageControler():
             ImageBytes:BytesIO = JsonUtil.LoadImage(ImagePath)
             return ImageBytes
         except Exception:
-            raise Exception(f"GetImage: Image error on load.")
+            raise Exception(f"GetImage: {Obj.Name} Image error on load.")
             

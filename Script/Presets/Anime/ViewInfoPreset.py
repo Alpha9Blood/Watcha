@@ -12,13 +12,14 @@ class ViewInfo:
         self.Gui.ButList[self.AnimeIndex.PrintInfo.ButtonIndex.GetInfo].config(width=12)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.AnimeIndex.PrintInfo.ButtonIndex.GetInfo], "Print the data of the selected anime.")
         
-        self.Gui.Text.CreateText("Name", 80, 1, 30)
+        self.Gui.Text.CreateLabel("Name", 80, 1, 30)
         self.AnimeIndex.PrintInfo.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.PrintInfo.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.PrintInfo.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(170, 1, 39)
         self.AnimeIndex.PrintInfo.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].AddList(GetAnimeList.AnimeList)
+        self.Gui.Entry.EntryFilter.AnimeList.append(self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name])
         self.Gui.Entry.EntryFilter.UpdateList.append(self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name])
         self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].config(width=25)
 
@@ -27,9 +28,9 @@ class ViewInfo:
         self.AnimeIndex.PrintSeason.ButtonIndex.PrintSeason = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.AnimeIndex.PrintSeason.ButtonIndex.PrintSeason].config(width=12)
 
-        self.Gui.Text.CreateText("SeasonID", 80, 1, 150)
+        self.Gui.Text.CreateLabel("SeasonID", 80, 1, 150)
         self.AnimeIndex.PrintSeason.TextIndex.SeasonID = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.PrintSeason.TextIndex.SeasonID], "File name containing season data.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.PrintSeason.TextIndex.SeasonID], "File name containing season data.")
 
         self.Gui.Entry.CreateEntry(170, 1, 159)
         self.AnimeIndex.PrintSeason.EntryIndex.SeasonID = self.Gui.Presets.UpdateEntryIndex()
@@ -42,9 +43,9 @@ class ViewInfo:
         self.Gui.ButList[self.AnimeIndex.PrintStatusList.ButtonIndex.PrintStatusList].config(width=14)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.AnimeIndex.PrintStatusList.ButtonIndex.PrintStatusList], "If StatusID is empty, all status will be printed.")
 
-        self.Gui.Text.CreateText("StatusID", 80, 1, 270)
+        self.Gui.Text.CreateLabel("StatusID", 80, 1, 270)
         self.AnimeIndex.PrintStatusList.TextIndex.StatusID = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.PrintStatusList.TextIndex.StatusID], "Can be Watching, Completed, Dropped, or PlanToWatch.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.PrintStatusList.TextIndex.StatusID], "Can be Watching, Completed, Dropped, or PlanToWatch.")
 
         self.Gui.Entry.CreateEntry(170, 1, 279)
         self.AnimeIndex.PrintStatusList.EntryIndex.StatusID = self.Gui.Presets.UpdateEntryIndex()
@@ -68,9 +69,9 @@ class ViewInfo:
         self.Gui.ButList[self.AnimeIndex.PrintCallendar.ButtonIndex.PrintCallendar].config(width=13)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.AnimeIndex.PrintCallendar.ButtonIndex.PrintCallendar], "Show season calendar")
 
-        self.Gui.Text.CreateText("SeasonID", 600, 1, 630)
+        self.Gui.Text.CreateLabel("SeasonID", 600, 1, 630)
         self.AnimeIndex.PrintCallendar.TextIndex.SeasonID = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.PrintCallendar.TextIndex.SeasonID], "File name containing season data")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.PrintCallendar.TextIndex.SeasonID], "File name containing season data")
 
         self.Gui.Entry.CreateEntry(700, 1, 639)
         self.AnimeIndex.PrintCallendar.EntryIndex.SeasonID = self.Gui.Presets.UpdateEntryIndex()
@@ -81,11 +82,17 @@ class ViewInfo:
         self.Gui.Button.CreateBut('PrintSerie', self.Gui.AnimeExec.PrintSerie , 1270, 1 , 80)
         self.AnimeIndex.PrintSerie.ButtonIndex.PrintSerie = self.Gui.Presets.UpdateButtonIndex()
 
-        self.Gui.Text.CreateText("SerieID", 1180, 1, 30)
+        self.Gui.Text.CreateLabel("SerieID", 1180, 1, 30)
         self.AnimeIndex.PrintSerie.TextIndex.SerieID = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.PrintSerie.TextIndex.SerieID], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.PrintSerie.TextIndex.SerieID], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(1270, 1, 39)
         self.AnimeIndex.PrintSerie.EntryIndex.SerieID = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.AnimeIndex.PrintSerie.EntryIndex.SerieID].AddList(GetAnimeList.SerieList)
         self.Gui.EntryList[self.AnimeIndex.PrintSerie.EntryIndex.SerieID].config(width=15)
+
+    def ViewAllAnimes(self):
+        self.Gui.Button.CreateBut('ViewAllAnimes', self.Gui.AnimeExec.ViewAll , 100, 1 , 700)
+        self.AnimeIndex.ViewAllAnimes.ButtonIndex.ViewAllAnimes = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.AnimeIndex.ViewAllAnimes.ButtonIndex.ViewAllAnimes].config(width=14)
+        self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.AnimeIndex.ViewAllAnimes.ButtonIndex.ViewAllAnimes], "View all animes.")

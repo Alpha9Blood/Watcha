@@ -4,6 +4,7 @@ from Script.ManageData.Anime.AnimeObj import Anime
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
 from Script.GUI_Index import AnimeI
 from Script.Utils import JsonUtil
+from Script.Utils import Math
 from Script.ManageData.Anime.ManageSeasons import SeasonManager
 from Script.ManageData.Anime.AnimeLists import GetAnimeList
 from Script.ManageData.Anime.AnimeWatcha import Watch
@@ -14,9 +15,9 @@ class AnimeExecute:
     def __init__(self):
         self.AnimeIndex = AnimeI()
     
-    def GuiInit(self, Janela):
+    def GuiInit(self, window):
         from WatchaGUI import WatchaGUI
-        self.Gui:WatchaGUI = Janela
+        self.Gui:WatchaGUI = window
     
     
     #Tools
@@ -301,10 +302,9 @@ class AnimeExecute:
     def PrintSerieList(self):
         self.Gui.Text.PrintDisplay(GetAnimeList.SerieList())
     
-    def __LoadImage(self, Name:str):
+    def __LoadImage(self, Name:str, posXY:tuple[int, int] = (1170, 220), CoverSize:tuple = (200, 300)):
         Selected:Anime = Watch.SelectAnime(Name)
-        self.Gui.ImageSlot.ProcessPhoto(Selected)
-
+        self.Gui.ImageSlot.ProcessPhoto(Selected, posXY, CoverSize)
     
     def GetAnimeStatus(self):
         Name:str = self.__GetEntry(self.AnimeIndex.PrintInfo.EntryIndex.Name)
@@ -329,6 +329,11 @@ class AnimeExecute:
 
     def PrintSeason(self):
         SeasonID:str = self.__GetEntry(self.AnimeIndex.PrintSeason.EntryIndex.SeasonID)
+
+        if (not os.path.exists(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")):
+            print(f"Invalid {SeasonID = }")
+            return
+        
         self.Gui.Text.PrintDisplay(Watch.PrintSeason(SeasonID))
         self.__ClearEntry(self.AnimeIndex.PrintSeason.EntryIndex.SeasonID)
     
@@ -476,3 +481,43 @@ class AnimeExecute:
 
         web.open(Info["WatchLink"])
         self.__ClearEntry(self.AnimeIndex.OpenWatchLink.EntryIndex.Name)
+
+
+
+    def ViewAll(self):
+        Animelist:list[str] = GetAnimeList.AnimeList()
+
+        self.Gui.Presets.ViewList.SelectList("anime" , Animelist)
+        self.Gui.Presets.ViewList.CurrentPage += 2
+        
+        Yposion:int = 120
+        inlineOptions:int = 5
+        self.Gui.Presets.ViewList.SetViewLines(self.Gui.Presets.ViewList.SelectedList)
+
+        self.Gui.Presets.ViewList.ViewReset()
+
+        TextList:list[tuple[str,int, int]] = []
+        
+        index:int = self.Gui.Presets.ViewList.ViewIndex
+        for i in range(0, 2):
+            for j in range(0, inlineOptions):
+                if (index < len(self.Gui.Presets.ViewList.SelectedList)):
+                    Xposion = 100 + j * 300
+                    self.__LoadImage(self.Gui.Presets.ViewList.SelectedList[index], (Xposion, Yposion), (150, 225))
+                    TextList.append((self.Gui.Presets.ViewList.SelectedList[index], Xposion, Yposion + 250))
+                    index += 1
+                else:
+                    break
+
+            Yposion += 300
+        
+        for name, Xposion, Yposion in TextList:
+            self.Gui.Text.CreateText(name, Xposion, CustomYPosition = Yposion, WidthHeight=(20, 1))
+
+        self.Gui.Presets.ViewList.PreviousPage = inlineOptions * 4
+        self.Gui.Presets.ViewList.ViewIndex = index
+
+    def ViewPrevious(self):
+        self.Gui.Presets.ViewList.ViewIndex -= self.Gui.Presets.ViewList.PreviousPage
+        self.Gui.Presets.ViewList.CurrentPage -= 4
+        self.ViewAll()

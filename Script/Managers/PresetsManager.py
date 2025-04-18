@@ -23,6 +23,7 @@ class PresetsManager:
         from Script.Presets.Manga.ViewInfoPreset import ViewInfo as MangaViewInfo
 
         from Script.Presets.CustomPresets import CustomPresets
+        from Script.Presets.ViewList import ViewList
         from Script.Presets.Menu import Menu
 
         self.AnimeAddInfo = AnimeAddInfo(SetGUI)
@@ -36,6 +37,7 @@ class PresetsManager:
         self.MangaViewInfo = MangaViewInfo(SetGUI)
 
         self.CustomPresets = CustomPresets(SetGUI)
+        self.ViewList = ViewList(SetGUI)
         self.MenuPreset = Menu(SetGUI)
 
         self.Gui:WatchaGUI = SetGUI
@@ -59,7 +61,7 @@ class PresetsManager:
         
     def UpdateTextIndex(self):
         Index = self.TextIndex
-        if (len(self.Gui.TextList) - 1 > self.TextIndex): 
+        if (len(self.Gui.LabelList) - 1 > self.TextIndex): 
             self.TextIndex += 1
             Index = self.TextIndex
         return Index
@@ -73,7 +75,7 @@ class PresetsManager:
 
     def UpdateLabelIndex(self):
         Index = self.LabelIndex
-        if (len(self.Gui.LabelList) - 1 > self.LabelIndex): 
+        if (len(self.Gui.TextList) - 1 > self.LabelIndex): 
             self.LabelIndex += 1
             Index = self.LabelIndex
         return Index

@@ -179,6 +179,35 @@ class AnimeWatcha:
         
         self.selected.UpdateData(Name)
 
+        
+        
+        # remove season
+        if (os.path.exists("./Data/ListedAnimeSeasons.json")):
+            Season:list = JsonUtil.LoadJson(f"./Data/Seasons/{self.selected.Season}.json")
+            ListedSeasons:list[str] = JsonUtil.LoadJson(f"./Data/ListedAnimeSeasons.json")
+            
+            if (self.selected.Season in ListedSeasons):
+                ListedSeasons.remove(self.selected.Season)
+            else:
+                print("Anime not found in season list")
+
+            if (Name in Season):
+                Season.remove(Name)
+            else:
+                print("Anime not found in season list")
+
+            if (len(Season) == 0):
+                os.remove(f"./Data/Seasons/{self.selected.Season}.json")
+            else:
+                JsonUtil.UpdateJson(Season, f"./Data/Seasons/{self.selected.Season}.json")
+            
+            if (len(ListedSeasons) == 0):
+                os.remove(f"./Data/ListedAnimeSeasons.json")
+            else:
+                JsonUtil.UpdateJson(ListedSeasons, f"./Data/ListedAnimeSeasons.json")
+        else:
+            print("Season list not found")
+
         # remove anime from its season
         if (os.path.exists(f"./Data/Seasons/{self.selected.Season}.json")):
             Season:list = JsonUtil.LoadJson(f"./Data/Seasons/{self.selected.Season}.json")
@@ -197,27 +226,8 @@ class AnimeWatcha:
 
             else:
                 JsonUtil.UpdateJson(Season, f"./Data/Seasons/{self.selected.Season}.json")
-        
-        # remove season
-        if (os.path.exists("./Data/ListedAnimeSeasons.json")):
-            Season:list = JsonUtil.LoadJson(f"./Data/Seasons/{self.selected.Season}.json")
-            ListedSeasons:list[str] = JsonUtil.LoadJson(f"./Data/ListedAnimeSeasons.json")
-            
-            if (self.selected.Season in ListedSeasons):
-                if (len(GetAnimeList.GetSeason(self.selected.Season)) == 0):
-                    ListedSeasons.remove(self.selected.Season)
-            else:
-                print("Anime not found in season list")
-
-            if (Name in Season):
-                Season.remove(Name)
-            else:
-                print("Anime not found in season list")
-            
-            if (len(ListedSeasons) == 0):
-                os.remove(f"./Data/ListedAnimeSeasons.json")
-            else:
-                JsonUtil.UpdateJson(ListedSeasons, f"./Data/ListedAnimeSeasons.json")
+        else:
+            print("Season not found")
 
         # remove anime from its serie       
         if (os.path.exists(f"./Data/SerieData/{JsonUtil.TrueName(self.selected.SerieName)}.json")):
@@ -269,6 +279,8 @@ class AnimeWatcha:
                 os.remove("./Data/ListedAnimes.json")
             else:
                 JsonUtil.UpdateJson(ListedAnimes, "./Data/ListedAnimes.json")
+        else:
+            print("ListedAnimes not found")
 
         #remove images
         if (os.path.exists(f"./Data/AnimeImages/{JsonUtil.TrueName(Name)}.png")):
@@ -385,13 +397,15 @@ class AnimeWatcha:
         # save data
         NewAnime.StoreData(True)
 
-    def UpdateMyAnimeListLink(self, Name, Link):
+    def UpdateMyAnimeListLink(self, Name:str, Link:str):
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            raise Exception("UpdateMyAnimeListLink path not found")
-        else:
-            self.selected.UpdateData(Name, False)
-            self.selected.MyAnimeListLink = Link
-            self.selected.StoreData()
+            raise Exception(f"UpdateMyAnimeListLink Anime {Name} path not found")
+        
+        if ("?" in Link):
+            Link = Link.split("?")[0]
+        self.selected.UpdateData(Name, False)
+        self.selected.MyAnimeListLink = Link
+        self.selected.StoreData()
 
 
     def PrintSeason(self, SeasonID:str) -> list:

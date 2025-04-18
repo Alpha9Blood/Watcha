@@ -10,9 +10,9 @@ class OpenLinks:
         self.Gui.Button.CreateBut('OpenLink', self.Gui.MangaExec.OpenLink , 230, 1 , 320)
         self.MangaIndex.OpenLink.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
 
-        self.Gui.Text.CreateText("Name", 80, 1, 270)
+        self.Gui.Text.CreateLabel("Name", 80, 1, 270)
         self.MangaIndex.OpenLink.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.MangaIndex.OpenLink.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.MangaIndex.OpenLink.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(180, 1, 280)
         self.MangaIndex.OpenLink.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
@@ -24,9 +24,9 @@ class OpenLinks:
         self.MangaIndex.OpenMyAnimeListLink.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.OpenMyAnimeListLink.ButtonIndex.OpenLink].config(width=19)
 
-        self.Gui.Text.CreateText("Name", 80, 1, 510)
+        self.Gui.Text.CreateLabel("Name", 80, 1, 510)
         self.MangaIndex.OpenMyAnimeListLink.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.MangaIndex.OpenMyAnimeListLink.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.MangaIndex.OpenMyAnimeListLink.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(170, 1, 519)
         self.MangaIndex.OpenMyAnimeListLink.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()

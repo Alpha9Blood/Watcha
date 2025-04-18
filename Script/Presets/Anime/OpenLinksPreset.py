@@ -11,9 +11,9 @@ class OpenLinks:
         self.AnimeIndex.OpenMyAnimeListLink.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.AnimeIndex.OpenMyAnimeListLink.ButtonIndex.OpenLink].config(width=19)
 
-        self.Gui.Text.CreateText("Name", 80, 1, 510)
+        self.Gui.Text.CreateLabel("Name", 80, 1, 510)
         self.AnimeIndex.OpenMyAnimeListLink.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.OpenMyAnimeListLink.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.OpenMyAnimeListLink.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(170, 1, 519)
         self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
@@ -25,9 +25,9 @@ class OpenLinks:
         self.AnimeIndex.OpenWatchLink.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.AnimeIndex.OpenWatchLink.ButtonIndex.OpenLink].config(width=14)
 
-        self.Gui.Text.CreateText("Name", 80, 1, 390)
+        self.Gui.Text.CreateLabel("Name", 80, 1, 390)
         self.AnimeIndex.OpenWatchLink.TextIndex.Name = self.Gui.Presets.UpdateTextIndex()
-        self.Gui.Presets.CreateTooltip(self.Gui.TextList[self.AnimeIndex.OpenWatchLink.TextIndex.Name], "Can be simplified.")
+        self.Gui.Presets.CreateTooltip(self.Gui.LabelList[self.AnimeIndex.OpenWatchLink.TextIndex.Name], "Can be simplified.")
 
         self.Gui.Entry.CreateEntry(170, 1, 399)
         self.AnimeIndex.OpenWatchLink.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
@@ -44,7 +44,7 @@ class OpenLinks:
         self.AnimeIndex.OpenSeasonLink.ButtonIndex.OpenLink = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.AnimeIndex.OpenSeasonLink.ButtonIndex.OpenLink].config(width=16)
 
-        self.Gui.Text.CreateText("SeasonID", 80, 1, 630)
+        self.Gui.Text.CreateLabel("SeasonID", 80, 1, 630)
         self.AnimeIndex.OpenSeasonLink.TextIndex.SeasonID = self.Gui.Presets.UpdateTextIndex()
 
         self.Gui.Entry.CreateEntry(170, 1, 639)
