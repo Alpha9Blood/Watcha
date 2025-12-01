@@ -1,31 +1,34 @@
 import os
+from Script.ManageData.Manga.MangaLists import GetMangaList
 from Script.Utils import JsonUtil
 from PIL import ImageTk
 
 
 class Manga:
-    def __init__(self, Name:str = "", Chapters:int = 0, Status:str = ""):
+    def __init__(self, Name:str = "", Chapter:int = 0, Status:str = ""):
         self.Name:str = Name
         self.Status:str = Status
-        self.Chapters:int = Chapters
+        self.Chapter:int = Chapter
         self.LeastTimeUpdated:str = ""
-        self.MyAnimeListLink:str = ""
-        self.MangaLink:str = ""
         self.Score:float = 0
         self.Path:str = ""
         self.Photo:ImageTk.PhotoImage
 
     def DirectoryPath(self) -> str:
-        return f"./Data/MangaData/{JsonUtil.TrueName(self.Name)}.json"
+        path:str = f"./Data/MangaData/{JsonUtil.TrueName(self.Name)}.json"
+        return path
     
-    def GetData(self, Name:str) -> dict:
-        return JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")["Manga"]
+    def GetData(self, Name:str) -> dict[str, str]:
+        Data:dict[str, dict[str, str]] = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")
+        if (not Data["Manga"]):
+            raise Exception("Maanga GetData manga not found")
+        return Data["Manga"]
     
     def UpdateStatus(self):
-        if (self.Chapters > 0):
+        if (self.Chapter > 0):
             if (self.Status != "Completed" and self.Status != "Dropped"):
                 self.Status = "Reading"
-        elif (self.Chapters == 0):
+        elif (self.Chapter == 0):
             self.Status = "PlanToRead"
         else:
             self.Status = "Error"
@@ -35,11 +38,9 @@ class Manga:
         return {
             "Manga" : {
                 "Name": JsonUtil.CursedStoreName(self.Name),
-                "Chapters": self.Chapters,
+                "Chapter": self.Chapter,
                 "Status": self.Status,
                 "LeastTimeUpdated": self.LeastTimeUpdated,
-                "MyAnimeListLink": self.MyAnimeListLink,
-                "MangaLink": self.MangaLink,
                 "Score": self.Score
                 }
             }
@@ -61,8 +62,10 @@ class Manga:
         """
         if (UpdateStatus):
             self.UpdateStatus()
+            
         Data:dict = self.MangaData()
         Path:str = self.DirectoryPath()
+
         if (not Create):
             if (os.path.exists(Path)):
                 JsonUtil.UpdateJson(Data, Path)
@@ -80,12 +83,15 @@ class Manga:
             
         try:
             Info:dict = self.GetData(Name)
-            self.Name = Info["Name"]
-            self.Chapters = Info["Chapters"]
+
+            for key in Info:
+                if (not Info[key]):
+                    raise Exception(f"UpdateData {key} manga not found")
+
+            self.Name = Name
+            self.Chapter = Info["Chapter"]
             self.Status = Info["Status"]
             self.LeastTimeUpdated = Info["LeastTimeUpdated"]
-            self.MyAnimeListLink = Info["MyAnimeListLink"]
-            self.MangaLink = Info["MangaLink"]
             self.Score = Info["Score"]
             self.Path = self.DirectoryPath()
             if (UpdateStatus):

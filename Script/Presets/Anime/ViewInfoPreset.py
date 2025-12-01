@@ -7,7 +7,7 @@ class ViewInfo:
         self.AnimeIndex = AnimeI()
 
     def PrintInfo(self):
-        self.Gui.Button.CreateBut('PrintInfo', self.Gui.AnimeExec.GetAnimeStatus , 230, 1 , 80)
+        self.Gui.Button.CreateBut('PrintInfo', self.Gui.AnimeExec.ViewAnime , 230, 1 , 80)
         self.AnimeIndex.PrintInfo.ButtonIndex.GetInfo = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.AnimeIndex.PrintInfo.ButtonIndex.GetInfo].config(width=12)
         self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.AnimeIndex.PrintInfo.ButtonIndex.GetInfo], "Print the data of the selected anime.")

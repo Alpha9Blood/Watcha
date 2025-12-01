@@ -9,6 +9,9 @@ class ButtonManager():
             self.window = self.Gui.window
         
         def PresetButPosition(self,But:tk.Button, PositionX:int, PositionTag:int, DefaultPos:int = 0):
+            if (PositionTag < 1):
+                raise Exception("PositionTag must be greater than 0")
+            
             CutYPos:int = ((PositionTag - 1) * 50)
             if (PositionTag == 1):
                 But.place(x=PositionX, y=DefaultPos)

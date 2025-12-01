@@ -1,5 +1,6 @@
 import os
 from Script.Utils import JsonUtil
+from Script.ManageData.Anime.AnimeLists import GetAnimeList
 
 
 class Anime:
@@ -18,8 +19,6 @@ class Anime:
         self.Season:str = Season
         self.SerieName:str = ""
         self.Score:float = 0
-        self.MyAnimeListLink:str = ""
-        self.WatchLink:str = ""
         self.Path = ""    
     
     def CurrentEpisodeStatus(self) -> str:
@@ -31,8 +30,12 @@ class Anime:
     def DirectoryPath(self) -> str:
         return f"./Data/AnimeData/{JsonUtil.TrueName(self.Name)}.json"
         
-    def GetData(self, Name:str) -> dict:
-        return JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")["Anime"]
+    def GetData(self, Name:str) -> dict[str, str]:
+        Data:dict[str, dict[str, str]] = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
+        if (not Data["Anime"]):
+            raise Exception("Anime GetData anime not found")
+        
+        return Data["Anime"]
     
     def UpdateStatus(self):
         
@@ -44,6 +47,7 @@ class Anime:
         If the episode is less than 0, it will set the status to "Error".
         If the episode is 0 and the max episodes is 0, it will set the status to "PlanToWatch".
         """
+        Status:str = self.CurrentStatus
         if (self.Episode > 0 and not self.CurrentStatus == "Dropped"):
             if (self.MaxEpisodes >= 0):
                 if (self.CurrentStatus == "Completed"):
@@ -53,6 +57,8 @@ class Anime:
                         self.Episode = self.MaxEpisodes
                 elif (self.Episode == self.MaxEpisodes):
                     self.CurrentStatus = "Completed"
+                elif (self.CurrentStatus == "PlanToWatch"):
+                    self.CurrentStatus = "Watching"
             else:
                 self.MaxEpisodes = 0
                 if (self.Episode > 0):
@@ -62,7 +68,23 @@ class Anime:
                     self.CurrentStatus = "PlanToWatch"
         elif (self.Episode < 0):
             self.CurrentStatus = "Error"
+        
+        AnimeStatusListInfo:dict[str, list[str]] = GetAnimeList.AnimeStatusList()
+        if (Status != self.CurrentStatus and self.Name in AnimeStatusListInfo[Status]):
+            AnimeStatusListInfo[Status].remove(self.Name)
+            if (self.Name not in AnimeStatusListInfo[self.CurrentStatus]):
+                AnimeStatusListInfo[self.CurrentStatus].append(self.Name)
+            else:
+                raise Exception("UpdateStatus error")
+        else:
+            for status in AnimeStatusListInfo:
+                if (self.Name in AnimeStatusListInfo[status]):
+                    AnimeStatusListInfo[status].remove(self.Name)
 
+            AnimeStatusListInfo[self.CurrentStatus].append(self.Name)
+
+                
+        JsonUtil.UpdateJson(AnimeStatusListInfo, f"./Data/AnimeStatusList.json")
     
     def StoreData(self, Create:bool = False, UpdateStatus:bool = True):
         
@@ -100,6 +122,10 @@ class Anime:
         
         try:
             Info:dict = self.GetData(Name)
+            for key in Info:
+                if (not Info[key]):
+                    raise Exception(f"UpdateData  {key} anime not found")
+                
             self.Name = Info["Name"]
             self.EpisodeStatus = Info["EpisodeStatus"]
             self.CurrentStatus = Info["Status"]
@@ -107,8 +133,6 @@ class Anime:
             self.MaxEpisodes = Info["MaxEpisodes"]
             self.Episode = Info["Episode"]
             self.SerieName = Info["SerieName"]
-            self.MyAnimeListLink = Info["MyAnimeListLink"]
-            self.WatchLink = Info["WatchLink"] 
             self.Score = Info["Score"]
             self.Path = self.DirectoryPath()
             if (UpdateStatus):
@@ -128,8 +152,6 @@ class Anime:
                 "MaxEpisodes": self.MaxEpisodes,
                 "Episode": self.Episode,
                 "SerieName": JsonUtil.CursedStoreName(self.SerieName),
-                "MyAnimeListLink": self.MyAnimeListLink,
-                "WatchLink": self.WatchLink,
                 "Score": self.Score
             }
-        }
+        } 

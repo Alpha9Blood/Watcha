@@ -28,8 +28,8 @@ class EditInfo:
         self.Gui.EntryList[self.MangaIndex.EditChapters.EntryIndex.Name].config(width=25)     
         
         self.Gui.Entry.CreateEntry(1355, 1, 226)
-        self.MangaIndex.EditChapters.EntryIndex.Chapters = self.Gui.Presets.UpdateEntryIndex()
-        self.Gui.EntryList[self.MangaIndex.EditChapters.EntryIndex.Chapters].config(width=3)
+        self.MangaIndex.EditChapters.EntryIndex.Chapter = self.Gui.Presets.UpdateEntryIndex()
+        self.Gui.EntryList[self.MangaIndex.EditChapters.EntryIndex.Chapter].config(width=3)
 
     def RemoveManga(self):
         self.Gui.Button.CreateBut('RemoveManga', self.Gui.MangaExec.DeleteManga , 1290, 1 , 634)

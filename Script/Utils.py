@@ -35,7 +35,7 @@ class JsonUtils:
         """
 
 
-        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|", "'", '"']
+        CursedChars:list[str] = ["/", ":", "*", "?", "<", ">", "|", '"', "＿"]
         for curse in CursedChars:
             if (curse in Name):
                 Name = Name.replace(curse, "_")

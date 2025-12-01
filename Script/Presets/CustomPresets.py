@@ -18,3 +18,4 @@ class CustomPresets:
     
     def ReturnToMenu(self):
         self.Gui.Button.CreateBut('Menu', self.Gui.Models.MenuPreset , 650, 1 , 20)
+        self.CustomIndex.ReturnToMenu.ButtonIndex.Menu = self.Gui.Presets.UpdateButtonIndex()

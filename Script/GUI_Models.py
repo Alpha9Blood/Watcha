@@ -218,9 +218,9 @@ class GUI_Models:
 
             self.Gui.Presets.MangaViewInfo.PrintFavorites()
 
-            self.Gui.Presets.CustomPresets.ReturnToMenu()
+            self.Gui.Presets.MangaViewInfo.ViewAll()
 
-            self.Gui.Presets.MangaViewInfo.ViewAllManga()
+            self.Gui.Presets.CustomPresets.ReturnToMenu()
 
             self.SelectedPreset = Preset
         else:

@@ -36,9 +36,11 @@ class AnimeExecute:
         EntryList:list[CustomEntry] = self.Gui.EntryList
         if (Index > -1):
             EntryList[Index].delete(0, 'end')
+            EntryList[Index].ResetOptions()
         if (IndexList != []):
             for i in IndexList:
                 EntryList[i].delete(0, 'end')
+                EntryList[i].ResetOptions()
 
     def __GetEntry(self, index:int) -> str:
         EntryList:list[CustomEntry] = self.Gui.EntryList
@@ -165,6 +167,10 @@ class AnimeExecute:
             return
         
         OnGoingList:list[str] = GetAnimeList.OnGoingList()
+        if (len(Name) < 2):
+            print("AddEpisode: name must be at least 2 characters long")
+            return
+        
         Name = self.__FindName(Name, CustomData = OnGoingList) 
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print(f"AddEpisode path not found: ./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
@@ -244,7 +250,7 @@ class AnimeExecute:
         Name = self.__GetEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Name)
         
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            print(f"AddMyAnimeListLink not found:./Data/MangaData/{JsonUtil.TrueName(Name)}.json")
+            print(f"AddMyAnimeListLink not found:./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")
             return
         
         Link = self.__GetEntry(self.AnimeIndex.SetMyAnimeListLink.EntryIndex.Link)
@@ -306,21 +312,21 @@ class AnimeExecute:
         Selected:Anime = Watch.SelectAnime(Name)
         self.Gui.ImageSlot.ProcessPhoto(Selected, posXY, CoverSize)
     
-    def GetAnimeStatus(self):
+    def ViewAnime(self):
         Name:str = self.__GetEntry(self.AnimeIndex.PrintInfo.EntryIndex.Name)
 
         if (Name == ""):
-            print("SetEpisode: name is empty")
+            print("ViewAnime: name is empty")
             return
         
         Name = self.__FindName(Name)
 
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            print(f"GetAnimeStatus path not found: {JsonUtil.TrueName(Name)}")
+            print(f"ViewAnime path not found: {JsonUtil.TrueName(Name)}")
             return
         
         if (Name not in self.Gui.EntryList[self.AnimeIndex.PrintInfo.EntryIndex.Name].options):
-            print(f"GetAnimeStatus {Name = } not found in options")
+            print(f"ViewAnime {Name = } not found in options")
             return
         
         self.Gui.Text.PrintDisplay(Watch.GetStatus(Name))
@@ -330,7 +336,7 @@ class AnimeExecute:
     def PrintSeason(self):
         SeasonID:str = self.__GetEntry(self.AnimeIndex.PrintSeason.EntryIndex.SeasonID)
 
-        if (not os.path.exists(f"./Data/SeasonsCalendar/{JsonUtil.TrueName(SeasonID)}.json")):
+        if (not os.path.exists(f"./Data/Seasons/{JsonUtil.TrueName(SeasonID)}.json")):
             print(f"Invalid {SeasonID = }")
             return
         
@@ -343,7 +349,7 @@ class AnimeExecute:
             print(f"StatusList path: ./Data/AnimeStatusList.json not found")
             return
         
-        Status:dict = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
+        Status:dict[str, list[str]] = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
         Filter = self.Gui.AnimeDataLists.GetFilter()
         if (Info != ""):  
             if (Info == "Watching"):
@@ -386,43 +392,64 @@ class AnimeExecute:
             NewStatus:dict[str, list[str]] = {"Watching": [], "Completed": [], "PlanToWatch": [], "Dropped": []}
             for status in Status:
                 NameList:list[str] = Status[f"{status}"]
-                for name in NameList:
-                    SelectedAnime:Anime = Watch.SelectAnime(name)
-                    if (Filter == "All"):
-                        NewStatus[f"{status}"].append(name)
-                    elif (SelectedAnime.Season == Filter):
-                        NewStatus[f"{status}"].append(name)
+
+                if (Filter == "All"):
+                    NewStatus[status] = NameList
+                else:
+                    if (not os.path.exists(f"./Data/Seasons/{Filter}.json")):
+                        print(f"Invalid path {Filter = }")
+                        return
+                    
+                    season:list[str] = JsonUtil.LoadJson(f"./Data/Seasons/{Filter}.json")
+                    for name in season:
+                        if (name in NameList):
+                            NewStatus[status].append(name)
+
             self.Gui.Text.PrintDisplay(NewStatus)
             
     def OpenMyAnimeListLink(self):
         Name:str = self.__GetEntry(self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name)
 
         if (Name == ""):
-            print("SetEpisode: name is empty")
+            print("OpenMyAnimeListLink: name is empty")
             return
         
         Name = self.__FindName(Name)
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
-            print("OpenLink path not found")
+            print("OpenMyAnimeListLink path not found")
             return
         
-        if (Name not in self.Gui.EntryList[self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name].options):
-            print("OpenLink name not found")
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print("OpenMyAnimeListLink: anime not found")
             return
         
-        link:str = Watch.SelectAnime(Name).MyAnimeListLink
-        if (link == ""):
-            print("OpenLink anime link is empty")
+        if (not os.path.exists(f"./Data/AnimeLinks.json")):
+            print("OpenMyAnimeListLink anime links not found")
             return
         
-        web.open(link)
+        AnimeLinks:dict = JsonUtil.LoadJson("./Data/AnimeLinks.json")
+        if (not AnimeLinks["MyAnimeListLinks"] or Name not in AnimeLinks["MyAnimeListLinks"]):
+            print("OpenMyAnimeListLink anime not found in AnimeLinks")
+            return
+        
+        if (AnimeLinks["MyAnimeListLinks"][Name] == ""):
+            print("OpenMyAnimeListLink anime link is empty")
+            return
+        
+        Link:str = AnimeLinks["MyAnimeListLinks"][Name]
+        
+        try:
+            web.open(Link)   
+        except:
+            print("OpenMyAnimeListLink anime link is invalid")
+        
         self.__ClearEntry(self.AnimeIndex.OpenMyAnimeListLink.EntryIndex.Name)
 
     def PrintSerie(self):
         Name:str = self.__GetEntry(self.AnimeIndex.PrintSerie.EntryIndex.SerieID)
 
         if (Name == ""):
-            print("SetEpisode: name is empty")
+            print("OpenMyAnimeListLink: name is empty")
             return
         
         self.__FindName(Name, True)
@@ -465,21 +492,40 @@ class AnimeExecute:
     
     def OpenWatchLink(self):
         Name = self.__GetEntry(self.AnimeIndex.OpenWatchLink.EntryIndex.Name)
+
+        if (Name == ""):
+            print("OpenWatchLink: name is empty")
+            return
+        
+        Name = self.__FindName(Name)
         if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
             print("OpenWatchLink season path not found")
             return
         
-        Info:dict = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")["Anime"]
-
-        if (Info["WatchLink"] == ""):
-            print("OpenWatchLink: link is empty")
+        if (not os.path.exists(f"./Data/AnimeData/{JsonUtil.TrueName(Name)}.json")):
+            print("OpenWatchLink: anime not found")
             return
         
-        if (Name not in self.Gui.EntryList[self.AnimeIndex.OpenWatchLink.EntryIndex.Name].options):
-            print("OpenWatchLink: name not found")
+        if (not os.path.exists(f"./Data/AnimeLinks.json")):
+            print("OpenWatchLink anime links not found")
             return
-
-        web.open(Info["WatchLink"])
+        
+        AnimeLinks:dict = JsonUtil.LoadJson("./Data/AnimeLinks.json")
+        if (not AnimeLinks["WatchLinks"] or Name not in AnimeLinks["WatchLinks"]):
+            print("OpenWatchLink anime not found in AnimeLinks")
+            return
+        
+        if (AnimeLinks["WatchLinks"][Name] == ""):
+            print("OpenWatchLink anime link is empty")
+            return
+        
+        Link:str = AnimeLinks["WatchLinks"][Name]
+        
+        try:
+            web.open(Link)   
+        except:
+            print("OpenWatchLink anime link is invalid")
+        
         self.__ClearEntry(self.AnimeIndex.OpenWatchLink.EntryIndex.Name)
 
 
@@ -496,7 +542,7 @@ class AnimeExecute:
 
         self.Gui.Presets.ViewList.ViewReset()
 
-        TextList:list[tuple[str,int, int]] = []
+        TextList:list[tuple[str, int, int]] = []
         
         index:int = self.Gui.Presets.ViewList.ViewIndex
         for i in range(0, 2):

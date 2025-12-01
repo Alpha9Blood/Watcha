@@ -16,7 +16,7 @@ class MangaLists:
         return JsonUtil.LoadJson("./Data/MangaList.json")[::-1]
         
 
-    def CurrentStatusTypeList(self):
+    def CurrentStatusTypeList(self) -> list[str]:
         return ["Reading", "PlanToRead", "Completed", "Dropped"]
     
     def MangaStatusList(self) -> dict[str, list[str]]:
@@ -52,6 +52,10 @@ class MangaLists:
             raise Exception("MangaCurrentStatusList: status not found")
         
         StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/MangaStatusList.json")
+
+        if (Status not in StatusList.keys()):
+            raise Exception("MangaCurrentStatusList: status not found")
+
         Info:list[str] = StatusList[Status]
         return Info
     
@@ -69,29 +73,25 @@ class MangaLists:
         return JsonUtil.LoadJson("./Data/FavoriteMangaList.json")
     
     def HasMAL_LinkList(self) -> list[str]:
-        Selected:str = ""
-        AnimeList:list[str] = self.MangaList()
-        List:list[str] = []
-        for i in AnimeList:
-            try:
-                Selected = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(i)}.json")["Manga"]["MyAnimeListLink"]
-                if (Selected != ""):
-                    List.append(i)
-            except:
-                raise Exception(f"HasMAL_LinkList: manga not found: ./Data/MangaData/{JsonUtil.TrueName(i)}.json or wrong format")
-        return List
+        if (not os.path.exists("./Data/MangaLinks.json")):
+            print("HasMyAnimeListLinks: path not found: ./Data/MangaLinks.json")
+            return []
+        
+        MangaLinks:dict[str, dict[str, str]] = JsonUtil.LoadJson("./Data/MangaLinks.json")
+        if (not MangaLinks["MyAnimeListLinks"]):
+            raise Exception("HasMyAnimeListLinks: MyAnimeListLinks not found: ./Data/MangaLinks.json")
+
+        return list(MangaLinks["MyAnimeListLinks"].keys())
     
     def HasMangaLinkList(self) -> list[str]:
-        Selected:str = ""
-        AnimeList:list[str] = self.MangaList()
-        List:list[str] = []
-        for i in AnimeList:
-            try:
-                Selected = JsonUtil.LoadJson(f"./Data/MangaData/{JsonUtil.TrueName(i)}.json")["Manga"]["MangaLink"]
-                if (Selected != ""):
-                    List.append(i)
-            except:
-                raise Exception(f"HasMangaLinkList: manga not found: ./Data/MangaData/{JsonUtil.TrueName(i)}.json or wrong format")
-        return List
+        if (not os.path.exists("./Data/MangaLinks.json")):
+            print("HasWatchLinkList: path not found: ./Data/MangaLinks.json")
+            return []
+        
+        MangaLinks:dict[str, dict[str, str]] = JsonUtil.LoadJson("./Data/MangaLinks.json")
+        if (not MangaLinks["WatchLinks"]):
+            raise Exception("HasWatchLinkList: WatchLinks not found: ./Data/MangaLinks.json")
+        
+        return list(MangaLinks["WatchLinks"].keys())
 
 GetMangaList = MangaLists()

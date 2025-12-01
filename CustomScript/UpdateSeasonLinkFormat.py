@@ -20,4 +20,4 @@ class UpdateSeasonLinkFormat:
         SeasonManager.UpdateSeasonLinks()
 
 Exec = UpdateSeasonLinkFormat()
-Exec.OverrideFormat()
+Exec.OverrideFormat

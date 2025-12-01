@@ -40,8 +40,8 @@ class ViewInfo:
         self.MangaIndex.PrintFavorites.ButtonIndex.PrintFavorites = self.Gui.Presets.UpdateButtonIndex()
         self.Gui.ButList[self.MangaIndex.PrintFavorites.ButtonIndex.PrintFavorites].config(width=15)
     
-    def ViewAllManga(self):
-        self.Gui.Button.CreateBut('ViewAllManga', self.Gui.MangaExec.ViewAll , 100, 1 , 700)
-        self.MangaIndex.ViewAllManga.ButtonIndex.ViewAllManga = self.Gui.Presets.UpdateButtonIndex()
-        self.Gui.ButList[self.MangaIndex.ViewAllManga.ButtonIndex.ViewAllManga].config(width=14)
-        self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.MangaIndex.ViewAllManga.ButtonIndex.ViewAllManga], "View all mangas.")
+    def ViewAll(self):
+        self.Gui.Button.CreateBut('ViewAll', self.Gui.MangaExec.ViewAll , 100, 1 , 700)
+        self.MangaIndex.ViewAll.ButtonIndex.ViewAll = self.Gui.Presets.UpdateButtonIndex()
+        self.Gui.ButList[self.MangaIndex.ViewAll.ButtonIndex.ViewAll].config(width=14)
+        self.Gui.Presets.CreateTooltip(self.Gui.ButList[self.MangaIndex.ViewAll.ButtonIndex.ViewAll], "View all mangas.")

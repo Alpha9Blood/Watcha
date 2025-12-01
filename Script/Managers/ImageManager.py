@@ -1,6 +1,7 @@
 from PIL import Image, ImageTk
 import tkinter as tk
 from io import BytesIO
+import os
 from Script.ManageData.Anime.AnimeObj import Anime
 from Script.ManageData.Manga.MangaObj import Manga
 from Script.ManageData.Manga.MangaLists import GetMangaList
@@ -54,7 +55,14 @@ class ImageManager():
             print("ProcessPhoto: Invalid MAL link")
             return
         
-        if (Obj.MyAnimeListLink == ""):
+        if (not os.path.exists(f"./Data/{AnimeOrManga[0].upper() + AnimeOrManga[1:]}Links.json")):
+            raise FileNotFoundError(f"ProcessPhoto: {AnimeOrManga[0].upper() + AnimeOrManga[1:]}Links.json not found")
+
+        Links:dict[str, dict[str, str]] = JsonUtil.LoadJson(f"./Data/{AnimeOrManga[0].upper() + AnimeOrManga[1:]}Links.json")
+        if (not Links["MyAnimeListLinks"]):
+            raise FileNotFoundError(f"ProcessPhoto: {AnimeOrManga[0].upper() + AnimeOrManga[1:]}Links.json MyAnimeListLinks not found")
+        
+        if (Obj.Name not in Links["MyAnimeListLinks"] or Links["MyAnimeListLinks"][Obj.Name] == ""):
             self.__NoImage(posXY, CoverSizePixels)
             print(f"ProcessPhoto: {Obj.Name} Empty MAL Link")
             return

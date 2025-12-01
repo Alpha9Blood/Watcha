@@ -1,6 +1,7 @@
 from io import BytesIO
 import os
 import requests
+import urllib.parse
 from Script.Utils import JsonUtil
 from Script.ManageData.Anime.AnimeObj import Anime
 from Script.ManageData.Manga.MangaObj import Manga
@@ -13,7 +14,7 @@ class ImageControler():
         elif ("/manga/" in url):
             return "manga"
         else:
-            raise Exception("AnimeOrManga: Invalid url")
+            raise Exception(f"AnimeOrManga: Invalid {url = }")
 
     def __GetImageLink(self, url:str, AnimeOrManga:str) -> str:
         MAL_Link:str = f"https://myanimelist.net/{AnimeOrManga}/" 
@@ -28,14 +29,14 @@ class ImageControler():
         else:
             raise Exception(f"GetImageLink: Invalid url MAL_Link: {MAL_Link} url: {url[:len(MAL_Link)]}")
         
-        RequestLink:str = f"{url}/pics"
+        RequestLink:str = f"{urllib.parse.unquote(url)}/pics"
         Id:str = f"<a href=\"{RequestLink}\">{IdVar}"
 
         try:
             response = requests.get(f"{url}/pics")
             result:str = response.text
         except:
-            raise requests.exceptions.HTTPError("Http Error.")
+            raise requests.exceptions.HTTPError(f"Http Error. {url}")
 
         if (Id not in result):
             raise Exception(f"GetImageLink: Invalid url MAL_Link: {MAL_Link} / ID: {RequestLink}")
@@ -71,6 +72,7 @@ class ImageControler():
     def GetImage(self, Obj:Anime | Manga) -> BytesIO:
         AnimeOrManga:str = list(JsonUtil.LoadJson(Obj.Path).keys())[0].lower()
         ImagePath:str = f"./Data/{AnimeOrManga}Images/{JsonUtil.TrueName(Obj.Name)}.png"
+        
             
         
         try:

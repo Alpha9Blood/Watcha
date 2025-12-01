@@ -1,10 +1,9 @@
 import os
 import webbrowser as web
-from tkinter import ttk
 from Script.ManageData.Manga.MangaObj import Manga
 from Script.Managers.CustomTypes.CustomEntry import CustomEntry
 from Script.GUI_Index import MangaI
-from Script.Utils import JsonUtil, Math
+from Script.Utils import JsonUtil
 from Script.ManageData.Manga.MangaLists import GetMangaList
 from Script.ManageData.Manga.MangaWatcha import Watch
 
@@ -32,7 +31,7 @@ class MangaExecute:
         EntryList:list[CustomEntry] = self.Gui.EntryList
         return EntryList[index].get()
     
-    def __ClearEntry(self, Index:int = -1, IndexList:list = []):  
+    def __ClearEntry(self, Index:int = -1, IndexList:list[int] = []):  
         """
         Clears the entry fields in the GUI.
 
@@ -41,15 +40,15 @@ class MangaExecute:
             IndexList (list): A list of indices of entry fields to clear. Defaults to an empty list.
 
         """
-        EntryList:list[CustomEntry] = self.Gui.EntryList
 
+        EntryList:list[CustomEntry] = self.Gui.EntryList
         if (Index > -1):
             EntryList[Index].delete(0, 'end')
-
+            EntryList[Index].ResetOptions()
         if (IndexList != []):
             for i in IndexList:
-                Entry:ttk.Combobox = EntryList[i]
-                Entry.delete(0, 'end')
+                EntryList[i].delete(0, 'end')
+                EntryList[i].ResetOptions()
     
     def __FindName(self, Name:str, CustomData:list[str] = []) -> str:
         
@@ -95,21 +94,21 @@ class MangaExecute:
             print("AddNewManga invalid status")
             return
 
-        Chapters:str = self.__GetEntry(self.MangaIndex.AddNewManga.EntryIndex.Chapters)
+        Chapter:str = self.__GetEntry(self.MangaIndex.AddNewManga.EntryIndex.Chapter)
         
-        if (Chapters != ""):
+        if (Chapter != ""):
             try:
-                ChaptersI = int(Chapters)
+                ChaptersI = int(Chapter)
                 if (ChaptersI < 0):
                     ChaptersI = 0
             except:
-                raise ValueError(f"AddNewManga: {Chapters = } must be a integer number.")
+                raise ValueError(f"AddNewManga: {Chapter = } must be a integer number.")
         else:
             ChaptersI = 0
 
         Watch.AddManga(Name, ChaptersI, Status)
         self.__ClearEntry(self.MangaIndex.AddNewManga.EntryIndex.Name)
-        self.__ClearEntry(self.MangaIndex.AddNewManga.EntryIndex.Chapters)
+        self.__ClearEntry(self.MangaIndex.AddNewManga.EntryIndex.Chapter)
         self.__ClearEntry(self.MangaIndex.AddNewManga.EntryIndex.Status)
     
     def DeleteManga(self):
@@ -164,6 +163,10 @@ class MangaExecute:
         if (Name == ""):
             print("EditChapters manga name is empty")
             return
+        
+        if (len(Name) < 2):
+            print("EditChapters: name must be at least 2 characters long")
+            return
 
         OnGoingList:list[str] = GetMangaList.OnGoingList()
         Name = self.__FindName(Name, OnGoingList)
@@ -171,15 +174,15 @@ class MangaExecute:
             print("SetChapters manga not found")
             return
         
-        Chapters:str = self.__GetEntry(self.MangaIndex.EditChapters.EntryIndex.Chapters)   
+        Chapter:str = self.__GetEntry(self.MangaIndex.EditChapters.EntryIndex.Chapter)   
         if (Set):
-            if (Chapters == ""):
-                print("EditChapters manga chapters is empty")
+            if (Chapter == ""):
+                print("EditChapters manga Chapter is empty")
                 return
             
-            Watch.EditChapters(Name, Set, Chapters)
+            Watch.EditChapters(Name, Set, Chapter)
             self.__ClearEntry(self.MangaIndex.EditChapters.EntryIndex.Name)
-            self.__ClearEntry(self.MangaIndex.EditChapters.EntryIndex.Chapters)
+            self.__ClearEntry(self.MangaIndex.EditChapters.EntryIndex.Chapter)
         else:
             Watch.EditChapters(Name)
             self.__ClearEntry(self.MangaIndex.EditChapters.EntryIndex.Name)
@@ -243,7 +246,7 @@ class MangaExecute:
         Name:str = self.__GetEntry(self.MangaIndex.PrintInfo.EntryIndex.Name)
 
         if (Name == ""):
-            print("SetEpisode: name is empty")
+            print("PrintManga: name is empty")
             return
         
         Name = self.__FindName(Name)
@@ -280,7 +283,7 @@ class MangaExecute:
             for i in range(len(Info)):
                 SelectedManga:Manga = Watch.SelectManga(Info[i])
                 NewInfo.append(SelectedManga.Name)
-                NewInfo.append(f"Chapters:{SelectedManga.Chapters}, Updated:{SelectedManga.LeastTimeUpdated}")
+                NewInfo.append(f"Chapter:{SelectedManga.Chapter}, Updated:{SelectedManga.LeastTimeUpdated}")
 
             self.Gui.Text.PrintDisplay(NewInfo)
             self.__ClearEntry(self.MangaIndex.PrintCurrentStatus.EntryIndex.Status)
@@ -291,7 +294,7 @@ class MangaExecute:
         Name:str = self.__GetEntry(self.MangaIndex.OpenLink.EntryIndex.Name)
 
         if (Name == ""):
-            print("SetEpisode: name is empty")
+            print("Openlink: name is empty")
             return
         
         Name = self.__FindName(Name)
@@ -299,18 +302,27 @@ class MangaExecute:
         if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             print("OpenLink manga not found")
             return
-        else:
-            SelectedManga:Manga = Watch.SelectManga(Name)
-
-        if (Name not in GetMangaList.MangaList()):
-            print("OpenLink manga not found in mangalist")
+        
+        if (not os.path.exists(f"./Data/MangaLinks.json")):
+            print("OpenLink manga links not found")
             return
-                
-        if (SelectedManga.MangaLink == ""):
+        
+        MangaLinks:dict = JsonUtil.LoadJson("./Data/MangaLinks.json")
+        if (not MangaLinks["WatchLinks"] or Name not in MangaLinks["WatchLinks"]):
+            print("OpenLink manga not found in mangalinks")
+            return
+        
+        if (MangaLinks["WatchLinks"][Name] == ""):
             print("OpenLink manga link is empty")
             return
-                    
-        web.open(SelectedManga.MangaLink)
+        
+        Link:str = MangaLinks["WatchLinks"][Name]
+        
+        try:
+            web.open(Link)   
+        except:
+            print("OpenLink manga link is invalid")
+        
         self.__ClearEntry(self.MangaIndex.OpenLink.EntryIndex.Name)
             
     
@@ -318,7 +330,7 @@ class MangaExecute:
         Name:str = self.__GetEntry(self.MangaIndex.OpenMyAnimeListLink.EntryIndex.Name)
 
         if (Name == ""):
-            print("SetEpisode: name is empty")
+            print("OpenMAL_Link: name is empty")
             return
         
         Name = self.__FindName(Name)
@@ -326,12 +338,27 @@ class MangaExecute:
         if (not os.path.exists(f"./Data/MangaData/{JsonUtil.TrueName(Name)}.json")):
             print("OpenMAL_Link: manga not found")
             return
-        if (Name not in self.Gui.EntryList[self.MangaIndex.OpenMyAnimeListLink.EntryIndex.Name].options):
-            print(f"OpenMAL_Link: manga name: {Name}")
+        
+        if (not os.path.exists(f"./Data/MangaLinks.json")):
+            print("OpenMAL_Link manga links not found")
             return
         
-        SelectedManga:Manga = Watch.SelectManga(Name)
-        web.open(SelectedManga.MyAnimeListLink)
+        MangaLinks:dict = JsonUtil.LoadJson("./Data/MangaLinks.json")
+        if (not MangaLinks["MyAnimeListLinks"] or Name not in MangaLinks["MyAnimeListLinks"]):
+            print("OpenMAL_Link manga not found in mangalinks")
+            return
+        
+        if (MangaLinks["MyAnimeListLinks"][Name] == ""):
+            print("OpenMAL_Link manga link is empty")
+            return
+        
+        Link:str = MangaLinks["MyAnimeListLinks"][Name]
+        
+        try:
+            web.open(Link)   
+        except:
+            print("OpenMAL_Link manga link is invalid")
+        
         self.__ClearEntry(self.MangaIndex.OpenMyAnimeListLink.EntryIndex.Name)
             
 

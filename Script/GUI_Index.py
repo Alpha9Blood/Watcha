@@ -217,12 +217,12 @@ class MangaI():
 
         class EntryIndex():
             Name = 0
-            Chapters = 1
+            Chapter = 1
             Status = 2
         
         class TextIndex():
             Name = 0
-            Chapters = 1
+            Chapter = 1
             Status = 2
     
     class SetLink():
@@ -256,11 +256,11 @@ class MangaI():
 
         class EntryIndex():
             Name = 0
-            Chapters = 1
+            Chapter = 1
         
         class TextIndex():
             Name = 0
-            Chapters = 1
+            Chapter = 1
             Title = 2
         
     class RemoveManga():
@@ -347,9 +347,9 @@ class MangaI():
         class ButtonIndex():
             PrintFavorites = 0
         
-    class ViewAllManga():
+    class ViewAll():
         class ButtonIndex():
-            ViewAllManga = 0    
+            ViewAll = 0    
 
 class MenuI():
     class Anime():
@@ -378,4 +378,8 @@ class CustomI():
             Selected = 0
                 
         class TextIndex():
-            Selected = 0
+            Selected = 0  
+    
+    class ReturnToMenu():
+        class ButtonIndex():
+            Menu = 0

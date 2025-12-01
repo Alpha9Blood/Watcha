@@ -9,6 +9,9 @@ class TextManager:
         self.GetList:list = [tk.Text(self.Gui.window), tk.Scrollbar(self.Gui.window)]
 
     def PresetTextPosition(self, Text:tk.Label | tk.Text, PositionX:int, PositionTag:int, DefaultPos:int = 0):
+        if (PositionTag < 1):
+            raise Exception("PositionTag must be greater than 0")
+        
         CutYPos:int = ((PositionTag - 1) * 50)
         if (PositionTag == 1):
             Text.place(x=PositionX, y=DefaultPos)
@@ -36,9 +39,10 @@ class TextManager:
         self.Display.config(yscrollcommand=self.DisplayScrollbar.set)
         self.DisplayScrollbar.config(command=self.Display.yview)
 
+        self.Display.config(cursor="arrow", takefocus=True, state="normal")
         self.Display.delete(1.0, tk.END)
-        self.Display.config(cursor="arrow", takefocus=True)
         self.Display.insert(tk.END, JsonUtil.TurnIndent(Info))
+        self.Display.config(state="disabled") 
 
 
     def CreateText(self, Text:str, PositionX:int, PositionTag:int = 1, DefaultPos:int = 0, CustomYPosition:int = 0, WidthHeight:tuple[int, int] = (24, 1)):

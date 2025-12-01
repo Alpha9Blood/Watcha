@@ -7,7 +7,7 @@ The program is a graphical user interface (GUI) application, built using the Tki
 **Functionality**
 
 1. **Anime/Manga Management**: The program allows users to manage their anime lists, including adding, removing, and updating anime entries.
-2. **Episode/Chapters Tracking**: Users can track episodes for each anime, including setting the current episode and updating the episode count.
+2. **Episode/Chapter Tracking**: Users can track episodes for each anime, including setting the current episode and updating the episode count.
 3. **Score Management**: Users can assign scores to each anime and update them as needed.
 4. **Link Management**: The program provides a way to update links for each anime, such as MyAnimeList links.
 5. **Season Management**: The program allows users to manage seasons, including adding filters for specific seasons and adding calendars.

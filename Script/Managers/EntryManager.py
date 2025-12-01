@@ -10,7 +10,10 @@ class EntryManager():
         self.window = self.Gui.window
         self.EntryFilter:EntryFilterList = EntryFilterList()
 
-    def PresetEntryPosition(self, Entry:ttk.Combobox, PositionX:int, PositionTag:int, DefaultPos:int = 0):           
+    def PresetEntryPosition(self, Entry:ttk.Combobox, PositionX:int, PositionTag:int, DefaultPos:int = 0):
+        if (PositionTag < 1):
+            raise Exception("PositionTag must be greater than 0")
+                  
         CutYPos:int = ((PositionTag - 1) * 50)
         if (PositionTag == 1):
             Entry.place(x=PositionX, y=DefaultPos)

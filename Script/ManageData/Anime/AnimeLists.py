@@ -54,6 +54,10 @@ class AnimeLists:
             raise Exception("AnimeCurrentStatusList: Path not found: ./Data/AnimeStatusList.json") 
         
         StatusList:dict[str, list[str]] = JsonUtil.LoadJson("./Data/AnimeStatusList.json")
+
+        if (Status not in StatusList.keys()):
+            raise Exception("AnimeCurrentStatusList: status not found")
+
         Info:list[str] = StatusList[Status]
         return Info
         
@@ -86,29 +90,25 @@ class AnimeLists:
         return JsonUtil.LoadJson("./Data/ListedAnimeSeasons.json")
         
     def HasMAL_LinkList(self) -> list[str]:
-        Selected:str = ""
-        AnimeList:list[str] = self.AnimeList()
-        List:list[str] = []
-        for i in AnimeList:
-            try:
-                Selected = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(i)}.json")["Anime"]["MyAnimeListLink"]
-                if (Selected != ""):
-                    List.append(i)
-            except Exception:
-                raise Exception(f"HasMAL_LinkList: anime not found: ./Data/AnimeData/{JsonUtil.TrueName(i)}.json or wrong format")
-        return List
+        if (not os.path.exists("./Data/AnimeLinks.json")):
+            print("HasWatchLinkList: path not found: ./Data/AnimeLinks.json")
+            return []
+        
+        AnimeLinks:dict[str, dict[str, str]] = JsonUtil.LoadJson("./Data/AnimeLinks.json")
+        if (not AnimeLinks["MyAnimeListLinks"]):
+            raise Exception("HasWatchLinkList: MyAnimeListLinks found: ./Data/AnimeLinks.json")
+        
+        return list(AnimeLinks["MyAnimeListLinks"].keys())
     
     def HasWatchLinkList(self) -> list[str]:
-        Selected:str = ""
-        AnimeList:list[str] = self.AnimeList()
-        List:list[str] = []
-        for i in AnimeList:
-            try:
-                Selected = JsonUtil.LoadJson(f"./Data/AnimeData/{JsonUtil.TrueName(i)}.json")["Anime"]["WatchLink"]
-                if (Selected != ""):
-                    List.append(i)
-            except Exception:
-                raise Exception(f"HasWatchLinkList: anime not found: ./Data/AnimeData/{JsonUtil.TrueName(i)}.json or wrong format")
-        return List
+        if (not os.path.exists("./Data/AnimeLinks.json")):
+            print("HasWatchLinkList: path not found: ./Data/AnimeLinks.json")
+            return []
+        
+        AnimeLinks:dict[str, dict[str, str]] = JsonUtil.LoadJson("./Data/AnimeLinks.json")
+        if (not AnimeLinks["WatchLinks"]):
+            raise Exception("HasWatchLinkList: WatchLinks found: ./Data/AnimeLinks.json")
+            
+        return list(AnimeLinks["WatchLinks"].keys())
 
 GetAnimeList = AnimeLists()

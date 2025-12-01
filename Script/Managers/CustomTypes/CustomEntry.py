@@ -38,6 +38,10 @@ class CustomEntry(ttk.Combobox):
     def UpdateOnPress(self, Func: Callable):
         self.bind('<Return>', lambda event: Func())
 
+    def ResetOptions(self):
+        if (self.IsCustom):
+            self['values'] = self.options
+
 
     def SetAutoComplete(self):
         def autocomplete(event):

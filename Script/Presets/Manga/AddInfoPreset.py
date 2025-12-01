@@ -19,12 +19,12 @@ class AddInfo:
         self.MangaIndex.AddNewManga.EntryIndex.Name = self.Gui.Presets.UpdateEntryIndex()
         self.Gui.EntryList[self.MangaIndex.AddNewManga.EntryIndex.Name].config(width=25)
 
-        self.Gui.Text.CreateLabel("Chapters", 100, 2)
-        self.MangaIndex.AddNewManga.TextIndex.Chapters = self.Gui.Presets.UpdateTextIndex()
+        self.Gui.Text.CreateLabel("Chapter", 100, 2)
+        self.MangaIndex.AddNewManga.TextIndex.Chapter = self.Gui.Presets.UpdateTextIndex()
         self.Gui.Entry.CreateEntry(200, 2)
-        self.MangaIndex.AddNewManga.EntryIndex.Chapters = self.Gui.Presets.UpdateEntryIndex()
-        self.Gui.Entry.EntryFilter.UpdateList.append(self.Gui.EntryList[self.MangaIndex.AddNewManga.EntryIndex.Chapters])
-        self.Gui.EntryList[self.MangaIndex.AddNewManga.EntryIndex.Chapters].config(width=4)
+        self.MangaIndex.AddNewManga.EntryIndex.Chapter = self.Gui.Presets.UpdateEntryIndex()
+        self.Gui.Entry.EntryFilter.UpdateList.append(self.Gui.EntryList[self.MangaIndex.AddNewManga.EntryIndex.Chapter])
+        self.Gui.EntryList[self.MangaIndex.AddNewManga.EntryIndex.Chapter].config(width=4)
 
         self.Gui.Text.CreateLabel("Status", 100, 3)
         self.MangaIndex.AddNewManga.TextIndex.Status = self.Gui.Presets.UpdateTextIndex()
